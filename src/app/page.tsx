@@ -12,13 +12,21 @@ import { getDriveThumbnailUrl } from '../lib/drive';
 interface ServiceData { id: string; title: string; description: string; icon: string; imageUrl?: string; demoUrl?: string; }
 interface IntegrationData { id: string; title: string; description: string; imageUrl: string; tag: string; referenceUrl?: string; }
 interface ConfigData {
-  hero_badge: string; hero_title: string; hero_desc: string;
+  hero_badge: string; 
+  hero_headline_en: string; hero_headline_th: string;
+  hero_sub_en: string; hero_sub_th: string;
   hero_btn1_text: string; hero_btn1_link: string; hero_btn2_text: string; hero_btn2_link: string;
-  why_badge: string; why_title: string;
+  why_badge: string; 
+  why_choose_title_en: string; why_choose_title_th: string;
   why1_title: string; why1_desc: string; why2_title: string; why2_desc: string;
   why3_title: string; why3_desc: string; why4_title: string; why4_desc: string;
-  svc_badge: string; svc_title: string;
-  port_badge: string; port_title: string; port_desc: string;
+  svc_badge: string; 
+  solutions_title_en: string; solutions_title_th: string;
+  port_badge: string; 
+  integrations_title_en: string; integrations_title_th: string;
+  port_desc: string;
+  cta_heading_en?: string; cta_heading_th?: string;
+  footer_bio_en?: string; footer_bio_th?: string;
 }
 
 const IconMap: Record<string, React.FC<any>> = {
@@ -31,18 +39,29 @@ export default function LandingPage() {
   const [integrations, setIntegrations] = useState<IntegrationData[]>([]);
   const [config, setConfig] = useState<ConfigData>({
     hero_badge: 'Professional Technology Solutions',
-    hero_title: 'Transform Your Business with \nIntelligent Web & IoT Solutions',
-    hero_desc: 'Bridging the gap between digital platforms and physical hardware. We deliver seamless integration from web-based management software to smart hardware automation.',
+    hero_headline_en: 'Transform Your Business with \nIntelligent Web & IoT Solutions',
+    hero_headline_th: 'ยกระดับธุรกิจของคุณด้วย โซลูชัน Web App & IoT อัจฉริยะ',
+    hero_sub_en: 'Bridging the gap between digital platforms and physical hardware. We deliver seamless integration from web-based management software to smart hardware automation.',
+    hero_sub_th: 'จากซอฟต์แวร์จัดการบนเว็บ สู่การควบคุมบอร์ด Arduino/ESP32 ไร้รอยต่อ',
     hero_btn1_text: 'Explore Solutions', hero_btn1_link: '#services',
     hero_btn2_text: 'Get a Quote', hero_btn2_link: '#contact',
-    why_badge: 'WHY CHOOSE US', why_title: 'What Makes Us Different',
+    why_badge: 'WHY CHOOSE US', 
+    why_choose_title_en: 'What Makes Us Different',
+    why_choose_title_th: 'ความแตกต่างที่ทำให้เราโดดเด่น',
     why1_title: 'Domain Expertise', why1_desc: 'Specialized professionals in full-stack web development and IoT hardware engineering.',
     why2_title: 'Agile Delivery', why2_desc: 'Rapid deployment with flexible, on-the-fly adaptations to meet your strict deadlines.',
     why3_title: 'Cost-Effective', why3_desc: 'Transparent pricing with high ROI on every digital innovation you receive.',
     why4_title: 'Premium Support', why4_desc: 'Dedicated system maintenance and highly responsive technical consulting.',
-    svc_badge: 'OUR SOLUTIONS', svc_title: 'Tailored Services for Your Business',
-    port_badge: 'INTEGRATIONS', port_title: 'Seamless Ecosystem Connectivity', 
-    port_desc: 'Enhance your workflow flawlessly by connecting our custom-built platforms with the everyday tools you already trust.'
+    svc_badge: 'OUR SOLUTIONS', 
+    solutions_title_en: 'Tailored Services for Your Business',
+    solutions_title_th: 'บริการที่ออกแบบมาเพื่อธุรกิจคุณโดยเฉพาะ',
+    port_badge: 'INTEGRATIONS', 
+    integrations_title_en: 'Seamless Ecosystem Connectivity',
+    integrations_title_th: 'ทำงานร่วมกับแพลตฟอร์มอื่นอย่างไร้รอยต่อ',
+    port_desc: 'Enhance your workflow flawlessly by connecting our custom-built platforms with the everyday tools you already trust.',
+    cta_heading_en: 'Ready to Start Your Next Big Project?', cta_heading_th: 'พร้อมเริ่มพัฒนาโปรเจกต์ของคุณแล้วหรือยัง?',
+    footer_bio_en: 'Your trusted tech partner in turning innovative ideas into powerful, real-world Web & Hardware platforms.',
+    footer_bio_th: 'พาร์ทเนอร์ที่พร้อมสานต่อไอเดียของคุณให้กลายเป็นแพลตฟอร์มที่ใช้งานได้จริง'
   });
 
   const [loading, setLoading] = useState(true);
@@ -125,15 +144,17 @@ export default function LandingPage() {
                   {config.hero_badge}
                 </div>
                 <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-[1.1] text-gray-900 whitespace-pre-line animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-                  {config.hero_title.split('Intelligent Web & IoT Solutions').map((part, i, arr) => (
+                  {config.hero_headline_en?.split('Intelligent Web & IoT Solutions').map((part, i, arr) => (
                     <span key={i}>
                       {part}
                       {i < arr.length - 1 && <span className="text-brand-500">Intelligent Web & IoT Solutions</span>}
                     </span>
                   ))}
+                  <div className="mt-2 text-xl sm:text-2xl font-medium text-gray-500">{config.hero_headline_th}</div>
                 </h1>
                 <p className="mt-4 text-lg sm:text-xl text-gray-600 max-w-xl leading-relaxed whitespace-pre-line animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                  {config.hero_desc}
+                  {config.hero_sub_en}
+                  <span className="block mt-2 text-base text-gray-500">{config.hero_sub_th}</span>
                 </p>
                 <div className="mt-10 flex flex-col sm:flex-row items-center gap-4 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
                   <a href={config.hero_btn1_link} className="w-full sm:w-auto px-8 py-4 bg-brand-500 hover:bg-brand-600 text-white rounded-xl font-semibold transition-all shadow-lg shadow-brand-500/30 flex items-center justify-center gap-2 group duration-300 transform hover:-translate-y-1">
@@ -188,7 +209,8 @@ export default function LandingPage() {
           <div className="max-w-7xl mx-auto px-6">
             <div className="text-center mb-16">
               <h2 className="text-brand-500 font-bold tracking-wide uppercase text-sm mb-2">{config.why_badge}</h2>
-              <h3 className="text-3xl font-extrabold text-gray-900">{config.why_title}</h3>
+              <h3 className="text-3xl font-extrabold text-gray-900">{config.why_choose_title_en}</h3>
+              <p className="mt-2 text-lg text-gray-500 font-medium">{config.why_choose_title_th}</p>
               <div className="w-16 h-1 bg-brand-500 mx-auto mt-6 rounded-full" />
             </div>
 
@@ -216,7 +238,8 @@ export default function LandingPage() {
           <div className="max-w-7xl mx-auto px-6">
             <div className="mb-16 text-center">
               <h2 className="text-brand-500 font-bold tracking-wide uppercase text-sm mb-2">{config.svc_badge}</h2>
-              <h3 className="text-3xl md:text-4xl font-extrabold text-gray-900">{config.svc_title}</h3>
+              <h3 className="text-3xl md:text-4xl font-extrabold text-gray-900">{config.solutions_title_en}</h3>
+              <p className="mt-2 text-lg text-gray-500 font-medium">{config.solutions_title_th}</p>
               <div className="w-16 h-1 bg-brand-500 mx-auto mt-6 rounded-full" />
             </div>
 
@@ -294,7 +317,8 @@ export default function LandingPage() {
           <div className="max-w-7xl mx-auto px-6">
             <div className="mb-16 text-center">
               <h2 className="text-brand-500 font-bold tracking-wide uppercase text-sm mb-2">{config.port_badge}</h2>
-              <h3 className="text-3xl md:text-4xl font-extrabold text-gray-900">{config.port_title}</h3>
+              <h3 className="text-3xl md:text-4xl font-extrabold text-gray-900">{config.integrations_title_en}</h3>
+              <p className="mt-2 text-lg text-gray-500 font-medium">{config.integrations_title_th}</p>
               <div className="w-16 h-1 bg-brand-500 mx-auto mt-6 rounded-full" />
               <p className="text-gray-600 mt-6 max-w-2xl mx-auto whitespace-pre-line">{config.port_desc}</p>
             </div>
@@ -341,7 +365,8 @@ export default function LandingPage() {
         <section id="contact" className="py-24 bg-gray-900 relative scroll-mt-20 overflow-hidden">
           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5" />
           <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
-            <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-6">Ready to Start Your Next Big Project?</h2>
+            <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-2">{config.cta_heading_en || 'Ready to Start Your Next Big Project?'}</h2>
+            <p className="text-gray-400 font-medium mb-6 text-lg">{config.cta_heading_th}</p>
             <p className="text-gray-400 mb-10 text-lg">Get a free consultation today. Let us design the perfect system architecture that fits your goals and budget.</p>
 
             <div className="flex flex-col sm:flex-row justify-center gap-4">
@@ -364,7 +389,8 @@ export default function LandingPage() {
               DeeDev<span className="text-brand-500 font-extrabold">IoT</span>
             </div>
             <p className="text-gray-500 text-sm leading-relaxed mb-6 max-w-sm">
-              Your trusted tech partner in turning innovative ideas into powerful, real-world Web & Hardware platforms.
+              {config.footer_bio_en || 'Your trusted tech partner in turning innovative ideas into powerful, real-world Web & Hardware platforms.'}
+              <span className="block mt-2 text-gray-400">{config.footer_bio_th}</span>
             </p>
           </div>
           <div>
