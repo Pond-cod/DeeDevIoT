@@ -144,12 +144,12 @@ export async function updateIntegrationRow(id: string, values: any[]) {
   try {
     const { sheets, GOOGLE_SHEET_ID } = getGoogleAuth();
 
-    const currentData = await getSheetValues('Integrations!A2:E');
+    const currentData = await getSheetValues('Integrations!A2:F');
     const rowIndex = currentData.findIndex((row) => row[0] === id);
 
     if (rowIndex !== -1) {
       const rowNumber = rowIndex + 2;
-      const range = `Integrations!A${rowNumber}:E${rowNumber}`;
+      const range = `Integrations!A${rowNumber}:F${rowNumber}`;
 
       const response = await sheets.spreadsheets.values.update({
         spreadsheetId: GOOGLE_SHEET_ID,

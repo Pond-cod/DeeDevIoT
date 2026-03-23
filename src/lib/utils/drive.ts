@@ -1,22 +1,18 @@
 export function convertToDirectLink(driveUrls: string): string {
   if (!driveUrls) return driveUrls;
   
-  // แยก URL ตามเครื่องหมายจุลภาคหรือขึ้นบรรทัดใหม่
-  const urls = driveUrls.split(/[,\n]/).map(url => url.trim()).filter(Boolean);
+  // ลบการเว้นวรรคและขึ้นบรรทัดใหม่ทั้งหมด เผื่อ User ก๊อปปี้ลิงก์แล้วข้อความขาดตอน
+  const cleanStr = driveUrls.replace(/\s+/g, '');
   
-  const converted = urls.map(url => {
-    // แยก ID จากลิงก์ปกติ /d/ หรือจากลิงก์ที่บังเอิญเป็น id=... มาแล้ว
-    const regex = /(?:\/d\/|id=)([a-zA-Z0-9_-]+)/;
-    const match = url.match(regex);
-    
-    if (match && match[1]) {
-      return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1000`;
-    }
-    
-    // หากไม่ตรงเงื่อนไขเลยให้ส่ง URL เดิมกลับไป
-    return url;
-  });
+  // ค้นหา ID จาก Google Drive (ความยาวประมาณ 25-35 ตัวอักษร)
+  const regex = /(?:\/d\/|id=|\/open\?id=)([a-zA-Z0-9_-]{20,})/g;
+  const matches = [...cleanStr.matchAll(regex)];
+  
+  if (matches.length > 0) {
+    // นำ ID ทั้งหมดที่เจอมาแปลงและคั่นด้วยบรรทัดใหม่
+    return matches.map(m => `https://drive.google.com/thumbnail?id=${m[1]}&sz=w1000`).join('\n');
+  }
 
-  // นำ URL ที่ถูกแปลงแล้วมารวมกันคั่นด้วยบรรทัดใหม่
-  return converted.join('\n');
+  // หากไม่มี ID ปรากฏ ส่งสตริงเดิมกลับไป
+  return driveUrls;
 }

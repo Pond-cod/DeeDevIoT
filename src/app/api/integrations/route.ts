@@ -8,19 +8,21 @@ export interface IntegrationData {
   id: string;
   title: string;
   description: string;
-  icon: string;
-  link: string;
+  imageUrl: string;
+  tag: string;
+  referenceUrl: string;
 }
 
 export async function GET() {
   try {
-    const rows = await getSheetValues('Integrations!A2:E');
+    const rows = await getSheetValues('Integrations!A2:F');
     const integrations: IntegrationData[] = rows.map((row) => ({
       id: row[0] || '',
       title: row[1] || '',
       description: row[2] || '',
-      icon: row[3] || '',
-      link: row[4] || '',
+      imageUrl: row[3] || '',
+      tag: row[4] || '',
+      referenceUrl: row[5] || '',
     }));
 
     return NextResponse.json({ success: true, data: integrations });
@@ -33,7 +35,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { id, title, description, icon, link, isEdit } = body;
+    const { id, title, description, imageUrl, tag, referenceUrl, isEdit } = body;
 
     if (!title || !description) {
       return NextResponse.json({ success: false, error: 'Title and description required' }, { status: 400 });
@@ -43,8 +45,9 @@ export async function POST(request: Request) {
       id || Date.now().toString(),
       title || "",
       description || "",
-      icon || "",
-      link || ""
+      imageUrl || "",
+      tag || "",
+      referenceUrl || ""
     ];
 
     if (isEdit) {
@@ -52,7 +55,7 @@ export async function POST(request: Request) {
       const result = await updateIntegrationRow(id, rowData);
       return NextResponse.json({ success: true, message: 'Integration updated', data: result });
     } else {
-      const result = await appendSheetValues('Integrations!A:E', [rowData]);
+      const result = await appendSheetValues('Integrations!A:F', [rowData]);
       return NextResponse.json({ success: true, message: 'Integration added', data: result });
     }
   } catch (error: any) {
