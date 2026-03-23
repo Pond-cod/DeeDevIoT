@@ -1,5 +1,12 @@
 import type { Metadata } from 'next'
+import { Prompt } from 'next/font/google'
 import './globals.css'
+
+const prompt = Prompt({
+  subsets: ['latin', 'thai'],
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-prompt'
+})
 
 export const metadata: Metadata = {
   title: 'DeeDevIoT - Web & IoT Solutions',
@@ -12,8 +19,10 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="th">
-      <body>{children}</body>
+    <html lang="th" className={`${prompt.variable}`}>
+      <body className="font-sans text-[#333333] bg-[#FFFFFF] antialiased">
+        {children}
+      </body>
     </html>
   )
 }
