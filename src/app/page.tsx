@@ -31,18 +31,18 @@ export default function LandingPage() {
   const [integrations, setIntegrations] = useState<IntegrationData[]>([]);
   const [config, setConfig] = useState<ConfigData>({
     hero_badge: 'Professional Technology Solutions',
-    hero_title: 'ยกระดับธุรกิจของคุณด้วย \nWeb App & Smart IoT Solutions',
-    hero_desc: 'จาก Web Management Software สู่การควบคุม Hardware (Arduino/ESP32) แบบ Seamless Integration',
-    hero_btn1_text: 'ผลงานและบริการ', hero_btn1_link: '#services',
-    hero_btn2_text: 'ขอใบเสนอราคา', hero_btn2_link: '#contact',
-    why_badge: 'WHY CHOOSE US', why_title: 'ทำไมถึงต้องเลือกเรา',
-    why1_title: 'Domain Expertise (ความเชี่ยวชาญเฉพาะด้าน)', why1_desc: 'ทีมงานวิศวกรและนักพัฒนา Web/Hardware IoT โดยเฉพาะ',
-    why2_title: 'Agile Delivery (บริการรวดเร็วทันใจ)', why2_desc: 'ส่งมอบชิ้นงานได้รวดเร็วตามกำหนดเวลา ยืดหยุ่นปรับแก้ได้ทันที',
-    why3_title: 'Cost-Effective (ราคาที่เข้าถึงได้และคุ้มค่า)', why3_desc: 'งบประมาณโปร่งใส ไม่มีแอบแฝง คุ้มค่ากับ Innovation ที่ได้รับ',
-    why4_title: 'System Maintenance (การบำรุงรักษาระบบ)', why4_desc: 'มีทีม Support บริการตอบคำถามและ System Maintenance อย่างใกล้ชิด',
-    svc_badge: 'OUR SOLUTIONS', svc_title: 'บริการและผลงาน',
-    port_badge: 'INTEGRATIONS', port_title: 'ระบบการทำงานร่วมกัน', 
-    port_desc: 'ช่วยให้การทำงานทั้งหมดของคุณราบรื่น โดยการเชื่อมต่อ Platform ที่เราพัฒนาเข้ากับ Tools ที่คุณใช้งานอยู่ประจำ'
+    hero_title: 'Transform Your Business with \nIntelligent Web & IoT Solutions',
+    hero_desc: 'Bridging the gap between digital platforms and physical hardware. We deliver seamless integration from web-based management software to smart hardware automation.',
+    hero_btn1_text: 'Explore Solutions', hero_btn1_link: '#services',
+    hero_btn2_text: 'Get a Quote', hero_btn2_link: '#contact',
+    why_badge: 'WHY CHOOSE US', why_title: 'What Makes Us Different',
+    why1_title: 'Domain Expertise', why1_desc: 'Specialized professionals in full-stack web development and IoT hardware engineering.',
+    why2_title: 'Agile Delivery', why2_desc: 'Rapid deployment with flexible, on-the-fly adaptations to meet your strict deadlines.',
+    why3_title: 'Cost-Effective', why3_desc: 'Transparent pricing with high ROI on every digital innovation you receive.',
+    why4_title: 'Premium Support', why4_desc: 'Dedicated system maintenance and highly responsive technical consulting.',
+    svc_badge: 'OUR SOLUTIONS', svc_title: 'Tailored Services for Your Business',
+    port_badge: 'INTEGRATIONS', port_title: 'Seamless Ecosystem Connectivity', 
+    port_desc: 'Enhance your workflow flawlessly by connecting our custom-built platforms with the everyday tools you already trust.'
   });
 
   const [loading, setLoading] = useState(true);
@@ -86,11 +86,20 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-gray-50 text-[#333333] font-sans selection:bg-brand-500/20">
       {/* ================= NAVIGATION ================= */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled ? 'bg-white/80 backdrop-blur-md border-b border-gray-200/50 shadow-sm' : 'bg-transparent py-2'}`}>
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled ? 'bg-white/80 backdrop-blur-md border-b border-gray-200/50 shadow-sm' : 'bg-transparent py-4'}`}>
+        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           <div className="text-2xl font-bold tracking-tighter flex items-center gap-2 cursor-pointer text-gray-900">
             DeeDev<span className="text-brand-500 font-extrabold">IoT</span>
           </div>
+          <div className="hidden md:flex items-center gap-8">
+            <a href="#" className="text-gray-600 hover:text-brand-500 font-semibold transition-colors text-sm uppercase tracking-wide">Home</a>
+            <a href="#services" className="text-gray-600 hover:text-brand-500 font-semibold transition-colors text-sm uppercase tracking-wide">Services</a>
+            <a href="#portfolio" className="text-gray-600 hover:text-brand-500 font-semibold transition-colors text-sm uppercase tracking-wide">Integrations</a>
+            <a href="#contact" className="text-gray-600 hover:text-brand-500 font-semibold transition-colors text-sm uppercase tracking-wide">Contact</a>
+          </div>
+          <a href="#contact" className="hidden md:inline-flex px-6 py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl transition-colors shadow-sm shadow-brand-500/30">
+            Get a Quote
+          </a>
         </div>
       </nav>
 
@@ -116,7 +125,12 @@ export default function LandingPage() {
                   {config.hero_badge}
                 </div>
                 <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-[1.1] text-gray-900 whitespace-pre-line animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-                  {config.hero_title}
+                  {config.hero_title.split('Intelligent Web & IoT Solutions').map((part, i, arr) => (
+                    <span key={i}>
+                      {part}
+                      {i < arr.length - 1 && <span className="text-brand-500">Intelligent Web & IoT Solutions</span>}
+                    </span>
+                  ))}
                 </h1>
                 <p className="mt-4 text-lg sm:text-xl text-gray-600 max-w-xl leading-relaxed whitespace-pre-line animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
                   {config.hero_desc}
@@ -244,7 +258,7 @@ export default function LandingPage() {
                       <p className="text-gray-600 mb-8 flex-grow line-clamp-3 text-sm leading-relaxed">{service.description}</p>
 
                       <div className="mt-auto px-4 py-2.5 bg-brand-50 text-brand-600 group-hover:bg-brand-500 group-hover:text-white rounded-xl text-center text-sm font-bold flex items-center justify-center gap-2 transition-colors">
-                        ดูรายละเอียด <ArrowRight className="w-4 h-4 ml-1" />
+                        View Details <ArrowRight className="w-4 h-4 ml-1" />
                       </div>
                     </div>
                   );
@@ -327,8 +341,8 @@ export default function LandingPage() {
         <section id="contact" className="py-24 bg-gray-900 relative scroll-mt-20 overflow-hidden">
           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5" />
           <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
-            <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-6">พร้อมเริ่มพัฒนา Project ของคุณแล้วหรือยัง?</h2>
-            <p className="text-gray-400 mb-10 text-lg">ปรึกษาเราฟรี ไม่มีค่าใช้จ่าย พร้อมประเมินราคาและระบบที่ตอบโจทย์คุณที่สุดอย่างรวดเร็ว</p>
+            <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-6">Ready to Start Your Next Big Project?</h2>
+            <p className="text-gray-400 mb-10 text-lg">Get a free consultation today. Let us design the perfect system architecture that fits your goals and budget.</p>
 
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <a href="mailto:hello@deedeviot.com" className="flex items-center justify-center gap-3 bg-brand-500 hover:bg-brand-600 border border-brand-500 px-8 py-4 rounded-xl text-white font-bold transition-colors shadow-lg shadow-brand-500/20">
@@ -350,11 +364,11 @@ export default function LandingPage() {
               DeeDev<span className="text-brand-500 font-extrabold">IoT</span>
             </div>
             <p className="text-gray-500 text-sm leading-relaxed mb-6 max-w-sm">
-              เราคือ Partner ที่พร้อมสานต่อ Idea ของคุณให้กลายเป็น Platform Web & Hardware ที่สามารถใช้งานได้จริง เต็มเปี่ยมไปด้วยประสิทธิภาพ
+              Your trusted tech partner in turning innovative ideas into powerful, real-world Web & Hardware platforms.
             </p>
           </div>
           <div>
-            <h4 className="font-bold text-gray-900 mb-6 uppercase tracking-wider text-sm">บริการของเรา</h4>
+            <h4 className="font-bold text-gray-900 mb-6 uppercase tracking-wider text-sm">Our Services</h4>
             <ul className="space-y-3 text-sm text-gray-500">
               <li><a href="#services" className="hover:text-brand-500 transition-colors">Web Application Development</a></li>
               <li><a href="#services" className="hover:text-brand-500 transition-colors">IoT Platform Architecture</a></li>
@@ -363,7 +377,7 @@ export default function LandingPage() {
             </ul>
           </div>
           <div>
-            <h4 className="font-bold text-gray-900 mb-6 uppercase tracking-wider text-sm">ติดต่อเรา</h4>
+            <h4 className="font-bold text-gray-900 mb-6 uppercase tracking-wider text-sm">Contact Us</h4>
             <ul className="space-y-3 text-sm text-gray-500">
               <li className="flex items-center gap-3"><Mail className="w-4 h-4 text-brand-500" /> hello@deedeviot.com</li>
               <li className="flex items-center gap-3"><Phone className="w-4 h-4 text-brand-500" /> 089-999-9999</li>
@@ -397,9 +411,9 @@ export default function LandingPage() {
 
             <div className="mt-8 flex justify-end gap-3 border-t border-gray-100 pt-6">
               {selectedService.demoUrl && (
-                <a href={selectedService.demoUrl} target="_blank" rel="noreferrer" className="px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl flex items-center gap-2 transition-colors"><ExternalLink className="w-4 h-4 ml-1" /> เปิด Website ของจริง</a>
+                <a href={selectedService.demoUrl} target="_blank" rel="noreferrer" className="px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl flex items-center gap-2 transition-colors"><ExternalLink className="w-4 h-4 ml-1" /> View Live Site</a>
               )}
-              <button onClick={() => setSelectedService(null)} className="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-colors">ปิดหน้าต่าง</button>
+              <button onClick={() => setSelectedService(null)} className="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-colors">Close</button>
             </div>
           </div>
         </div>

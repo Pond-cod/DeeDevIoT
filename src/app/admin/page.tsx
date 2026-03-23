@@ -29,18 +29,18 @@ const emptySvc: ServiceData = { id: '', title: '', description: '', icon: '', im
 const emptyInt: IntegrationData = { id: '', title: '', description: '', imageUrl: '', tag: '', referenceUrl: '' };
 const emptyConf: ConfigData = { 
   hero_badge: 'Professional Technology Solutions', 
-  hero_title: 'ยกระดับธุรกิจของคุณด้วย \nWeb App & Smart IoT Solutions', 
-  hero_desc: 'จาก Web Management Software สู่การควบคุม Hardware (Arduino/ESP32) แบบ Seamless Integration', 
-  hero_btn1_text: 'ผลงานและบริการ', hero_btn1_link: '#services', 
-  hero_btn2_text: 'ขอใบเสนอราคา', hero_btn2_link: '#contact',
-  why_badge: 'WHY CHOOSE US', why_title: 'ทำไมถึงต้องเลือกเรา', 
-  why1_title: 'Domain Expertise (ความเชี่ยวชาญเฉพาะด้าน)', why1_desc: 'ทีมงานวิศวกรและนักพัฒนา Web/Hardware IoT โดยเฉพาะ', 
-  why2_title: 'Agile Delivery (บริการรวดเร็วทันใจ)', why2_desc: 'ส่งมอบชิ้นงานได้รวดเร็วตามกำหนดเวลา ยืดหยุ่นปรับแก้ได้ทันที', 
-  why3_title: 'Cost-Effective (ราคาที่เข้าถึงได้และคุ้มค่า)', why3_desc: 'งบประมาณโปร่งใส ไม่มีแอบแฝง คุ้มค่ากับ Innovation ที่ได้รับ', 
-  why4_title: 'System Maintenance (การบำรุงรักษาระบบ)', why4_desc: 'มีทีม Support บริการตอบคำถามและ System Maintenance อย่างใกล้ชิด',
-  svc_badge: 'OUR SOLUTIONS', svc_title: 'บริการและผลงาน', 
-  port_badge: 'INTEGRATIONS', port_title: 'ระบบการทำงานร่วมกัน', 
-  port_desc: 'ช่วยให้การทำงานทั้งหมดของคุณราบรื่น โดยการเชื่อมต่อ Platform ที่เราพัฒนาเข้ากับ Tools ที่คุณใช้งานอยู่ประจำ' 
+  hero_title: 'Transform Your Business with \nIntelligent Web & IoT Solutions', 
+  hero_desc: 'Bridging the gap between digital platforms and physical hardware. We deliver seamless integration from web-based management software to smart hardware automation.', 
+  hero_btn1_text: 'Explore Solutions', hero_btn1_link: '#services', 
+  hero_btn2_text: 'Get a Quote', hero_btn2_link: '#contact',
+  why_badge: 'WHY CHOOSE US', why_title: 'What Makes Us Different', 
+  why1_title: 'Domain Expertise', why1_desc: 'Specialized professionals in full-stack web development and IoT hardware engineering.', 
+  why2_title: 'Agile Delivery', why2_desc: 'Rapid deployment with flexible, on-the-fly adaptations to meet your strict deadlines.', 
+  why3_title: 'Cost-Effective', why3_desc: 'Transparent pricing with high ROI on every digital innovation you receive.', 
+  why4_title: 'Premium Support', why4_desc: 'Dedicated system maintenance and highly responsive technical consulting.',
+  svc_badge: 'OUR SOLUTIONS', svc_title: 'Tailored Services for Your Business', 
+  port_badge: 'INTEGRATIONS', port_title: 'Seamless Ecosystem Connectivity', 
+  port_desc: 'Enhance your workflow flawlessly by connecting our custom-built platforms with the everyday tools you already trust.' 
 };
 
 export default function AdminDashboard() {
