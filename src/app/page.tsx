@@ -46,6 +46,15 @@ export default function LandingPage() {
 
   const [loading, setLoading] = useState(true);
   const [selectedService, setSelectedService] = useState<ServiceData | null>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -76,7 +85,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-gray-50 text-[#333333] font-sans selection:bg-brand-500/20">
       {/* ================= NAVIGATION ================= */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200/50 shadow-sm transition-all duration-300">
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled ? 'bg-white/80 backdrop-blur-md border-b border-gray-200/50 shadow-sm' : 'bg-transparent py-2'}`}>
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="text-2xl font-bold tracking-tighter flex items-center gap-2 cursor-pointer text-gray-900">
             DeeDev<span className="text-brand-500 font-extrabold">IoT</span>
@@ -86,50 +95,51 @@ export default function LandingPage() {
 
       <main className="pt-20">
         {/* ================= HERO SECTION (2 COLUMNS) ================= */}
-        <section className="relative overflow-hidden bg-white pt-16 pb-24 sm:pt-24 sm:pb-32 lg:pb-32 lg:pt-32">
+        <section className="relative overflow-hidden bg-white pt-24 pb-24 sm:pt-32 sm:pb-32 lg:pb-36 lg:pt-36">
           {/* subtle background effects */}
           <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-            <div className="absolute top-[-10%] right-[-5%] w-[50vh] h-[50vh] bg-brand-50 rounded-full blur-3xl opacity-70" />
-            <div className="absolute bottom-[-10%] left-[-5%] w-[40vh] h-[40vh] bg-sky-50 rounded-full blur-3xl opacity-60" />
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:32px_32px]"></div>
+            <div className="absolute top-[-10%] right-[-5%] w-[50vh] h-[50vh] bg-brand-50 rounded-full blur-3xl opacity-70 animate-float" />
+            <div className="absolute bottom-[-10%] left-[-5%] w-[40vh] h-[40vh] bg-sky-50 rounded-full blur-3xl opacity-60 animate-float" style={{ animationDelay: '1.5s' }} />
           </div>
 
           <div className="max-w-7xl mx-auto px-6 relative z-10">
             <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
               {/* Left Col - text */}
               <div className="text-left">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 text-brand-600 text-sm font-semibold mb-6">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 text-brand-600 text-sm font-semibold mb-6 animate-fade-in-up">
                   <span className="relative flex h-2 w-2">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-500 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-500"></span>
                   </span>
                   {config.hero_badge}
                 </div>
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6 leading-[1.15] text-gray-900 whitespace-pre-line">
+                <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-[1.1] text-gray-900 whitespace-pre-line animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
                   {config.hero_title}
                 </h1>
-                <p className="mt-4 text-lg sm:text-xl text-gray-600 max-w-xl leading-relaxed whitespace-pre-line">
+                <p className="mt-4 text-lg sm:text-xl text-gray-600 max-w-xl leading-relaxed whitespace-pre-line animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
                   {config.hero_desc}
                 </p>
-                <div className="mt-10 flex flex-col sm:flex-row items-center gap-4">
-                  <a href={config.hero_btn1_link} className="w-full sm:w-auto px-8 py-4 bg-brand-500 hover:bg-brand-600 text-white rounded-xl font-semibold transition-all shadow-lg shadow-brand-500/30 flex items-center justify-center gap-2 group duration-300">
+                <div className="mt-10 flex flex-col sm:flex-row items-center gap-4 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+                  <a href={config.hero_btn1_link} className="w-full sm:w-auto px-8 py-4 bg-brand-500 hover:bg-brand-600 text-white rounded-xl font-semibold transition-all shadow-lg shadow-brand-500/30 flex items-center justify-center gap-2 group duration-300 transform hover:-translate-y-1">
                     {config.hero_btn1_text} <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform" />
                   </a>
-                  <a href={config.hero_btn2_link} className="w-full sm:w-auto px-8 py-4 bg-white hover:bg-gray-50 text-gray-800 rounded-xl font-semibold transition-all border border-gray-200 flex items-center justify-center gap-2 duration-300 hover:border-brand-500/30 hover:shadow-sm">
+                  <a href={config.hero_btn2_link} className="w-full sm:w-auto px-8 py-4 bg-white hover:bg-gray-50 text-gray-800 rounded-xl font-semibold transition-all border border-gray-200 flex items-center justify-center gap-2 duration-300 hover:border-brand-500/30 hover:shadow-sm transform hover:-translate-y-1">
                     {config.hero_btn2_text}
                   </a>
                 </div>
               </div>
 
               {/* Right Col - illustration */}
-              <div className="relative mx-auto w-full max-w-lg lg:max-w-none h-80 sm:h-96 lg:h-[500px] flex items-center justify-center">
-                <div className="absolute inset-0 bg-gradient-to-tr from-brand-100 to-sky-50 rounded-full blur-3xl opacity-50" />
-                <div className="relative w-full h-full flex items-center justify-center grayscale-[0%] contrast-125">
-                  <div className="w-64 h-64 sm:w-80 sm:h-80 bg-white shadow-2xl shadow-gray-200/50 rounded-full border border-gray-100 flex items-center justify-center relative animate-[spin_60s_linear_infinite]">
+              <div className="relative mx-auto w-full max-w-lg lg:max-w-none h-80 sm:h-96 lg:h-[500px] flex items-center justify-center animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+                <div className="absolute inset-0 bg-gradient-to-tr from-brand-100 to-sky-50 rounded-full blur-3xl opacity-50 animate-pulse" />
+                <div className="relative w-full h-full flex items-center justify-center grayscale-[0%] contrast-125 animate-float">
+                  <div className="w-64 h-64 sm:w-80 sm:h-80 bg-white shadow-[0_0_60px_-15px_rgba(255,107,0,0.2)] rounded-full border border-gray-100 flex items-center justify-center relative animate-[spin_60s_linear_infinite]">
                     {/* Floating Icons connecting */}
-                    <div className="absolute top-[-10px] left-1/2 -translate-x-1/2 p-4 bg-white shadow-lg rounded-2xl border border-gray-100 -rotate-[0deg] text-brand-500"><Server className="w-8 h-8" /></div>
-                    <div className="absolute bottom-[-10px] left-1/2 -translate-x-1/2 p-4 bg-white shadow-lg rounded-2xl border border-gray-100 -rotate-[0deg] text-sky-500"><Globe className="w-8 h-8" /></div>
-                    <div className="absolute left-[-10px] top-1/2 -translate-y-1/2 p-4 bg-white shadow-lg rounded-2xl border border-gray-100 -rotate-[0deg] text-indigo-500"><Terminal className="w-8 h-8" /></div>
-                    <div className="absolute right-[-10px] top-1/2 -translate-y-1/2 p-4 bg-white shadow-lg rounded-2xl border border-gray-100 -rotate-[0deg] text-brand-500"><Cpu className="w-8 h-8" /></div>
+                    <div className="absolute top-[-10px] left-1/2 -translate-x-1/2 p-4 bg-white shadow-lg rounded-2xl border border-gray-100 -rotate-[0deg] text-brand-500 transition-transform duration-300 hover:scale-110"><Server className="w-8 h-8" /></div>
+                    <div className="absolute bottom-[-10px] left-1/2 -translate-x-1/2 p-4 bg-white shadow-lg rounded-2xl border border-gray-100 -rotate-[0deg] text-sky-500 transition-transform duration-300 hover:scale-110"><Globe className="w-8 h-8" /></div>
+                    <div className="absolute left-[-10px] top-1/2 -translate-y-1/2 p-4 bg-white shadow-lg rounded-2xl border border-gray-100 -rotate-[0deg] text-indigo-500 transition-transform duration-300 hover:scale-110"><Terminal className="w-8 h-8" /></div>
+                    <div className="absolute right-[-10px] top-1/2 -translate-y-1/2 p-4 bg-white shadow-lg rounded-2xl border border-gray-100 -rotate-[0deg] text-brand-500 transition-transform duration-300 hover:scale-110"><Cpu className="w-8 h-8" /></div>
 
                     <div className="w-32 h-32 sm:w-40 sm:h-40 bg-brand-50 rounded-full flex items-center justify-center border-4 border-white shadow-inner animate-[spin_60s_linear_infinite_reverse]">
                       <Wifi className="w-12 h-12 sm:w-16 sm:h-16 text-brand-500 animate-pulse" />
@@ -140,6 +150,23 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
+
+        {/* ================= TECH STACK MARQUEE ================= */}
+        <div className="py-8 border-b border-gray-100 bg-white relative flex overflow-hidden group">
+          <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-white to-transparent z-10" />
+          <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-white to-transparent z-10" />
+          <div className="animate-marquee whitespace-nowrap flex gap-12 md:gap-20 items-center opacity-70 group-hover:opacity-100 transition-opacity duration-300">
+            {['Next.js', 'React', 'Node.js', 'TypeScript', 'Tailwind CSS', 'Arduino', 'ESP32', 'MQTT', 'LINE API'].map((tech, i) => (
+              <span key={i} className="text-xl md:text-2xl font-black text-gray-300 hover:text-brand-500 transition-colors duration-300 select-none cursor-default">{tech}</span>
+            ))}
+            {['Next.js', 'React', 'Node.js', 'TypeScript', 'Tailwind CSS', 'Arduino', 'ESP32', 'MQTT', 'LINE API'].map((tech, i) => (
+              <span key={`dup-${i}`} className="text-xl md:text-2xl font-black text-gray-300 hover:text-brand-500 transition-colors duration-300 select-none cursor-default">{tech}</span>
+            ))}
+            {['Next.js', 'React', 'Node.js', 'TypeScript', 'Tailwind CSS', 'Arduino', 'ESP32', 'MQTT', 'LINE API'].map((tech, i) => (
+              <span key={`dup2-${i}`} className="text-xl md:text-2xl font-black text-gray-300 hover:text-brand-500 transition-colors duration-300 select-none cursor-default">{tech}</span>
+            ))}
+          </div>
+        </div>
 
         {/* ================= WHY CHOOSE US ================= */}
         <section className="py-20 bg-gray-50 border-t border-gray-200/50">
@@ -157,7 +184,7 @@ export default function LandingPage() {
                 { title: config.why3_title, desc: config.why3_desc, icon: ShieldCheck },
                 { title: config.why4_title, desc: config.why4_desc, icon: ThumbsUp },
               ].map((item, i) => (
-                <div key={i} className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-1 transition-all">
+                <div key={i} className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-xl hover:shadow-brand-500/10 hover:-translate-y-2 transition-all duration-300">
                   <div className="w-14 h-14 bg-brand-50 rounded-xl flex items-center justify-center mb-6">
                     <item.icon className="w-7 h-7 text-brand-500" />
                   </div>
@@ -185,7 +212,7 @@ export default function LandingPage() {
                 {services.map(service => {
                   const IconComp = IconMap[service.icon?.toLowerCase()] || Code;
                   return (
-                    <div key={service.id} onClick={() => setSelectedService(service)} className="group bg-white border border-gray-200 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-xl hover:border-brand-500 rounded-3xl p-6 cursor-pointer hover:-translate-y-1 transition-all duration-300 flex flex-col h-full overflow-hidden relative">
+                    <div key={service.id} onClick={() => setSelectedService(service)} className="group bg-white border border-gray-200 shadow-sm hover:shadow-xl hover:shadow-brand-500/10 hover:border-brand-500 rounded-3xl p-6 cursor-pointer hover:-translate-y-2 transition-all duration-300 flex flex-col h-full overflow-hidden relative">
                       {service.imageUrl ? (() => {
                         const images = service.imageUrl.split(/[,\n]/).map(url => url.trim()).filter(Boolean);
                         if (images.length > 1) {
@@ -265,7 +292,7 @@ export default function LandingPage() {
                   const CardWrapper = project.referenceUrl ? 'a' : 'div';
                   const wrapperProps = project.referenceUrl ? { href: project.referenceUrl, target: '_blank', rel: 'noopener noreferrer' } : {};
                   return (
-                  <CardWrapper key={project.id} {...(wrapperProps as any)} className="bg-white border text-left border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 rounded-3xl overflow-hidden transition-all duration-300 group flex flex-col h-full cursor-pointer block">
+                  <CardWrapper key={project.id} {...(wrapperProps as any)} className="bg-white border text-left border-gray-100 shadow-sm hover:shadow-xl hover:shadow-brand-500/10 hover:-translate-y-2 rounded-3xl overflow-hidden transition-all duration-300 group flex flex-col h-full cursor-pointer block">
                     <div className="w-full aspect-[4/3] bg-gray-100 overflow-hidden relative">
                       {project.imageUrl && project.imageUrl.includes('http') ? (
                         <img src={getDriveThumbnailUrl(project.imageUrl)} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
