@@ -13,21 +13,20 @@ const config: Config = {
       },
       colors: {
         brand: {
-          50: '#EFF6FF',
-          100: '#DBEAFE',
-          200: '#BFDBFE',
-          300: '#93C5FD',
-          400: '#60A5FA',
-          500: '#3B82F6', // Vibrant Blue
-          600: '#2563EB',
-          700: '#1D4ED8',
+          50: '#F0F5FF',
+          100: '#E5EDFF',
+          500: '#0047FF', // Vivid Blue
+          600: '#003BE0',
         },
         accent: {
-          50: '#FEFCE8',
-          100: '#FEF9C3',
-          400: '#FACC15',
-          500: '#EAB308', // Vibrant Yellow
-          600: '#CA8A04',
+          50: '#FFFDF0',
+          100: '#FFF9CC',
+          500: '#FFCE00', // Vivid Yellow
+          600: '#E6BA00',
+        },
+        palette: {
+          light: '#EAEAEA',
+          gray: '#8C8C8C',
         }
       },
       keyframes: {

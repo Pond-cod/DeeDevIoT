@@ -4,9 +4,9 @@ import React, { useEffect, useState } from 'react';
 import {
   Cpu, Code, Globe, Smartphone, Database, Wifi, Server, Terminal, ChevronRight,
   ArrowRight, Zap, Activity, Monitor, X, ExternalLink, Blocks, MessageSquare,
-  Mail, Phone, ShieldCheck, Clock, ThumbsUp, Users, Target
+  Mail, Phone, ShieldCheck, Clock, ThumbsUp, Users, Target, Facebook, MessageCircle
 } from 'lucide-react';
-import { getDriveThumbnailUrl } from '../lib/drive';
+import { getDriveThumbnailUrl, getDriveDirectUrl, getDriveIframeUrl } from '../lib/drive';
 
 // Types
 interface ServiceData { id: string; title: string; description: string; icon: string; imageUrl?: string; demoUrl?: string; }
@@ -16,9 +16,9 @@ interface ConfigData {
   hero_headline_en: string; hero_headline_th: string;
   hero_sub_en: string; hero_sub_th: string;
   hero_btn1_text_en: string; hero_btn1_text_th: string;
-  hero_btn1_link: string; 
+  hero_btn1_link: string;
   hero_btn2_text_en: string; hero_btn2_text_th: string;
-  hero_btn2_link: string; 
+  hero_btn2_link: string;
   why_badge_en: string; why_badge_th: string;
   why_choose_title_en: string; why_choose_title_th: string;
   why1_title_en: string; why1_title_th: string;
@@ -36,6 +36,7 @@ interface ConfigData {
   port_desc_en: string; port_desc_th: string;
   cta_heading_en: string; cta_heading_th: string;
   footer_bio_en: string; footer_bio_th: string;
+  facebook_url: string;
 }
 
 const IconMap: Record<string, React.FC<any>> = {
@@ -47,30 +48,31 @@ export default function LandingPage() {
   const [services, setServices] = useState<ServiceData[]>([]);
   const [integrations, setIntegrations] = useState<IntegrationData[]>([]);
   const [config, setConfig] = useState<ConfigData>({
-  hero_badge_en: 'Professional Technology Solutions', hero_badge_th: 'พรีเมียมเทคโนโลยีโซลูชัน',
-  hero_headline_en: 'Transform Your Business with \nIntelligent Web & IoT Solutions', hero_headline_th: 'ยกระดับธุรกิจของคุณด้วย โซลูชัน Web App & IoT อัจฉริยะ',
-  hero_sub_en: 'Bridging the gap between digital platforms and physical hardware. We deliver seamless integration from web-based management software to smart hardware automation.', hero_sub_th: 'จากซอฟต์แวร์จัดการบนเว็บ สู่การควบคุมบอร์ด Arduino/ESP32 ไร้รอยต่อ',
-  hero_btn1_text_en: 'Explore Solutions', hero_btn1_text_th: 'ดูโซลูชันของเรา',
-  hero_btn1_link: '#services', 
-  hero_btn2_text_en: 'Get a Quote', hero_btn2_text_th: 'ขอใบเสนอราคา',
-  hero_btn2_link: '#contact',
-  why_badge_en: 'WHY CHOOSE US', why_badge_th: 'ทำไมถึงต้องเลือกเรา',
-  why_choose_title_en: 'What Makes Us Different', why_choose_title_th: 'ความแตกต่างที่ทำให้เราโดดเด่น',
-  why1_title_en: 'Domain Expertise', why1_title_th: 'ความเชี่ยวชาญเฉพาะด้าน',
-  why1_desc_en: 'Specialized professionals in full-stack web development and IoT hardware engineering.', why1_desc_th: 'ทีมงานมืออาชีพที่มีความเชี่ยวชาญทั้งด้าน Web Development และ IoT Hardware',
-  why2_title_en: 'Agile Delivery', why2_title_th: 'การส่งมอบที่รวดเร็ว',
-  why2_desc_en: 'Rapid deployment with flexible, on-the-fly adaptations to meet your strict deadlines.', why2_desc_th: 'พัฒนาและส่งมอบงานได้อย่างรวดเร็ว พร้อมยืดหยุ่นปรับเปลี่ยนตามความต้องการ',
-  why3_title_en: 'Cost-Effective', why3_title_th: 'คุ้มค่าการลงทุน',
-  why3_desc_en: 'Transparent pricing with high ROI on every digital innovation you receive.', why3_desc_th: 'ราคาโปร่งใส ให้ผลตอบแทนคุ้มค่าในทุกนวัตกรรมดิจิทัลที่คุณได้รับ',
-  why4_title_en: 'Premium Support', why4_title_th: 'บริการดูแลหลังการขาย',
-  why4_desc_en: 'Dedicated system maintenance and highly responsive technical consulting.', why4_desc_th: 'ดูแลรักษาระบบอย่างใกล้ชิด พร้อมให้คำปรึกษาทางเทคนิคอย่างรวดเร็ว',
-  svc_badge_en: 'OUR SOLUTIONS', svc_badge_th: 'โซลูชันของเรา',
-  solutions_title_en: 'Tailored Services for Your Business', solutions_title_th: 'บริการที่ออกแบบมาเพื่อธุรกิจคุณโดยเฉพาะ',
-  port_badge_en: 'INTEGRATIONS', port_badge_th: 'ผลงานของเรา',
-  integrations_title_en: 'Seamless Ecosystem Connectivity', integrations_title_th: 'ทำงานร่วมกับแพลตฟอร์มอื่นอย่างไร้รอยต่อ',
-  port_desc_en: 'Enhance your workflow flawlessly by connecting our custom-built platforms with the everyday tools you already trust.', port_desc_th: 'เพิ่มประสิทธิภาพการทำงานด้วยการเชื่อมต่อแพลตฟอร์มของเรากับเครื่องมือที่คุณคุ้นเคย',
-  cta_heading_en: 'Ready to Start Your Next Big Project?', cta_heading_th: 'พร้อมเริ่มพัฒนาโปรเจกต์ของคุณแล้วหรือยัง?',
-  footer_bio_en: 'Your trusted tech partner in turning innovative ideas into powerful, real-world Web & Hardware platforms.', footer_bio_th: 'พาร์ทเนอร์ที่พร้อมสานต่อไอเดียของคุณให้กลายเป็นแพลตฟอร์มที่ใช้งานได้จริง'
+    hero_badge_en: 'Professional Technology Solutions', hero_badge_th: 'พรีเมียมเทคโนโลยีโซลูชัน',
+    hero_headline_en: 'Transform Your Business with \nIntelligent Web & IoT Solutions', hero_headline_th: 'ยกระดับธุรกิจของคุณด้วย โซลูชัน Web App & IoT อัจฉริยะ',
+    hero_sub_en: 'Bridging the gap between digital platforms and physical hardware. We deliver seamless integration from web-based management software to smart hardware automation.', hero_sub_th: 'จากซอฟต์แวร์จัดการบนเว็บ สู่การควบคุมบอร์ด Arduino/ESP32 ไร้รอยต่อ',
+    hero_btn1_text_en: 'Explore Solutions', hero_btn1_text_th: 'ดูโซลูชันของเรา',
+    hero_btn1_link: '#services',
+    hero_btn2_text_en: 'Get a Quote', hero_btn2_text_th: 'ขอใบเสนอราคา',
+    hero_btn2_link: '#contact',
+    why_badge_en: 'WHY CHOOSE US', why_badge_th: 'ทำไมถึงต้องเลือกเรา',
+    why_choose_title_en: 'What Makes Us Different', why_choose_title_th: 'ความแตกต่างที่ทำให้เราโดดเด่น',
+    why1_title_en: 'Domain Expertise', why1_title_th: 'ความเชี่ยวชาญเฉพาะด้าน',
+    why1_desc_en: 'Specialized professionals in full-stack web development and IoT hardware engineering.', why1_desc_th: 'ทีมงานมืออาชีพที่มีความเชี่ยวชาญทั้งด้าน Web Development และ IoT Hardware',
+    why2_title_en: 'Agile Delivery', why2_title_th: 'การส่งมอบที่รวดเร็ว',
+    why2_desc_en: 'Rapid deployment with flexible, on-the-fly adaptations to meet your strict deadlines.', why2_desc_th: 'พัฒนาและส่งมอบงานได้อย่างรวดเร็ว พร้อมยืดหยุ่นปรับเปลี่ยนตามความต้องการ',
+    why3_title_en: 'Cost-Effective', why3_title_th: 'คุ้มค่าการลงทุน',
+    why3_desc_en: 'Transparent pricing with high ROI on every digital innovation you receive.', why3_desc_th: 'ราคาโปร่งใส ให้ผลตอบแทนคุ้มค่าในทุกนวัตกรรมดิจิทัลที่คุณได้รับ',
+    why4_title_en: 'Premium Support', why4_title_th: 'บริการดูแลหลังการขาย',
+    why4_desc_en: 'Dedicated system maintenance and highly responsive technical consulting.', why4_desc_th: 'ดูแลรักษาระบบอย่างใกล้ชิด พร้อมให้คำปรึกษาทางเทคนิคอย่างรวดเร็ว',
+    svc_badge_en: 'OUR SOLUTIONS', svc_badge_th: 'โซลูชันของเรา',
+    solutions_title_en: 'Tailored Services for Your Business', solutions_title_th: 'บริการที่ออกแบบมาเพื่อธุรกิจคุณโดยเฉพาะ',
+    port_badge_en: 'INTEGRATIONS', port_badge_th: 'ผลงานของเรา',
+    integrations_title_en: 'Seamless Ecosystem Connectivity', integrations_title_th: 'ทำงานร่วมกับแพลตฟอร์มอื่นอย่างไร้รอยต่อ',
+    port_desc_en: 'Enhance your workflow flawlessly by connecting our custom-built platforms with the everyday tools you already trust.', port_desc_th: 'เพิ่มประสิทธิภาพการทำงานด้วยการเชื่อมต่อแพลตฟอร์มของเรากับเครื่องมือที่คุณคุ้นเคย',
+    cta_heading_en: 'Ready to Start Your Next Big Project?', cta_heading_th: 'พร้อมเริ่มพัฒนาโปรเจกต์ของคุณแล้วหรือยัง?',
+    footer_bio_en: 'Your trusted tech partner in turning innovative ideas into powerful, real-world Web & Hardware platforms.', footer_bio_th: 'พาร์ทเนอร์ที่พร้อมสานต่อไอเดียของคุณให้กลายเป็นแพลตฟอร์มที่ใช้งานได้จริง',
+    facebook_url: 'https://www.facebook.com/profile.php?id=61577499060199'
   });
 
   const [loading, setLoading] = useState(true);
@@ -126,7 +128,7 @@ export default function LandingPage() {
               <a href="#portfolio" className="text-gray-600 hover:text-brand-500 font-semibold transition-colors text-sm uppercase tracking-wide">Integrations</a>
               <a href="#contact" className="text-gray-600 hover:text-brand-500 font-semibold transition-colors text-sm uppercase tracking-wide">Contact</a>
             </div>
-            <a href="#contact" className="hidden md:inline-flex px-6 py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl transition-all shadow-md shadow-brand-500/20 hover:shadow-lg hover:shadow-brand-500/30 hover:-translate-y-0.5">
+            <a href="#contact" className="hidden md:inline-flex px-6 py-2.5 bg-accent-500 hover:bg-accent-600 text-[var(--color-brand-700)] font-extrabold rounded-xl transition-all shadow-md shadow-accent-500/20 hover:shadow-lg hover:shadow-accent-500/30 hover:-translate-y-0.5">
               ขอใบเสนอราคา
             </a>
           </div>
@@ -170,9 +172,9 @@ export default function LandingPage() {
                     <span className="flex items-center gap-2">{config.hero_btn1_text_en} <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform" /></span>
                     <span className="text-xs text-brand-100 font-medium font-thai">{config.hero_btn1_text_th}</span>
                   </a>
-                  <a href={config.hero_btn2_link} className="w-full sm:w-auto px-8 py-4 bg-accent-500 hover:bg-accent-600 text-white rounded-xl font-semibold transition-all shadow-md shadow-accent-500/20 flex flex-col items-center justify-center gap-1 duration-300 transform hover:-translate-y-1">
-                    <span className="flex items-center gap-2 text-gray-900">{config.hero_btn2_text_en}</span>
-                    <span className="text-xs text-gray-800 font-medium font-thai">{config.hero_btn2_text_th}</span>
+                  <a href={config.hero_btn2_link} className="w-full sm:w-auto px-8 py-4 bg-accent-500 hover:bg-accent-600 text-[var(--color-brand-700)] rounded-xl font-bold transition-all flex flex-col items-center justify-center gap-1 duration-300 shadow-md shadow-accent-500/20 transform hover:-translate-y-1">
+                    <span className="flex items-center gap-2">{config.hero_btn2_text_en}</span>
+                    <span className="text-xs text-[var(--color-brand-600)] font-medium font-thai">{config.hero_btn2_text_th}</span>
                   </a>
                 </div>
               </div>
@@ -216,7 +218,7 @@ export default function LandingPage() {
         </div>
 
         {/* ================= WHY CHOOSE US ================= */}
-        <section className="py-20 bg-gray-50 border-t border-gray-200/50">
+        <section className="py-20 bg-palette-light border-t border-gray-200/50">
           <div className="max-w-7xl mx-auto px-6">
             <div className="text-center mb-16">
               <h2 className="text-brand-500 font-bold tracking-wide uppercase text-sm mb-2">{config.why_badge_en} <span className="ml-2 font-normal text-gray-400 border-l border-brand-200 pl-2">{config.why_badge_th}</span></h2>
@@ -233,11 +235,11 @@ export default function LandingPage() {
                 { title_en: config.why4_title_en, title_th: config.why4_title_th, desc_en: config.why4_desc_en, desc_th: config.why4_desc_th, icon: ThumbsUp },
               ].map((item, i) => (
                 <div key={i} className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-xl hover:shadow-brand-500/10 hover:-translate-y-2 transition-all duration-300 flex flex-col">
-                  <div className="w-14 h-14 bg-brand-50 rounded-xl flex items-center justify-center mb-6">
-                    <item.icon className="w-7 h-7 text-brand-500" />
+                  <div className="w-14 h-14 bg-accent-100 rounded-xl flex items-center justify-center mb-6">
+                    <item.icon className="w-7 h-7 text-accent-600" />
                   </div>
                   <h4 className="text-lg font-bold text-gray-900 mb-1">{item.title_en}</h4>
-                  <div className="text-xs text-brand-500 font-medium font-thai mb-3">{item.title_th}</div>
+                  <div className="text-xs text-accent-600 font-medium font-thai mb-3">{item.title_th}</div>
                   <p className="text-gray-600 text-sm leading-relaxed whitespace-pre-line">{item.desc_en}</p>
                   <p className="text-gray-400 text-xs mt-2 leading-relaxed whitespace-pre-line border-t border-gray-50 pt-2 font-thai">{item.desc_th}</p>
                 </div>
@@ -263,7 +265,7 @@ export default function LandingPage() {
                 {services.map(service => {
                   const IconComp = IconMap[service.icon?.toLowerCase()] || Code;
                   return (
-                    <div key={service.id} onClick={() => setSelectedService(service)} className="group bg-white border border-gray-200 shadow-sm hover:shadow-xl hover:shadow-brand-500/10 hover:border-brand-500 rounded-3xl p-6 cursor-pointer hover:-translate-y-2 transition-all duration-300 flex flex-col h-full overflow-hidden relative">
+                    <div key={service.id} onClick={() => setSelectedService(service)} className="group bg-white border border-gray-100 shadow-lg hover:shadow-xl hover:shadow-brand-500/10 hover:border-brand-500 rounded-3xl p-6 cursor-pointer hover:-translate-y-2 transition-all duration-300 flex flex-col h-full overflow-hidden relative">
                       {service.imageUrl ? (() => {
                         const images = service.imageUrl.split(/[,\n]/).map(url => url.trim()).filter(Boolean);
                         if (images.length > 1) {
@@ -279,9 +281,31 @@ export default function LandingPage() {
                           );
                         }
                         if (images.length === 1) {
+                          const isVideoPrefix = images[0].toLowerCase().startsWith('video:');
+                          const rawUrl = isVideoPrefix ? images[0].substring(6) : images[0];
+                          const directUrl = getDriveDirectUrl(rawUrl);
+                          const thumbUrl = getDriveThumbnailUrl(rawUrl);
+                          const iframeUrl = getDriveIframeUrl(rawUrl);
+
                           return (
-                            <div className="w-full h-48 mb-6 rounded-2xl overflow-hidden shrink-0 bg-gray-100">
-                              <img src={getDriveThumbnailUrl(images[0])} alt={service.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
+                            <div className="w-full h-48 mb-6 rounded-2xl overflow-hidden shrink-0 bg-gray-100 relative group-hover:shadow-md transition-shadow">
+                              {isVideoPrefix ? (
+                                <iframe src={iframeUrl} className="w-full h-full border-0" allow="autoplay; encrypted-media" allowFullScreen />
+                              ) : (
+                                <video 
+                                  src={directUrl} 
+                                  autoPlay loop muted playsInline
+                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                  onError={(e) => {
+                                    (e.target as HTMLVideoElement).style.display = 'none';
+                                    const img = (e.target as HTMLVideoElement).nextElementSibling as HTMLImageElement;
+                                    if (img) img.style.display = 'block';
+                                  }}
+                                />
+                              )}
+                              {!isVideoPrefix && (
+                                <img src={thumbUrl} alt={service.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 hidden" referrerPolicy="no-referrer" />
+                              )}
                             </div>
                           );
                         }
@@ -326,7 +350,7 @@ export default function LandingPage() {
         </section>
 
         {/* ================= PORTFOLIO (FEATURED PROJECTS) SECTION ================= */}
-        <section id="portfolio" className="py-24 bg-gray-50 relative scroll-mt-20 border-t border-gray-200/50">
+        <section id="portfolio" className="py-24 bg-palette-light relative scroll-mt-20 border-t border-gray-200/50">
           <div className="max-w-7xl mx-auto px-6">
             <div className="mb-16 text-center">
               <h2 className="text-brand-500 font-bold tracking-wide uppercase text-sm mb-2">{config.port_badge_en} <span className="ml-2 font-normal text-gray-400 border-l border-brand-200 pl-2">{config.port_badge_th}</span></h2>
@@ -345,51 +369,83 @@ export default function LandingPage() {
                   const CardWrapper = project.referenceUrl ? 'a' : 'div';
                   const wrapperProps = project.referenceUrl ? { href: project.referenceUrl, target: '_blank', rel: 'noopener noreferrer' } : {};
                   return (
-                  <CardWrapper key={project.id} {...(wrapperProps as any)} className="bg-white border text-left border-gray-100 shadow-sm hover:shadow-xl hover:shadow-brand-500/10 hover:-translate-y-2 rounded-3xl overflow-hidden transition-all duration-300 group flex flex-col h-full cursor-pointer block">
-                    <div className="w-full aspect-[4/3] bg-gray-100 overflow-hidden relative">
-                      {project.imageUrl && project.imageUrl.includes('http') ? (
-                        <img src={getDriveThumbnailUrl(project.imageUrl)} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
-                      ) : (
-                        <div className="w-full h-full flex flex-col items-center justify-center text-gray-400 gap-3">
-                          <Code className="w-12 h-12 opacity-30" />
-                          <span className="text-sm font-medium">No Image</span>
-                        </div>
-                      )}
-                      {project.tag && (
-                        <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-brand-600 text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
-                          {project.tag}
-                        </div>
-                      )}
-                    </div>
-                    <div className="p-6 flex flex-col flex-grow">
-                      <div className="flex items-start justify-between gap-2 mb-3">
-                        <h4 className="font-bold text-xl text-gray-900 group-hover:text-brand-500 transition-colors">{project.title}</h4>
-                        {project.referenceUrl && <ExternalLink className="w-4 h-4 mt-1 text-gray-400 group-hover:text-brand-500 shrink-0" />}
+                    <CardWrapper key={project.id} {...(wrapperProps as any)} className="bg-white border text-left border-gray-100 shadow-sm hover:shadow-xl hover:shadow-brand-500/10 hover:-translate-y-2 rounded-3xl overflow-hidden transition-all duration-300 group flex flex-col h-full cursor-pointer block">
+                      <div className="w-full aspect-[4/3] bg-gray-100 overflow-hidden relative">
+                        {project.imageUrl && project.imageUrl.includes('http') ? (() => {
+                          const isVideoPrefix = project.imageUrl.toLowerCase().startsWith('video:');
+                          const rawUrl = isVideoPrefix ? project.imageUrl.substring(6) : project.imageUrl;
+                          const directUrl = getDriveDirectUrl(rawUrl);
+                          const thumbUrl = getDriveThumbnailUrl(rawUrl);
+                          const iframeUrl = getDriveIframeUrl(rawUrl);
+
+                          return (
+                            <>
+                              {isVideoPrefix ? (
+                                <iframe src={iframeUrl} className="w-full h-full border-0" allow="autoplay; encrypted-media" allowFullScreen />
+                              ) : (
+                                <video 
+                                  src={directUrl} 
+                                  autoPlay loop muted playsInline
+                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                  onError={(e) => {
+                                    (e.target as HTMLVideoElement).style.display = 'none';
+                                    const img = (e.target as HTMLVideoElement).nextElementSibling as HTMLImageElement;
+                                    if (img) img.style.display = 'block';
+                                  }}
+                                />
+                              )}
+                              {!isVideoPrefix && (
+                                <img src={thumbUrl} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 hidden" referrerPolicy="no-referrer" />
+                              )}
+                            </>
+                          );
+                        })() : (
+                          <div className="w-full h-full flex flex-col items-center justify-center text-gray-400 gap-3">
+                            <Code className="w-12 h-12 opacity-30" />
+                            <span className="text-sm font-medium">No Image</span>
+                          </div>
+                        )}
+                        {project.tag && (
+                          <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-brand-600 text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
+                            {project.tag}
+                          </div>
+                        )}
                       </div>
-                      <p className="text-sm text-gray-600 line-clamp-3 leading-relaxed">{project.description}</p>
-                    </div>
-                  </CardWrapper>
-                )})}
+                      <div className="p-6 flex flex-col flex-grow">
+                        <div className="flex items-start justify-between gap-2 mb-3">
+                          <h4 className="font-bold text-xl text-gray-900 group-hover:text-brand-500 transition-colors">{project.title}</h4>
+                          {project.referenceUrl && <ExternalLink className="w-4 h-4 mt-1 text-gray-400 group-hover:text-brand-500 shrink-0" />}
+                        </div>
+                        <p className="text-sm text-gray-600 line-clamp-3 leading-relaxed">{project.description}</p>
+                      </div>
+                    </CardWrapper>
+                  )
+                })}
               </div>
             )}
           </div>
         </section>
 
         {/* ================= CONTACT SECTION ================= */}
-        <section id="contact" className="py-24 bg-gray-900 relative scroll-mt-20 overflow-hidden">
-          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5" />
+        <section id="contact" className="py-24 bg-white relative scroll-mt-20 overflow-hidden border-t border-gray-100">
+          <div className="absolute inset-0 bg-brand-50/30 opacity-50" />
           <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
-            <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-2">{config.cta_heading_en || 'Ready to Start Your Next Big Project?'}</h2>
-            <p className="text-gray-400 font-medium mb-6 text-lg font-thai">{config.cta_heading_th}</p>
-            <p className="text-gray-400 mb-10 text-lg">Get a free consultation today. Let us design the perfect system architecture that fits your goals and budget.</p>
+            <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-2">{config.cta_heading_en || 'Ready to Start Your Next Big Project?'}</h2>
+            <p className="text-gray-500 font-medium mb-6 text-lg font-thai">{config.cta_heading_th}</p>
+            <p className="text-gray-500 mb-10 text-lg">Get a free consultation today. Let us design the perfect system architecture that fits your goals and budget.</p>
 
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <a href="mailto:hello@deedeviot.com" className="flex items-center justify-center gap-3 bg-brand-500 hover:bg-brand-600 border border-brand-500 px-8 py-4 rounded-xl text-white font-bold transition-colors shadow-lg shadow-brand-500/20">
                 <Mail className="w-5 h-5" /> hello@deedeviot.com
               </a>
-              <a href="tel:0899999999" className="flex items-center justify-center gap-3 bg-accent-500 hover:bg-accent-600 border border-accent-500 px-8 py-4 rounded-xl text-gray-900 font-bold transition-colors shadow-lg shadow-accent-500/20">
+              <a href="tel:0899999999" className="flex items-center justify-center gap-3 bg-accent-500 hover:bg-accent-600 px-8 py-4 rounded-xl text-[var(--color-brand-700)] font-extrabold transition-colors shadow-lg shadow-accent-500/20">
                 <Phone className="w-5 h-5" /> 089-999-9999
               </a>
+              {config.facebook_url && (
+                <a href={config.facebook_url} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-3 bg-[#1877F2] hover:bg-[#166FE5] border border-[#1877F2] px-8 py-4 rounded-xl text-white font-bold transition-colors shadow-lg shadow-[#1877F2]/20">
+                  <Facebook className="w-5 h-5" /> ทักแชทแฟนเพจ
+                </a>
+              )}
             </div>
           </div>
         </section>
@@ -406,6 +462,16 @@ export default function LandingPage() {
               {config.footer_bio_en || 'Your trusted tech partner in turning innovative ideas into powerful, real-world Web & Hardware platforms.'}
               <span className="block mt-2 text-gray-400 font-thai">{config.footer_bio_th}</span>
             </p>
+            <div className="flex items-center gap-4 mt-6">
+              {config.facebook_url && (
+                <a href={config.facebook_url} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-palette-light hover:bg-brand-50 text-palette-gray hover:text-brand-500 flex items-center justify-center transition-colors">
+                  <Facebook className="w-5 h-5" />
+                </a>
+              )}
+              <a href="#" className="w-10 h-10 rounded-full bg-palette-light hover:bg-brand-50 text-palette-gray hover:text-brand-500 flex items-center justify-center transition-colors">
+                <MessageCircle className="w-5 h-5" />
+              </a>
+            </div>
           </div>
           <div>
             <h4 className="font-bold text-gray-900 mb-6 uppercase tracking-wider text-sm">Our Services</h4>

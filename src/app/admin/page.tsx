@@ -40,6 +40,7 @@ interface ConfigData {
   port_desc_en: string; port_desc_th: string;
   cta_heading_en: string; cta_heading_th: string;
   footer_bio_en: string; footer_bio_th: string;
+  facebook_url: string;
 }
 
 const emptySvc: ServiceData = { id: '', title: '', description: '', icon: '', imageUrl: '', demoUrl: '' };
@@ -68,7 +69,8 @@ const emptyConf: ConfigData = {
   integrations_title_en: 'Seamless Ecosystem Connectivity', integrations_title_th: 'ทำงานร่วมกับแพลตฟอร์มอื่นอย่างไร้รอยต่อ',
   port_desc_en: 'Enhance your workflow flawlessly by connecting our custom-built platforms with the everyday tools you already trust.', port_desc_th: 'เพิ่มประสิทธิภาพการทำงานด้วยการเชื่อมต่อแพลตฟอร์มของเรากับเครื่องมือที่คุณคุ้นเคย',
   cta_heading_en: 'Ready to Start Your Next Big Project?', cta_heading_th: 'พร้อมเริ่มพัฒนาโปรเจกต์ของคุณแล้วหรือยัง?',
-  footer_bio_en: 'Your trusted tech partner in turning innovative ideas into powerful, real-world Web & Hardware platforms.', footer_bio_th: 'พาร์ทเนอร์ที่พร้อมสานต่อไอเดียของคุณให้กลายเป็นแพลตฟอร์มที่ใช้งานได้จริง'
+  footer_bio_en: 'Your trusted tech partner in turning innovative ideas into powerful, real-world Web & Hardware platforms.', footer_bio_th: 'พาร์ทเนอร์ที่พร้อมสานต่อไอเดียของคุณให้กลายเป็นแพลตฟอร์มที่ใช้งานได้จริง',
+  facebook_url: 'https://facebook.com/deedeviot'
 };
 
 export default function AdminDashboard() {
@@ -429,6 +431,9 @@ export default function AdminDashboard() {
                  <div className="grid md:grid-cols-2 gap-4">
                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Footer Bio (EN)</label><textarea rows={2} value={configData.footer_bio_en} onChange={e=>setConfigData({...configData, footer_bio_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Footer Bio (TH)</label><textarea rows={2} value={configData.footer_bio_th} onChange={e=>setConfigData({...configData, footer_bio_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
+                 </div>
+                 <div className="grid md:grid-cols-1 gap-4">
+                   <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ลิงก์ Facebook Fanpage</label><input type="text" value={configData.facebook_url} onChange={e=>setConfigData({...configData, facebook_url: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" placeholder="https://facebook.com/..." /></div>
                  </div>
               </div>
 
