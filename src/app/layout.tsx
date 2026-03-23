@@ -20,7 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="th" className={`${prompt.variable}`}>
-      <body className="font-sans text-[#333333] bg-[#FFFFFF] antialiased">
+      <body className="font-sans text-[#333333] bg-[#F8F9FA] antialiased">
         {children}
       </body>
     </html>

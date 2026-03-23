@@ -99,10 +99,78 @@ export async function updateSheetRow(id: string, values: any[]) {
 
 export async function getConfig() {
   try {
-    const rows = await getSheetValues('SiteConfig!A2:B');
+    const { sheets, GOOGLE_SHEET_ID } = getGoogleAuth();
+    let rows;
+    
+    try {
+      rows = await getSheetValues('SiteConfig!A2:C');
+    } catch (e: any) {
+      if (e.message && e.message.includes('Unable to parse range')) rows = [];
+      else throw e;
+    }
+
+    if (!rows || rows.length === 0) {
+      // Auto-Seed Data
+      const headers = ['Key', 'Value', 'ThaiValue'];
+      const defaultData = [
+        ['hero_badge', 'Professional Technology Solutions', 'พรีเมียมเทคโนโลยีโซลูชัน'],
+        ['hero_headline', 'Transform Your Business with \nIntelligent Web & IoT Solutions', 'ยกระดับธุรกิจของคุณด้วย โซลูชัน Web App & IoT อัจฉริยะ'],
+        ['hero_sub', 'Bridging the gap between digital platforms and physical hardware. We deliver seamless integration from web-based management software to smart hardware automation.', 'จากซอฟต์แวร์จัดการบนเว็บ สู่การควบคุมบอร์ด Arduino/ESP32 ไร้รอยต่อ'],
+        ['hero_btn1_text', 'Explore Solutions', 'ดูโซลูชันของเรา'],
+        ['hero_btn1_link', '#services', '#services'],
+        ['hero_btn2_text', 'Get a Quote', 'ขอใบเสนอราคา'],
+        ['hero_btn2_link', '#contact', '#contact'],
+        ['why_badge', 'WHY CHOOSE US', 'ทำไมถึงต้องเลือกเรา'],
+        ['why_choose_title', 'What Makes Us Different', 'ความแตกต่างที่ทำให้เราโดดเด่น'],
+        ['why1_title', 'Domain Expertise', 'ความเชี่ยวชาญเฉพาะด้าน'],
+        ['why1_desc', 'Specialized professionals in full-stack web development and IoT hardware engineering.', 'ทีมงานมืออาชีพที่มีความเชี่ยวชาญทั้งด้าน Web Development และ IoT Hardware'],
+        ['why2_title', 'Agile Delivery', 'การส่งมอบที่รวดเร็ว'],
+        ['why2_desc', 'Rapid deployment with flexible, on-the-fly adaptations to meet your strict deadlines.', 'พัฒนาและส่งมอบงานได้อย่างรวดเร็ว พร้อมยืดหยุ่นปรับเปลี่ยนตามความต้องการ'],
+        ['why3_title', 'Cost-Effective', 'คุ้มค่าการลงทุน'],
+        ['why3_desc', 'Transparent pricing with high ROI on every digital innovation you receive.', 'ราคาโปร่งใส ให้ผลตอบแทนคุ้มค่าในทุกนวัตกรรมดิจิทัลที่คุณได้รับ'],
+        ['why4_title', 'Premium Support', 'บริการดูแลหลังการขาย'],
+        ['why4_desc', 'Dedicated system maintenance and highly responsive technical consulting.', 'ดูแลรักษาระบบอย่างใกล้ชิด พร้อมให้คำปรึกษาทางเทคนิคอย่างรวดเร็ว'],
+        ['svc_badge', 'OUR SOLUTIONS', 'โซลูชันของเรา'],
+        ['solutions_title', 'Tailored Services for Your Business', 'บริการที่ออกแบบมาเพื่อธุรกิจคุณโดยเฉพาะ'],
+        ['port_badge', 'INTEGRATIONS', 'ผลงานของเรา'],
+        ['integrations_title', 'Seamless Ecosystem Connectivity', 'ทำงานร่วมกับแพลตฟอร์มอื่นอย่างไร้รอยต่อ'],
+        ['port_desc', 'Enhance your workflow flawlessly by connecting our custom-built platforms with the everyday tools you already trust.', 'เพิ่มประสิทธิภาพการทำงานด้วยการเชื่อมต่อแพลตฟอร์มของเรากับเครื่องมือที่คุณคุ้นเคย'],
+        ['cta_heading', 'Ready to Start Your Next Big Project?', 'พร้อมเริ่มพัฒนาโปรเจกต์ของคุณแล้วหรือยัง?'],
+        ['footer_bio', 'Your trusted tech partner in turning innovative ideas into powerful, real-world Web & Hardware platforms.', 'พาร์ทเนอร์ที่พร้อมสานต่อไอเดียของคุณให้กลายเป็นแพลตฟอร์มที่ใช้งานได้จริง']
+      ];
+      
+      try {
+        await sheets.spreadsheets.values.update({
+          spreadsheetId: GOOGLE_SHEET_ID,
+          range: 'SiteConfig!A1:C1',
+          valueInputOption: 'USER_ENTERED',
+          requestBody: { values: [headers] },
+        });
+        await appendSheetValues('SiteConfig!A2:C', defaultData);
+        rows = defaultData;
+      } catch (seedErr) {
+        console.error('Auto-seed failed:', seedErr);
+        rows = defaultData;
+      }
+    }
+
+    const bilingualKeys = [
+      'hero_badge', 'hero_headline', 'hero_sub', 'hero_btn1_text', 'hero_btn2_text',
+      'why_badge', 'why_choose_title', 'why1_title', 'why1_desc', 'why2_title', 'why2_desc',
+      'why3_title', 'why3_desc', 'why4_title', 'why4_desc', 'svc_badge', 'solutions_title',
+      'port_badge', 'integrations_title', 'port_desc', 'cta_heading', 'footer_bio'
+    ];
+
     const configObj: Record<string, string> = {};
     for (const row of rows) {
-      if (row[0]) configObj[row[0]] = row[1] || '';
+      if (row[0]) {
+        if (bilingualKeys.includes(row[0])) {
+          configObj[`${row[0]}_en`] = row[1] || '';
+          configObj[`${row[0]}_th`] = (row[2] !== undefined) ? row[2] : '';
+        } else {
+          configObj[row[0]] = row[1] || '';
+        }
+      }
     }
     return configObj;
   } catch (error) {
@@ -115,12 +183,26 @@ export async function updateConfig(configObj: Record<string, string>) {
   try {
     const { sheets, GOOGLE_SHEET_ID } = getGoogleAuth();
     
-    // Convert object to array of arrays
-    const values = Object.entries(configObj);
+    // Convert flat dictionary back to 3-column rows
+    const rowMap: Record<string, [string, string, string]> = {};
+    for (const [key, value] of Object.entries(configObj)) {
+      if (key.endsWith('_en')) {
+        const baseKey = key.replace('_en', '');
+        if (!rowMap[baseKey]) rowMap[baseKey] = [baseKey, '', ''];
+        rowMap[baseKey][1] = value;
+      } else if (key.endsWith('_th')) {
+        const baseKey = key.replace('_th', '');
+        if (!rowMap[baseKey]) rowMap[baseKey] = [baseKey, '', ''];
+        rowMap[baseKey][2] = value;
+      } else {
+        // Flat keys map explicitly to EN (Value Column)
+        if (!rowMap[key]) rowMap[key] = [key, '', ''];
+        rowMap[key][1] = value;
+      }
+    }
     
-    // Clear and update might be safer, but an update starting from A2 is usually fine
-    // Assuming A1, B1 are headers (Key, Value)
-    const range = `SiteConfig!A2:B${values.length + 1}`;
+    const values = Object.values(rowMap);
+    const range = `SiteConfig!A2:C${values.length + 1}`;
 
     const response = await sheets.spreadsheets.values.update({
       spreadsheetId: GOOGLE_SHEET_ID,

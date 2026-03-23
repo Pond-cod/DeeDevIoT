@@ -16,19 +16,28 @@ interface IntegrationData {
   id: string; title: string; description: string; imageUrl: string; tag: string; referenceUrl: string;
 }
 interface ConfigData {
-  hero_badge: string; 
+  hero_badge_en: string; hero_badge_th: string;
   hero_headline_en: string; hero_headline_th: string;
   hero_sub_en: string; hero_sub_th: string;
-  hero_btn1_text: string; hero_btn1_link: string; hero_btn2_text: string; hero_btn2_link: string;
-  why_badge: string; 
+  hero_btn1_text_en: string; hero_btn1_text_th: string;
+  hero_btn1_link: string; 
+  hero_btn2_text_en: string; hero_btn2_text_th: string;
+  hero_btn2_link: string; 
+  why_badge_en: string; why_badge_th: string;
   why_choose_title_en: string; why_choose_title_th: string;
-  why1_title: string; why1_desc: string; why2_title: string; why2_desc: string;
-  why3_title: string; why3_desc: string; why4_title: string; why4_desc: string;
-  svc_badge: string; 
+  why1_title_en: string; why1_title_th: string;
+  why1_desc_en: string; why1_desc_th: string;
+  why2_title_en: string; why2_title_th: string;
+  why2_desc_en: string; why2_desc_th: string;
+  why3_title_en: string; why3_title_th: string;
+  why3_desc_en: string; why3_desc_th: string;
+  why4_title_en: string; why4_title_th: string;
+  why4_desc_en: string; why4_desc_th: string;
+  svc_badge_en: string; svc_badge_th: string;
   solutions_title_en: string; solutions_title_th: string;
-  port_badge: string; 
+  port_badge_en: string; port_badge_th: string;
   integrations_title_en: string; integrations_title_th: string;
-  port_desc: string;
+  port_desc_en: string; port_desc_th: string;
   cta_heading_en: string; cta_heading_th: string;
   footer_bio_en: string; footer_bio_th: string;
 }
@@ -36,30 +45,30 @@ interface ConfigData {
 const emptySvc: ServiceData = { id: '', title: '', description: '', icon: '', imageUrl: '', demoUrl: '' };
 const emptyInt: IntegrationData = { id: '', title: '', description: '', imageUrl: '', tag: '', referenceUrl: '' };
 const emptyConf: ConfigData = { 
-  hero_badge: 'Professional Technology Solutions', 
-  hero_headline_en: 'Transform Your Business with \nIntelligent Web & IoT Solutions', 
-  hero_headline_th: 'ยกระดับธุรกิจของคุณด้วย โซลูชัน Web App & IoT อัจฉริยะ',
-  hero_sub_en: 'Bridging the gap between digital platforms and physical hardware. We deliver seamless integration from web-based management software to smart hardware automation.', 
-  hero_sub_th: 'จากซอฟต์แวร์จัดการบนเว็บ สู่การควบคุมบอร์ด Arduino/ESP32 ไร้รอยต่อ',
-  hero_btn1_text: 'Explore Solutions', hero_btn1_link: '#services', 
-  hero_btn2_text: 'Get a Quote', hero_btn2_link: '#contact',
-  why_badge: 'WHY CHOOSE US', 
-  why_choose_title_en: 'What Makes Us Different', 
-  why_choose_title_th: 'ความแตกต่างที่ทำให้เราโดดเด่น',
-  why1_title: 'Domain Expertise', why1_desc: 'Specialized professionals in full-stack web development and IoT hardware engineering.', 
-  why2_title: 'Agile Delivery', why2_desc: 'Rapid deployment with flexible, on-the-fly adaptations to meet your strict deadlines.', 
-  why3_title: 'Cost-Effective', why3_desc: 'Transparent pricing with high ROI on every digital innovation you receive.', 
-  why4_title: 'Premium Support', why4_desc: 'Dedicated system maintenance and highly responsive technical consulting.',
-  svc_badge: 'OUR SOLUTIONS', 
-  solutions_title_en: 'Tailored Services for Your Business', 
-  solutions_title_th: 'บริการที่ออกแบบมาเพื่อธุรกิจคุณโดยเฉพาะ',
-  port_badge: 'INTEGRATIONS', 
-  integrations_title_en: 'Seamless Ecosystem Connectivity', 
-  integrations_title_th: 'ทำงานร่วมกับแพลตฟอร์มอื่นอย่างไร้รอยต่อ',
-  port_desc: 'Enhance your workflow flawlessly by connecting our custom-built platforms with the everyday tools you already trust.',
+  hero_badge_en: 'Professional Technology Solutions', hero_badge_th: 'พรีเมียมเทคโนโลยีโซลูชัน',
+  hero_headline_en: 'Transform Your Business with \nIntelligent Web & IoT Solutions', hero_headline_th: 'ยกระดับธุรกิจของคุณด้วย โซลูชัน Web App & IoT อัจฉริยะ',
+  hero_sub_en: 'Bridging the gap between digital platforms and physical hardware. We deliver seamless integration from web-based management software to smart hardware automation.', hero_sub_th: 'จากซอฟต์แวร์จัดการบนเว็บ สู่การควบคุมบอร์ด Arduino/ESP32 ไร้รอยต่อ',
+  hero_btn1_text_en: 'Explore Solutions', hero_btn1_text_th: 'ดูโซลูชันของเรา',
+  hero_btn1_link: '#services', 
+  hero_btn2_text_en: 'Get a Quote', hero_btn2_text_th: 'ขอใบเสนอราคา',
+  hero_btn2_link: '#contact',
+  why_badge_en: 'WHY CHOOSE US', why_badge_th: 'ทำไมถึงต้องเลือกเรา',
+  why_choose_title_en: 'What Makes Us Different', why_choose_title_th: 'ความแตกต่างที่ทำให้เราโดดเด่น',
+  why1_title_en: 'Domain Expertise', why1_title_th: 'ความเชี่ยวชาญเฉพาะด้าน',
+  why1_desc_en: 'Specialized professionals in full-stack web development and IoT hardware engineering.', why1_desc_th: 'ทีมงานมืออาชีพที่มีความเชี่ยวชาญทั้งด้าน Web Development และ IoT Hardware',
+  why2_title_en: 'Agile Delivery', why2_title_th: 'การส่งมอบที่รวดเร็ว',
+  why2_desc_en: 'Rapid deployment with flexible, on-the-fly adaptations to meet your strict deadlines.', why2_desc_th: 'พัฒนาและส่งมอบงานได้อย่างรวดเร็ว พร้อมยืดหยุ่นปรับเปลี่ยนตามความต้องการ',
+  why3_title_en: 'Cost-Effective', why3_title_th: 'คุ้มค่าการลงทุน',
+  why3_desc_en: 'Transparent pricing with high ROI on every digital innovation you receive.', why3_desc_th: 'ราคาโปร่งใส ให้ผลตอบแทนคุ้มค่าในทุกนวัตกรรมดิจิทัลที่คุณได้รับ',
+  why4_title_en: 'Premium Support', why4_title_th: 'บริการดูแลหลังการขาย',
+  why4_desc_en: 'Dedicated system maintenance and highly responsive technical consulting.', why4_desc_th: 'ดูแลรักษาระบบอย่างใกล้ชิด พร้อมให้คำปรึกษาทางเทคนิคอย่างรวดเร็ว',
+  svc_badge_en: 'OUR SOLUTIONS', svc_badge_th: 'โซลูชันของเรา',
+  solutions_title_en: 'Tailored Services for Your Business', solutions_title_th: 'บริการที่ออกแบบมาเพื่อธุรกิจคุณโดยเฉพาะ',
+  port_badge_en: 'INTEGRATIONS', port_badge_th: 'ผลงานของเรา',
+  integrations_title_en: 'Seamless Ecosystem Connectivity', integrations_title_th: 'ทำงานร่วมกับแพลตฟอร์มอื่นอย่างไร้รอยต่อ',
+  port_desc_en: 'Enhance your workflow flawlessly by connecting our custom-built platforms with the everyday tools you already trust.', port_desc_th: 'เพิ่มประสิทธิภาพการทำงานด้วยการเชื่อมต่อแพลตฟอร์มของเรากับเครื่องมือที่คุณคุ้นเคย',
   cta_heading_en: 'Ready to Start Your Next Big Project?', cta_heading_th: 'พร้อมเริ่มพัฒนาโปรเจกต์ของคุณแล้วหรือยัง?',
-  footer_bio_en: 'Your trusted tech partner in turning innovative ideas into powerful, real-world Web & Hardware platforms.',
-  footer_bio_th: 'พาร์ทเนอร์ที่พร้อมสานต่อไอเดียของคุณให้กลายเป็นแพลตฟอร์มที่ใช้งานได้จริง'
+  footer_bio_en: 'Your trusted tech partner in turning innovative ideas into powerful, real-world Web & Hardware platforms.', footer_bio_th: 'พาร์ทเนอร์ที่พร้อมสานต่อไอเดียของคุณให้กลายเป็นแพลตฟอร์มที่ใช้งานได้จริง'
 };
 
 export default function AdminDashboard() {
@@ -307,9 +316,15 @@ export default function AdminDashboard() {
                 <div className="absolute top-0 left-0 w-1 h-full bg-brand-500"></div>
                 <h3 className="text-lg font-bold mb-6 text-brand-600 border-b border-gray-100 pb-3">1. ส่วนหน้าหลัก (Hero Section)</h3>
                 <div className="space-y-4">
-                  <div>
-                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ป้ายกำกับบนสุด (Badge)</label>
-                    <input type="text" value={configData.hero_badge} onChange={e=>setConfigData({...configData, hero_badge: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" />
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ป้ายกำกับบนสุด (Badge EN)</label>
+                      <input type="text" value={configData.hero_badge_en} onChange={e=>setConfigData({...configData, hero_badge_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" />
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ป้ายกำกับบนสุด (Badge TH)</label>
+                      <input type="text" value={configData.hero_badge_th} onChange={e=>setConfigData({...configData, hero_badge_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" />
+                    </div>
                   </div>
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
@@ -331,15 +346,17 @@ export default function AdminDashboard() {
                       <textarea rows={2} value={configData.hero_sub_th} onChange={e=>setConfigData({...configData, hero_sub_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all font-thai" />
                     </div>
                   </div>
-                  <div className="grid sm:grid-cols-2 gap-4 mt-6 bg-gray-50 p-5 rounded-xl border border-gray-100">
-                    <div className="col-span-2 text-sm font-bold text-gray-700">📌 ปุ่มหลัก (สีส้ม)</div>
-                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ข้อความเป้าหมาย</label><input type="text" value={configData.hero_btn1_text} onChange={e=>setConfigData({...configData, hero_btn1_text: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none py-2 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" /></div>
-                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ลิงก์ URL</label><input type="text" value={configData.hero_btn1_link} onChange={e=>setConfigData({...configData, hero_btn1_link: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none py-2 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" /></div>
+                  <div className="grid sm:grid-cols-3 gap-4 mt-6 bg-gray-50 p-5 rounded-xl border border-gray-100">
+                    <div className="col-span-3 text-sm font-bold text-gray-700">📌 ปุ่มหลัก (สีหลัก)</div>
+                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ข้อความเป้าหมาย (EN)</label><input type="text" value={configData.hero_btn1_text_en} onChange={e=>setConfigData({...configData, hero_btn1_text_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
+                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ข้อความเป้าหมาย (TH)</label><input type="text" value={configData.hero_btn1_text_th} onChange={e=>setConfigData({...configData, hero_btn1_text_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
+                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ลิงก์ URL</label><input type="text" value={configData.hero_btn1_link} onChange={e=>setConfigData({...configData, hero_btn1_link: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
                   </div>
-                  <div className="grid sm:grid-cols-2 gap-4 bg-gray-50 p-5 rounded-xl border border-gray-100">
-                    <div className="col-span-2 text-sm font-bold text-gray-700">📌 ปุ่มรอง (สีขาว)</div>
-                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ข้อความเป้าหมาย</label><input type="text" value={configData.hero_btn2_text} onChange={e=>setConfigData({...configData, hero_btn2_text: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none py-2 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" /></div>
-                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ลิงก์ URL</label><input type="text" value={configData.hero_btn2_link} onChange={e=>setConfigData({...configData, hero_btn2_link: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none py-2 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" /></div>
+                  <div className="grid sm:grid-cols-3 gap-4 bg-gray-50 p-5 rounded-xl border border-gray-100">
+                    <div className="col-span-3 text-sm font-bold text-gray-700">📌 ปุ่มรอง (สีรอง)</div>
+                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ข้อความเป้าหมาย (EN)</label><input type="text" value={configData.hero_btn2_text_en} onChange={e=>setConfigData({...configData, hero_btn2_text_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
+                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ข้อความเป้าหมาย (TH)</label><input type="text" value={configData.hero_btn2_text_th} onChange={e=>setConfigData({...configData, hero_btn2_text_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
+                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ลิงก์ URL</label><input type="text" value={configData.hero_btn2_link} onChange={e=>setConfigData({...configData, hero_btn2_link: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
                   </div>
                 </div>
               </div>
@@ -348,16 +365,21 @@ export default function AdminDashboard() {
               <div className="bg-white p-6 md:p-8 rounded-2xl border border-gray-200 shadow-sm relative overflow-hidden">
                  <div className="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
                  <h3 className="text-lg font-bold mb-6 text-brand-600 border-b border-gray-100 pb-3">2. ทำไมถึงเลือกเรา (Why Choose Us)</h3>
-                 <div className="grid md:grid-cols-3 gap-4 mb-6">
-                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ป้ายกำกับ (Badge)</label><input type="text" value={configData.why_badge} onChange={e=>setConfigData({...configData, why_badge: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" /></div>
-                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">หัวข้อ (Title EN)</label><input type="text" value={configData.why_choose_title_en} onChange={e=>setConfigData({...configData, why_choose_title_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" /></div>
-                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">หัวข้อ (Title TH)</label><input type="text" value={configData.why_choose_title_th} onChange={e=>setConfigData({...configData, why_choose_title_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all font-thai" /></div>
+                 <div className="grid md:grid-cols-2 gap-4 mb-6">
+                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ป้ายกำกับ (Badge EN)</label><input type="text" value={configData.why_badge_en} onChange={e=>setConfigData({...configData, why_badge_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
+                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ป้ายกำกับ (Badge TH)</label><input type="text" value={configData.why_badge_th} onChange={e=>setConfigData({...configData, why_badge_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
+                 </div>
+                 <div className="grid md:grid-cols-2 gap-4 mb-6">
+                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">หัวข้อ (Title EN)</label><input type="text" value={configData.why_choose_title_en} onChange={e=>setConfigData({...configData, why_choose_title_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
+                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">หัวข้อ (Title TH)</label><input type="text" value={configData.why_choose_title_th} onChange={e=>setConfigData({...configData, why_choose_title_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
                  </div>
                  <div className="space-y-4">
                     {[1,2,3,4].map((i) => (
-                        <div key={i} className="bg-gray-50 p-4 rounded-xl border border-gray-100 grid md:grid-cols-3 gap-4">
-                            <div className="md:col-span-1"><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ข้อที่ {i} - ชื่อจุดขาย</label><input type="text" value={(configData as any)[`why${i}_title`]} onChange={e=>setConfigData({...configData, [`why${i}_title`]: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
-                            <div className="md:col-span-2"><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ข้อที่ {i} - คำอธิบายสั้นๆ</label><input type="text" value={(configData as any)[`why${i}_desc`]} onChange={e=>setConfigData({...configData, [`why${i}_desc`]: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
+                        <div key={i} className="bg-gray-50 p-4 rounded-xl border border-gray-100 grid md:grid-cols-2 gap-4">
+                            <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ข้อที่ {i} - บริการ (EN)</label><input type="text" value={(configData as any)[`why${i}_title_en`]} onChange={e=>setConfigData({...configData, [`why${i}_title_en`]: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
+                            <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ข้อที่ {i} - บริการ (TH)</label><input type="text" value={(configData as any)[`why${i}_title_th`]} onChange={e=>setConfigData({...configData, [`why${i}_title_th`]: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
+                            <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ข้อที่ {i} - คำอธิบาย (EN)</label><input type="text" value={(configData as any)[`why${i}_desc_en`]} onChange={e=>setConfigData({...configData, [`why${i}_desc_en`]: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
+                            <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ข้อที่ {i} - คำอธิบาย (TH)</label><input type="text" value={(configData as any)[`why${i}_desc_th`]} onChange={e=>setConfigData({...configData, [`why${i}_desc_th`]: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
                         </div>
                     ))}
                  </div>
@@ -368,18 +390,31 @@ export default function AdminDashboard() {
                 <div className="bg-white p-6 md:p-8 rounded-2xl border border-gray-200 shadow-sm relative overflow-hidden space-y-4">
                    <div className="absolute top-0 left-0 w-1 h-full bg-amber-500"></div>
                    <h3 className="text-lg font-bold mb-4 text-brand-600 border-b border-gray-100 pb-3">3. บริการ (Services)</h3>
-                   <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ป้ายกำกับ (Badge)</label><input type="text" value={configData.svc_badge} onChange={e=>setConfigData({...configData, svc_badge: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
-                   <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">หัวข้อสรุป (Title EN)</label><input type="text" value={configData.solutions_title_en} onChange={e=>setConfigData({...configData, solutions_title_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
-                   <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">หัวข้อสรุป (Title TH)</label><input type="text" value={configData.solutions_title_th} onChange={e=>setConfigData({...configData, solutions_title_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
+                   <div className="grid md:grid-cols-2 gap-4">
+                       <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ป้ายกำกับ (Badge EN)</label><input type="text" value={configData.svc_badge_en} onChange={e=>setConfigData({...configData, svc_badge_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
+                       <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ป้ายกำกับ (Badge TH)</label><input type="text" value={configData.svc_badge_th} onChange={e=>setConfigData({...configData, svc_badge_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
+                   </div>
+                   <div className="grid md:grid-cols-2 gap-4 mt-4">
+                       <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">หัวข้อสรุป (Title EN)</label><input type="text" value={configData.solutions_title_en} onChange={e=>setConfigData({...configData, solutions_title_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
+                       <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">หัวข้อสรุป (Title TH)</label><input type="text" value={configData.solutions_title_th} onChange={e=>setConfigData({...configData, solutions_title_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
+                   </div>
                 </div>
 
                 <div className="bg-white p-6 md:p-8 rounded-2xl border border-gray-200 shadow-sm relative overflow-hidden space-y-4">
                    <div className="absolute top-0 left-0 w-1 h-full bg-purple-500"></div>
                    <h3 className="text-lg font-bold mb-4 text-brand-600 border-b border-gray-100 pb-3">4. ระบบเชื่อมต่อ (Integrations)</h3>
-                   <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ป้ายกำกับ (Badge)</label><input type="text" value={configData.port_badge} onChange={e=>setConfigData({...configData, port_badge: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
-                   <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">หัวข้อสรุป (Title EN)</label><input type="text" value={configData.integrations_title_en} onChange={e=>setConfigData({...configData, integrations_title_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
-                   <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">หัวข้อสรุป (Title TH)</label><input type="text" value={configData.integrations_title_th} onChange={e=>setConfigData({...configData, integrations_title_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
-                   <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">คำอธิบาย</label><textarea rows={2} value={configData.port_desc} onChange={e=>setConfigData({...configData, port_desc: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
+                   <div className="grid md:grid-cols-2 gap-4">
+                       <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ป้ายกำกับ (Badge EN)</label><input type="text" value={configData.port_badge_en} onChange={e=>setConfigData({...configData, port_badge_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
+                       <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ป้ายกำกับ (Badge TH)</label><input type="text" value={configData.port_badge_th} onChange={e=>setConfigData({...configData, port_badge_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
+                   </div>
+                   <div className="grid md:grid-cols-2 gap-4">
+                       <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">หัวข้อสรุป (Title EN)</label><input type="text" value={configData.integrations_title_en} onChange={e=>setConfigData({...configData, integrations_title_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
+                       <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">หัวข้อสรุป (Title TH)</label><input type="text" value={configData.integrations_title_th} onChange={e=>setConfigData({...configData, integrations_title_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
+                   </div>
+                   <div className="grid md:grid-cols-2 gap-4">
+                       <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">คำอธิบาย (EN)</label><textarea rows={2} value={configData.port_desc_en} onChange={e=>setConfigData({...configData, port_desc_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
+                       <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">คำอธิบาย (TH)</label><textarea rows={2} value={configData.port_desc_th} onChange={e=>setConfigData({...configData, port_desc_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
+                   </div>
                 </div>
               </div>
 

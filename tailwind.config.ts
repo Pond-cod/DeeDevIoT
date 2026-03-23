@@ -13,10 +13,21 @@ const config: Config = {
       },
       colors: {
         brand: {
-          50: '#fff4ed',
-          100: '#ffe6d3',
-          500: '#FF6B00',
-          600: '#e66000',
+          50: '#EFF6FF',
+          100: '#DBEAFE',
+          200: '#BFDBFE',
+          300: '#93C5FD',
+          400: '#60A5FA',
+          500: '#3B82F6', // Vibrant Blue
+          600: '#2563EB',
+          700: '#1D4ED8',
+        },
+        accent: {
+          50: '#FEFCE8',
+          100: '#FEF9C3',
+          400: '#FACC15',
+          500: '#EAB308', // Vibrant Yellow
+          600: '#CA8A04',
         }
       },
       keyframes: {
