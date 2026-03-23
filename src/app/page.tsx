@@ -31,17 +31,18 @@ export default function LandingPage() {
   const [integrations, setIntegrations] = useState<IntegrationData[]>([]);
   const [config, setConfig] = useState<ConfigData>({
     hero_badge: 'Professional Technology Solutions',
-    hero_title: 'ยกระดับธุรกิจของคุณด้วย \nโซลูชัน Web App & IoT อัจฉริยะ',
-    hero_desc: 'จากซอฟต์แวร์จัดการบนเว็บ สู่การควบคุมบอร์ด Arduino/ESP32 ไร้รอยต่อ',
+    hero_title: 'ยกระดับธุรกิจของคุณด้วย \nWeb App & Smart IoT Solutions',
+    hero_desc: 'จาก Web Management Software สู่การควบคุม Hardware (Arduino/ESP32) แบบ Seamless Integration',
     hero_btn1_text: 'ผลงานและบริการ', hero_btn1_link: '#services',
     hero_btn2_text: 'ขอใบเสนอราคา', hero_btn2_link: '#contact',
     why_badge: 'WHY CHOOSE US', why_title: 'ทำไมถึงต้องเลือกเรา',
-    why1_title: 'ความเชี่ยวชาญเฉพาะด้าน', why1_desc: 'ทีมงานมืออาชีพทางด้าน Web Development และ Hardware IoT โดยเฉพาะ',
-    why2_title: 'บริการรวดเร็วทันใจ', why2_desc: 'ส่งมอบงานได้รวดเร็วตามกำหนดเวลา ยืดหยุ่นปรับแก้ได้ทันที',
-    why3_title: 'ราคาที่เข้าถึงได้และคุ้มค่า', why3_desc: 'งบประมาณโปร่งใส ไม่มีแอบแฝง คุ้มค่ากับนวัตกรรมที่คุณได้รับ',
-    why4_title: 'ดูแลหลังการขายอย่างดี', why4_desc: 'มีบริการตอบคำถามและดูแลการบำรุงรักษาระบบอย่างใกล้ชิด',
+    why1_title: 'Domain Expertise (ความเชี่ยวชาญเฉพาะด้าน)', why1_desc: 'ทีมงานวิศวกรและนักพัฒนา Web/Hardware IoT โดยเฉพาะ',
+    why2_title: 'Agile Delivery (บริการรวดเร็วทันใจ)', why2_desc: 'ส่งมอบชิ้นงานได้รวดเร็วตามกำหนดเวลา ยืดหยุ่นปรับแก้ได้ทันที',
+    why3_title: 'Cost-Effective (ราคาที่เข้าถึงได้และคุ้มค่า)', why3_desc: 'งบประมาณโปร่งใส ไม่มีแอบแฝง คุ้มค่ากับ Innovation ที่ได้รับ',
+    why4_title: 'System Maintenance (การบำรุงรักษาระบบ)', why4_desc: 'มีทีม Support บริการตอบคำถามและ System Maintenance อย่างใกล้ชิด',
     svc_badge: 'OUR SOLUTIONS', svc_title: 'บริการและผลงาน',
-    port_badge: 'INTEGRATIONS', port_title: 'ระบบการทำงานรวมกัน', port_desc: 'ช่วยให้การทำงานของคุณไร้รอยต่อ โดยการเชื่อมแพลตฟอร์มที่เราพัฒนาเข้ากับเครื่องมือที่คุณใช้งานอยู่ประจำ'
+    port_badge: 'INTEGRATIONS', port_title: 'ระบบการทำงานร่วมกัน', 
+    port_desc: 'ช่วยให้การทำงานทั้งหมดของคุณราบรื่น โดยการเชื่อมต่อ Platform ที่เราพัฒนาเข้ากับ Tools ที่คุณใช้งานอยู่ประจำ'
   });
 
   const [loading, setLoading] = useState(true);
@@ -260,15 +261,15 @@ export default function LandingPage() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center divide-y sm:divide-y-0 sm:divide-x divide-white/20">
               <div className="py-4">
                 <div className="text-5xl font-extrabold mb-2">5+</div>
-                <div className="text-brand-100 font-medium">ปีของประสบการณ์</div>
+                <div className="text-brand-100 font-medium">Years of Experience</div>
               </div>
               <div className="py-4">
                 <div className="text-5xl font-extrabold mb-2">50+</div>
-                <div className="text-brand-100 font-medium">โปรเจกต์ที่สำเร็จ</div>
+                <div className="text-brand-100 font-medium">Successful Projects</div>
               </div>
               <div className="py-4">
                 <div className="text-5xl font-extrabold mb-2">100%</div>
-                <div className="text-brand-100 font-medium">ความพึงพอใจของลูกค้า</div>
+                <div className="text-brand-100 font-medium">Client Satisfaction</div>
               </div>
             </div>
           </div>
@@ -326,7 +327,7 @@ export default function LandingPage() {
         <section id="contact" className="py-24 bg-gray-900 relative scroll-mt-20 overflow-hidden">
           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5" />
           <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
-            <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-6">พร้อมเริ่มพัฒนาโปรเจกต์ของคุณแล้วหรือยัง?</h2>
+            <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-6">พร้อมเริ่มพัฒนา Project ของคุณแล้วหรือยัง?</h2>
             <p className="text-gray-400 mb-10 text-lg">ปรึกษาเราฟรี ไม่มีค่าใช้จ่าย พร้อมประเมินราคาและระบบที่ตอบโจทย์คุณที่สุดอย่างรวดเร็ว</p>
 
             <div className="flex flex-col sm:flex-row justify-center gap-4">
@@ -349,7 +350,7 @@ export default function LandingPage() {
               DeeDev<span className="text-brand-500 font-extrabold">IoT</span>
             </div>
             <p className="text-gray-500 text-sm leading-relaxed mb-6 max-w-sm">
-              เราคือพาร์ทเนอร์ที่พร้อมพาสานต่อไอเดียของคุณให้กลายเป็นแพลตฟอร์ม Web & Hardware ที่สามารถใช้งานได้จริง เต็มเปี่ยมไปด้วยประสิทธิภาพ
+              เราคือ Partner ที่พร้อมสานต่อ Idea ของคุณให้กลายเป็น Platform Web & Hardware ที่สามารถใช้งานได้จริง เต็มเปี่ยมไปด้วยประสิทธิภาพ
             </p>
           </div>
           <div>
@@ -396,7 +397,7 @@ export default function LandingPage() {
 
             <div className="mt-8 flex justify-end gap-3 border-t border-gray-100 pt-6">
               {selectedService.demoUrl && (
-                <a href={selectedService.demoUrl} target="_blank" rel="noreferrer" className="px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl flex items-center gap-2 transition-colors"><ExternalLink className="w-4 h-4 ml-1" /> เปิดเว็บไซต์ของจริง</a>
+                <a href={selectedService.demoUrl} target="_blank" rel="noreferrer" className="px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl flex items-center gap-2 transition-colors"><ExternalLink className="w-4 h-4 ml-1" /> เปิด Website ของจริง</a>
               )}
               <button onClick={() => setSelectedService(null)} className="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-colors">ปิดหน้าต่าง</button>
             </div>

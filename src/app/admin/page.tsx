@@ -29,18 +29,18 @@ const emptySvc: ServiceData = { id: '', title: '', description: '', icon: '', im
 const emptyInt: IntegrationData = { id: '', title: '', description: '', imageUrl: '', tag: '', referenceUrl: '' };
 const emptyConf: ConfigData = { 
   hero_badge: 'Professional Technology Solutions', 
-  hero_title: 'ยกระดับธุรกิจของคุณด้วย \nโซลูชัน Web App & IoT อัจฉริยะ', 
-  hero_desc: 'จากซอฟต์แวร์จัดการบนเว็บ สู่การควบคุมบอร์ด Arduino/ESP32 ไร้รอยต่อ', 
+  hero_title: 'ยกระดับธุรกิจของคุณด้วย \nWeb App & Smart IoT Solutions', 
+  hero_desc: 'จาก Web Management Software สู่การควบคุม Hardware (Arduino/ESP32) แบบ Seamless Integration', 
   hero_btn1_text: 'ผลงานและบริการ', hero_btn1_link: '#services', 
   hero_btn2_text: 'ขอใบเสนอราคา', hero_btn2_link: '#contact',
   why_badge: 'WHY CHOOSE US', why_title: 'ทำไมถึงต้องเลือกเรา', 
-  why1_title: 'ความเชี่ยวชาญเฉพาะด้าน', why1_desc: 'ทีมงานมืออาชีพทางด้าน Web Development และ Hardware IoT โดยเฉพาะ', 
-  why2_title: 'บริการรวดเร็วทันใจ', why2_desc: 'ส่งมอบงานได้รวดเร็วตามกำหนดเวลา ยืดหยุ่นปรับแก้ได้ทันที', 
-  why3_title: 'ราคาที่เข้าถึงได้และคุ้มค่า', why3_desc: 'งบประมาณโปร่งใส ไม่มีแอบแฝง คุ้มค่ากับนวัตกรรมที่คุณได้รับ', 
-  why4_title: 'ดูแลหลังการขายอย่างดี', why4_desc: 'มีบริการตอบคำถามและดูแลการบำรุงรักษาระบบอย่างใกล้ชิด',
+  why1_title: 'Domain Expertise (ความเชี่ยวชาญเฉพาะด้าน)', why1_desc: 'ทีมงานวิศวกรและนักพัฒนา Web/Hardware IoT โดยเฉพาะ', 
+  why2_title: 'Agile Delivery (บริการรวดเร็วทันใจ)', why2_desc: 'ส่งมอบชิ้นงานได้รวดเร็วตามกำหนดเวลา ยืดหยุ่นปรับแก้ได้ทันที', 
+  why3_title: 'Cost-Effective (ราคาที่เข้าถึงได้และคุ้มค่า)', why3_desc: 'งบประมาณโปร่งใส ไม่มีแอบแฝง คุ้มค่ากับ Innovation ที่ได้รับ', 
+  why4_title: 'System Maintenance (การบำรุงรักษาระบบ)', why4_desc: 'มีทีม Support บริการตอบคำถามและ System Maintenance อย่างใกล้ชิด',
   svc_badge: 'OUR SOLUTIONS', svc_title: 'บริการและผลงาน', 
-  port_badge: 'INTEGRATIONS', port_title: 'ระบบการทำงานรวมกัน', 
-  port_desc: 'ช่วยให้การทำงานของคุณไร้รอยต่อ โดยการเชื่อมแพลตฟอร์มที่เราพัฒนาเข้ากับเครื่องมือที่คุณใช้งานอยู่ประจำ' 
+  port_badge: 'INTEGRATIONS', port_title: 'ระบบการทำงานร่วมกัน', 
+  port_desc: 'ช่วยให้การทำงานทั้งหมดของคุณราบรื่น โดยการเชื่อมต่อ Platform ที่เราพัฒนาเข้ากับ Tools ที่คุณใช้งานอยู่ประจำ' 
 };
 
 export default function AdminDashboard() {
