@@ -434,14 +434,48 @@ export default function AdminDashboard() {
         <div className="p-6 flex items-center justify-between border-b border-gray-50 h-24">
           {isSidebarOpen ? (
             <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-brand-50 border border-brand-100 rounded-xl"><LayoutDashboard className="w-6 h-6 text-brand-500" /></div>
+              <div className="w-10 h-10 master-gear-spin flex items-center justify-center">
+                <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-sm">
+                  <defs>
+                    <linearGradient id="adminLogoGearGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#FFD200" />
+                      <stop offset="100%" stopColor="#F59E0B" />
+                    </linearGradient>
+                  </defs>
+                  <g fill="url(#adminLogoGearGrad)">
+                     {[0,45,90,135,180,225,270,315].map(deg => (
+                       <path key={deg} d="M92 5 Q100 0 108 5 L112 35 Q100 35 88 35 Z" transform={`rotate(${deg} 100 100)`} />
+                     ))}
+                     <circle cx="100" cy="100" r="70" />
+                  </g>
+                  <circle cx="100" cy="100" r="30" fill="#1D4ED8" />
+                  <circle cx="100" cy="100" r="10" fill="white" />
+                </svg>
+              </div>
               <div>
                 <h1 className="font-extrabold text-gray-900 leading-tight text-lg">Admin CMS</h1>
                 <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Control Panel</p>
               </div>
             </div>
           ) : (
-             <div className="p-2.5 bg-brand-50 border border-brand-100 rounded-xl mx-auto"><LayoutDashboard className="w-6 h-6 text-brand-500" /></div>
+            <div className="w-10 h-10 master-gear-spin flex items-center justify-center mx-auto">
+                <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-sm">
+                  <defs>
+                    <linearGradient id="adminLogoGearGradSmall" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#FFD200" />
+                      <stop offset="100%" stopColor="#F59E0B" />
+                    </linearGradient>
+                  </defs>
+                  <g fill="url(#adminLogoGearGradSmall)">
+                     {[0,45,90,135,180,225,270,315].map(deg => (
+                       <path key={deg} d="M92 5 Q100 0 108 5 L112 35 Q100 35 88 35 Z" transform={`rotate(${deg} 100 100)`} />
+                     ))}
+                     <circle cx="100" cy="100" r="70" />
+                  </g>
+                  <circle cx="100" cy="100" r="30" fill="#1D4ED8" />
+                  <circle cx="100" cy="100" r="10" fill="white" />
+                </svg>
+            </div>
           )}
         </div>
 

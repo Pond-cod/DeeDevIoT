@@ -4,7 +4,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import {
   Settings, Monitor, Lightbulb, PhoneCall, CheckCircle,
   Menu, ChevronRight, Send, Code, Cpu, Wifi, Zap, RefreshCw, ArrowLeft,
-  Mail, Phone, Facebook, MessageCircle, Settings2, Link, Star
+  Mail, Phone, Facebook, MessageCircle, Settings2, Link, Star, Sliders
 } from 'lucide-react';
 
 // --- STYLES (Tailwind + Custom Animations in globals.css) ---
@@ -129,8 +129,25 @@ export default function LandingPage() {
         }`}>
           <div className="max-w-7xl mx-auto px-6 h-full flex justify-between items-center">
             <div className="flex items-center space-x-3 cursor-pointer group" onClick={() => { setView('main'); window.scrollTo(0,0); }}>
-              <Settings className="w-10 h-10 text-accent-500 master-gear-spin group-hover:scale-110 transition-transform" />
-              <span className="font-montserrat text-2xl font-black tracking-tighter text-slate-900 uppercase">
+              <div className="w-10 h-10 master-gear-spin group-hover:scale-110 transition-transform flex items-center justify-center">
+                <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-md">
+                  <defs>
+                    <linearGradient id="logoGearGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#FFD200" />
+                      <stop offset="100%" stopColor="#F59E0B" />
+                    </linearGradient>
+                  </defs>
+                  <g fill="url(#logoGearGrad)">
+                     {[0,45,90,135,180,225,270,315].map(deg => (
+                       <path key={deg} d="M92 5 Q100 0 108 5 L112 35 Q100 35 88 35 Z" transform={`rotate(${deg} 100 100)`} />
+                     ))}
+                     <circle cx="100" cy="100" r="70" />
+                  </g>
+                  <circle cx="100" cy="100" r="30" fill="#1D4ED8" />
+                  <circle cx="100" cy="100" r="10" fill="white" />
+                </svg>
+              </div>
+              <span className={`font-montserrat text-2xl font-black tracking-tighter uppercase transition-colors ${scrolled ? 'text-slate-900' : 'text-white'}`}>
                 DEE<span className="text-brand-500">DEV</span><span className="text-accent-500">IOT</span>
               </span>
             </div>
@@ -188,90 +205,98 @@ export default function LandingPage() {
         {view === 'main' ? (
           <main>
             {/* Hero Section */}
-            <section className="pt-56 pb-40 px-6 bg-slate-900 relative overflow-hidden">
+            <section className="pt-56 pb-40 px-6 bg-[#030712] relative overflow-hidden">
               {/* Subtle Tech Grid Background */}
-              <div className="absolute inset-0 opacity-[0.15]" style={{ backgroundImage: 'radial-gradient(#1d4ed8 0.5px, transparent 0.5px)', backgroundSize: '30px 30px' }}></div>
+              <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: 'radial-gradient(#1d4ed8 0.5px, transparent 0.5px)', backgroundSize: '40px 40px' }}></div>
               
-              {/* Background Glows */}
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,_var(--color-brand-700)_0%,_transparent_70%)] opacity-30"></div>
-              <div className="absolute top-40 left-10 text-white/5 master-gear-spin-slow"><Code size={64} /></div>
-              <div className="absolute bottom-20 right-1/4 text-accent-500/5 counter-spin"><Cpu size={80} /></div>
-              
+              {/* Lighting & Depth */}
+              <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-72 h-72 bg-blue-600/10 rounded-full blur-[100px] pointer-events-none"></div>
+              <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-yellow-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+
               <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16 relative z-10">
                 <div className="lg:w-3/5 text-white text-center lg:text-left">
-                  <div className="reveal inline-flex items-center bg-white/5 backdrop-blur-md px-4 py-1.5 rounded-full mb-8 border border-white/10">
-                    <div className="w-2 h-2 bg-brand-500 rounded-full mr-3 animate-ping"></div>
-                    <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-blue-400">{t('hero_badge', 'TECHNOLOGY POWERHOUSE')}</span>
+                  {/* Tag: Dark Glassmorphism */}
+                  <div className="reveal inline-flex items-center bg-white/[0.03] border border-white/10 backdrop-blur-sm px-4 py-2 rounded-full mb-8 shadow-2xl">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full mr-3 animate-pulse shadow-[0_0_10px_rgba(59,130,246,0.8)]"></div>
+                    <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-blue-100/80">NEXT-GEN TECH ACCELERATOR</span>
                   </div>
-                  <h1 
-                    className="reveal delay-100 font-montserrat text-4xl sm:text-5xl lg:text-6xl font-semibold mb-8 leading-[1.15] tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent"
-                    dangerouslySetInnerHTML={{ __html: t('hero_headline', 'GEARING UP FOR THE FUTURE.') }}
-                  />
-                  <p className="reveal delay-200 text-lg lg:text-xl text-gray-400 mb-12 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-light whitespace-pre-line">
-                    {t('hero_sub', 'Building intelligent software and hardware ecosystems.')}
+
+                  <h1 className="reveal delay-100 font-montserrat text-4xl sm:text-5xl lg:text-7xl font-black mb-8 leading-[1.1] tracking-tight drop-shadow-2xl">
+                    Transform Your Business with <br className="hidden md:block" />
+                    <span className="text-transparent bg-clip-text bg-gradient-to-br from-blue-400 via-cyan-300 to-indigo-400">
+                      Intelligent Web & IoT Solutions
+                    </span>
+                  </h1>
+
+                  <p className="reveal delay-200 text-lg lg:text-xl text-slate-400 mb-12 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-light">
+                    Building intelligent software and hardware ecosystems for the modern era.
                   </p>
+
                   <div className="reveal delay-300 flex flex-col sm:flex-row gap-6 justify-center lg:justify-start">
-                    <a href={t('hero_btn1_link', '#contact')} className="px-10 py-5 bg-brand-500 text-white rounded-2xl font-bold text-lg shadow-2xl shadow-brand-500/30 hover:bg-brand-600 hover:scale-105 hover:shadow-brand-500/50 transition-all uppercase tracking-widest flex items-center justify-center gap-3 group">
-                      {t('hero_btn1_text', 'Consult our Expert')}
-                      <ChevronRight className="group-hover:translate-x-1 transition-transform" />
+                    {/* Primary Button */}
+                    <a href={t('hero_btn1_link', '#contact')} className="px-10 py-5 bg-[#1D4ED8] text-white rounded-2xl font-bold text-lg shadow-[0_8px_30px_rgba(29,78,216,0.3)] hover:bg-[#1D4ED8]/90 hover:scale-[1.02] active:scale-[0.97] transition-all uppercase tracking-widest flex items-center justify-center gap-3">
+                      {t('hero_btn1_text', 'CONSULT OUR EXPERT')}
+                      <ChevronRight size={20} />
                     </a>
-                    <a href={t('hero_btn2_link', '#services')} className="px-10 py-5 border-2 border-white/20 text-white rounded-2xl font-bold text-lg hover:bg-white/5 hover:border-white/50 hover:scale-105 transition-all uppercase tracking-widest flex items-center justify-center">
-                      {t('hero_btn2_text', 'See Our Portfolio')}
+                    {/* Secondary Button: Glassmorphism */}
+                    <a href={t('hero_btn2_link', '#services')} className="px-10 py-5 bg-white/[0.02] border border-white/10 backdrop-blur-md text-white rounded-2xl font-bold text-lg hover:bg-white/[0.05] hover:scale-[1.02] transition-all uppercase tracking-widest flex items-center justify-center">
+                      {t('hero_btn2_text', 'SEE OUR PORTFOLIO')}
                     </a>
                   </div>
                 </div>
                 
-                {/* BIG POLISHED GEAR GRAPHIC */}
-                <div className="lg:w-2/5 flex lg:justify-end">
-                   <div className="relative w-80 h-80 md:w-[500px] md:h-[500px]">
-                      {/* Ambient Glow behind gear - PULSING */}
-                      <div className="absolute inset-0 bg-brand-500/20 blur-[130px] rounded-full animate-glow-pulse"></div>
-                      <div className="absolute inset-20 bg-accent-500/10 blur-[100px] rounded-full animate-pulse delay-700"></div>
-                      
-                      {/* Master Gear */}
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="master-gear-spin-slow w-72 h-72 md:w-[420px] md:h-[420px] relative">
-                          <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-[0_20px_50px_rgba(255,210,0,0.3)]">
+                {/* Hero Graphic: Animated Gear + Floating Icons */}
+                <div className="lg:w-2/3 flex lg:justify-end mt-16 lg:mt-0">
+                  <div className="relative w-80 h-80 md:w-[600px] md:h-[600px]">
+                    {/* Main Gear Graphic */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="animate-[spin_60s_linear_infinite] w-64 h-64 md:w-[480px] md:h-[480px] relative">
+                         <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-[0_25px_50px_rgba(0,0,0,0.5)]">
                             <defs>
-                              <linearGradient id="gearGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stopColor="#FFD200" />
-                                <stop offset="100%" stopColor="#F59E0B" />
-                              </linearGradient>
+                               <linearGradient id="gearGradientLarge" x1="0%" y1="0%" x2="100%" y2="100%">
+                                  <stop offset="0%" stopColor="#FFD54F" />
+                                  <stop offset="100%" stopColor="#F57C00" />
+                               </linearGradient>
                             </defs>
-                            <g fill="url(#gearGrad)">
+                            {/* 8-Tooth Gear Shape */}
+                            <g fill="url(#gearGradientLarge)">
                                {[0,45,90,135,180,225,270,315].map(deg => (
-                                 <path key={deg} d="M92 5 Q100 0 108 5 L112 35 Q100 35 88 35 Z" transform={`rotate(${deg} 100 100)`} />
+                                 <path key={deg} d="M90 10 Q100 0 110 10 L115 40 Q100 40 85 40 Z" transform={`rotate(${deg} 100 100)`} />
                                ))}
-                               <circle cx="100" cy="100" r="70" />
+                               <circle cx="100" cy="100" r="75" />
                             </g>
-                            <circle cx="100" cy="100" r="30" fill="#1D4ED8" />
-                            <circle cx="100" cy="100" r="10" fill="#FFFFFF" />
-                            {/* Inner dashboard lines */}
-                            <circle cx="100" cy="100" r="50" fill="none" stroke="white" strokeWidth="1" strokeDasharray="4 4" opacity="0.3" />
-                          </svg>
-                        </div>
+                            {/* Inner Details */}
+                            <circle cx="100" cy="100" r="55" fill="none" stroke="white" strokeWidth="0.5" strokeDasharray="6 4" opacity="0.2" />
+                            <circle cx="100" cy="100" r="35" fill="#1D4ED8" />
+                            <circle cx="100" cy="100" r="12" fill="white" />
+                            <circle cx="100" cy="100" r="12" fill="white" className="animate-pulse opacity-50" />
+                         </svg>
                       </div>
+                    </div>
 
-                      {/* Orbiting Icons - Larger Orbit Radius */}
-                      <div className="absolute inset-0 counter-spin pointer-events-none">
-                         {[0,60,120,180,240,300].map((deg, i) => (
-                           <div key={i} className="absolute inset-0" style={{ transform: `rotate(${deg}deg)` }}>
-                              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-float-bounce" style={{ animationDelay: `${i * 0.5}s` }}>
-                                 <div className="w-14 h-14 md:w-20 md:h-20 bg-slate-900/50 rounded-2xl flex items-center justify-center border border-white/10 shadow-2xl backdrop-blur-xl master-gear-spin pointer-events-auto hover:border-brand-500/50 hover:scale-110 transition-all group overflow-hidden">
-                                    <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-50"></div>
-                                    {i === 0 && <Wifi className="text-white w-1/2 h-1/2 relative z-10" />}
-                                    {i === 1 && <Code className="text-white w-1/2 h-1/2 relative z-10" />}
-                                    {i === 2 && <Settings2 className="text-white w-1/2 h-1/2 relative z-10" />}
-                                    {i === 3 && <Zap className="text-white w-1/2 h-1/2 relative z-10" />}
-                                    {i === 4 && <Cpu className="text-white w-1/2 h-1/2 relative z-10" />}
-                                    {i === 5 && <RefreshCw className="text-white w-1/2 h-1/2 relative z-10" />}
-                                 </div>
+                    {/* Floating Icons */}
+                    <div className="absolute inset-0 pointer-events-none">
+                      {[
+                        { icon: Code, deg: 0, delay: '0s', dur: '3s', rot: '-rotate-[15deg]' },
+                        { icon: Sliders, deg: 60, delay: '0.5s', dur: '4s', rot: 'rotate-[12deg]' },
+                        { icon: Zap, deg: 120, delay: '1s', dur: '3.5s', rot: '-rotate-[8deg]' },
+                        { icon: Cpu, deg: 180, delay: '1.5s', dur: '4.5s', rot: 'rotate-[15deg]' },
+                        { icon: RefreshCw, deg: 240, delay: '2s', dur: '3.2s', rot: '-rotate-[12deg]' },
+                        { icon: Wifi, deg: 300, delay: '2.5s', dur: '3.8s', rot: 'rotate-[8deg]' }
+                      ].map((item, i) => (
+                        <div key={i} className="absolute inset-0" style={{ transform: `rotate(${item.deg}deg)` }}>
+                           <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2" style={{ transform: `rotate(${-item.deg}deg)` }}>
+                              <div 
+                                className={`w-14 h-14 md:w-20 md:h-20 bg-[#080D1A] rounded-2xl flex items-center justify-center border border-white/10 shadow-[0_15px_30px_rgba(0,0,0,0.5)] backdrop-blur-xl animate-bounce pointer-events-auto hover:scale-110 transition-transform ${item.rot}`}
+                                style={{ animationDelay: item.delay, animationDuration: item.dur }}
+                              >
+                                 <item.icon className="text-white w-1/2 h-1/2" />
                               </div>
                            </div>
-                         ))}
-                      </div>
-
-                   </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
             </section>
