@@ -10,10 +10,10 @@ import { convertToDirectLink } from '../../lib/utils/drive';
 
 // ================= TYPES =================
 interface ServiceData {
-  id: string; title: string; description: string; icon: string; imageUrl: string; demoUrl?: string;
+  id: string; title: string; description: string; title_th?: string; description_th?: string; icon: string; imageUrl: string; demoUrl?: string;
 }
 interface IntegrationData {
-  id: string; title: string; description: string; imageUrl: string; tag: string; referenceUrl: string;
+  id: string; title: string; description: string; title_th?: string; description_th?: string; imageUrl: string; tag: string; referenceUrl: string;
 }
 interface ConfigData {
   hero_badge_en: string; hero_badge_th: string;
@@ -41,10 +41,25 @@ interface ConfigData {
   cta_heading_en: string; cta_heading_th: string;
   footer_bio_en: string; footer_bio_th: string;
   facebook_url: string;
+  concept_title1_en: string; concept_title1_th: string;
+  concept_title2_en: string; concept_title2_th: string;
+  concept_description_en: string; concept_description_th: string;
+  concept_c1t_en: string; concept_c1t_th: string;
+  concept_c1d_en: string; concept_c1d_th: string;
+  concept_c2t_en: string; concept_c2t_th: string;
+  concept_c2d_en: string; concept_c2d_th: string;
+  concept_c3t_en: string; concept_c3t_th: string;
+  concept_c3d_en: string; concept_c3d_th: string;
+  contact_title_en: string; contact_title_th: string;
+  contact_description_en: string; contact_description_th: string;
+  contact_email: string;
+  contact_phone: string;
+  contact_facebook_en: string; contact_facebook_th: string;
+  contact_line: string;
 }
 
-const emptySvc: ServiceData = { id: '', title: '', description: '', icon: '', imageUrl: '', demoUrl: '' };
-const emptyInt: IntegrationData = { id: '', title: '', description: '', imageUrl: '', tag: '', referenceUrl: '' };
+const emptySvc: ServiceData = { id: '', title: '', description: '', title_th: '', description_th: '', icon: '', imageUrl: '', demoUrl: '' };
+const emptyInt: IntegrationData = { id: '', title: '', description: '', title_th: '', description_th: '', imageUrl: '', tag: '', referenceUrl: '' };
 const emptyConf: ConfigData = { 
   hero_badge_en: 'Professional Technology Solutions', hero_badge_th: 'พรีเมียมเทคโนโลยีโซลูชัน',
   hero_headline_en: 'Transform Your Business with \nIntelligent Web & IoT Solutions', hero_headline_th: 'ยกระดับธุรกิจของคุณด้วย โซลูชัน Web App & IoT อัจฉริยะ',
@@ -70,7 +85,22 @@ const emptyConf: ConfigData = {
   port_desc_en: 'Enhance your workflow flawlessly by connecting our custom-built platforms with the everyday tools you already trust.', port_desc_th: 'เพิ่มประสิทธิภาพการทำงานด้วยการเชื่อมต่อแพลตฟอร์มของเรากับเครื่องมือที่คุณคุ้นเคย',
   cta_heading_en: 'Ready to Start Your Next Big Project?', cta_heading_th: 'พร้อมเริ่มพัฒนาโปรเจกต์ของคุณแล้วหรือยัง?',
   footer_bio_en: 'Your trusted tech partner in turning innovative ideas into powerful, real-world Web & Hardware platforms.', footer_bio_th: 'พาร์ทเนอร์ที่พร้อมสานต่อไอเดียของคุณให้กลายเป็นแพลตฟอร์มที่ใช้งานได้จริง',
-  facebook_url: 'https://facebook.com/deedeviot'
+  facebook_url: 'https://facebook.com/deedeviot',
+  concept_title1_en: 'SMART', concept_title1_th: 'สมาร์ท',
+  concept_title2_en: 'GEARING', concept_title2_th: 'เกียร์ริ่ง',
+  concept_description_en: 'Our systems work in harmony like precision-engineered gears.', concept_description_th: 'ระบบของเราทำงานร่วมกันอย่างสมบูรณ์แบบ เหมือนฟันเฟืองที่ผ่านการวิศวกรรมมาอย่างแม่นยำ',
+  concept_c1t_en: 'Precision Eng.', concept_c1t_th: 'ความแม่นยำสูง',
+  concept_c1d_en: 'Every line of code and IoT component is designed for perfect harmony.', concept_c1d_th: 'ทุกบรรทัดของโค้ดและส่วนประกอบ IoT ถูกออกแบบมาเพื่อความสอดคล้องที่ลงตัว',
+  concept_c2t_en: 'High Velocity', concept_c2t_th: 'ความเร็วสูงสุด',
+  concept_c2d_en: 'Accelerate your business with high-performance systems.', concept_c2d_th: 'เร่งสปีดธุรกิจของคุณด้วยระบบที่มีประสิทธิภาพและรวดเร็ว',
+  concept_c3t_en: 'Steady Growth', concept_c3t_th: 'การเติบโตที่มั่นคง',
+  concept_c3d_en: 'Reliable tech that ensures your business thrives consistently.', concept_c3d_th: 'เทคโนโลยีที่เชื่อถือได้ เพื่อให้มั่นใจว่าธุรกิจของคุณจะเติบโตอย่างต่อเนื่อง',
+  contact_title_en: 'READY TO POWER UP?', contact_title_th: 'พร้อมที่จะขับเคลื่อนไปข้างหน้าหรือยัง?',
+  contact_description_en: 'Our gears are ready. Let us power your success.', contact_description_th: 'ฟันเฟืองของเราพร้อมแล้ว ให้เราเป็นส่วนหนึ่งในความสำเร็จของคุณ',
+  contact_email: 'hello@deedeviot.com',
+  contact_phone: '02-123-4567',
+  contact_facebook_en: 'DeeDevIOT Page', contact_facebook_th: 'เพจ DeeDevIOT',
+  contact_line: '@DEEDEVIOT'
 };
 
 export default function AdminDashboard() {
@@ -254,13 +284,25 @@ export default function AdminDashboard() {
                     <input type="text" value={svcForm.icon} onChange={(e) => setSvcForm({...svcForm, icon: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" />
                   </div>
                 </div>
-                <div>
-                  <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Title *</label>
-                  <input required type="text" value={svcForm.title} onChange={(e) => setSvcForm({...svcForm, title: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" />
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Title (EN) *</label>
+                    <input required type="text" value={svcForm.title} onChange={(e) => setSvcForm({...svcForm, title: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Title (TH)</label>
+                    <input type="text" value={svcForm.title_th} onChange={(e) => setSvcForm({...svcForm, title_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all font-thai" />
+                  </div>
                 </div>
-                <div>
-                  <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Description *</label>
-                  <textarea required rows={3} value={svcForm.description} onChange={(e) => setSvcForm({...svcForm, description: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" />
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Description (EN) *</label>
+                    <textarea required rows={3} value={svcForm.description} onChange={(e) => setSvcForm({...svcForm, description: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Description (TH)</label>
+                    <textarea rows={3} value={svcForm.description_th} onChange={(e) => setSvcForm({...svcForm, description_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all font-thai" />
+                  </div>
                 </div>
                 <div>
                   <div className="flex justify-between items-end mb-1.5">
@@ -288,7 +330,7 @@ export default function AdminDashboard() {
                 {services.map(s => (
                   <div key={s.id} className="bg-gray-50 border border-gray-200 hover:border-brand-200 p-5 rounded-2xl flex justify-between items-start transition-colors group">
                     <div>
-                      <h3 className="font-bold text-brand-600 text-lg mb-1 group-hover:text-brand-700">{s.title}</h3>
+                      <h3 className="font-bold text-brand-600 text-lg mb-1 group-hover:text-brand-700">{s.title} {s.title_th && <span className="text-gray-400 font-normal">/ {s.title_th}</span>}</h3>
                       <p className="text-sm text-gray-600 line-clamp-2 max-w-2xl leading-relaxed">{s.description}</p>
                       <div className="flex gap-3 mt-3">
                         <span className="text-xs font-semibold bg-white border border-gray-200 text-gray-500 px-2.5 py-1 rounded-md">ID: {s.id}</span>
@@ -363,28 +405,44 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              {/* SECTION 2: WHY CHOOSE US */}
+              {/* SECTION 2: CONCEPT (GEARING) */}
               <div className="bg-white p-6 md:p-8 rounded-2xl border border-gray-200 shadow-sm relative overflow-hidden">
                  <div className="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
-                 <h3 className="text-lg font-bold mb-6 text-brand-600 border-b border-gray-100 pb-3">2. ทำไมถึงเลือกเรา (Why Choose Us)</h3>
+                 <h3 className="text-lg font-bold mb-6 text-brand-600 border-b border-gray-100 pb-3">2. แนวคิดของแบรนด์ (Brand Concept - Gearing)</h3>
                  <div className="grid md:grid-cols-2 gap-4 mb-6">
-                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ป้ายกำกับ (Badge EN)</label><input type="text" value={configData.why_badge_en} onChange={e=>setConfigData({...configData, why_badge_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
-                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ป้ายกำกับ (Badge TH)</label><input type="text" value={configData.why_badge_th} onChange={e=>setConfigData({...configData, why_badge_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
+                     <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">หัวข้อ (Title EN)</label><input type="text" value={configData.concept_title1_en} onChange={e=>setConfigData({...configData, concept_title1_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-bold" /></div>
+                     <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">หัวข้อ (Title TH)</label><input type="text" value={configData.concept_title1_th} onChange={e=>setConfigData({...configData, concept_title1_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai font-bold" /></div>
                  </div>
                  <div className="grid md:grid-cols-2 gap-4 mb-6">
-                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">หัวข้อ (Title EN)</label><input type="text" value={configData.why_choose_title_en} onChange={e=>setConfigData({...configData, why_choose_title_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
-                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">หัวข้อ (Title TH)</label><input type="text" value={configData.why_choose_title_th} onChange={e=>setConfigData({...configData, why_choose_title_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
+                     <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">หัวข้อรอง (Subtitle EN)</label><input type="text" value={configData.concept_title2_en} onChange={e=>setConfigData({...configData, concept_title2_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-bold text-brand-500" /></div>
+                     <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">หัวข้อรอง (Subtitle TH)</label><input type="text" value={configData.concept_title2_th} onChange={e=>setConfigData({...configData, concept_title2_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai font-bold text-brand-500" /></div>
                  </div>
+                 <div className="grid md:grid-cols-2 gap-4 mb-8 pb-8 border-b border-gray-100">
+                     <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">คำอธิบายรวม (Description EN)</label><textarea rows={2} value={configData.concept_description_en} onChange={e=>setConfigData({...configData, concept_description_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
+                     <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">คำอธิบายรวม (Description TH)</label><textarea rows={2} value={configData.concept_description_th} onChange={e=>setConfigData({...configData, concept_description_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
+                 </div>
+
                  <div className="space-y-4">
-                    {[1,2,3,4].map((i) => (
-                        <div key={i} className="bg-gray-50 p-4 rounded-xl border border-gray-100 grid md:grid-cols-2 gap-4">
-                            <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ข้อที่ {i} - บริการ (EN)</label><input type="text" value={(configData as any)[`why${i}_title_en`]} onChange={e=>setConfigData({...configData, [`why${i}_title_en`]: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
-                            <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ข้อที่ {i} - บริการ (TH)</label><input type="text" value={(configData as any)[`why${i}_title_th`]} onChange={e=>setConfigData({...configData, [`why${i}_title_th`]: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
-                            <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ข้อที่ {i} - คำอธิบาย (EN)</label><input type="text" value={(configData as any)[`why${i}_desc_en`]} onChange={e=>setConfigData({...configData, [`why${i}_desc_en`]: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
-                            <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ข้อที่ {i} - คำอธิบาย (TH)</label><input type="text" value={(configData as any)[`why${i}_desc_th`]} onChange={e=>setConfigData({...configData, [`why${i}_desc_th`]: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
+                     <div className="font-bold text-sm text-gray-400 mb-2">📌 การนำเสนอรูปประโยคแบบฟันเฟือง (Gearing Cards - 3 items)</div>
+                     {[1,2,3].map((i) => (
+                        <div key={`c${i}`} className="bg-brand-50/50 p-4 rounded-xl border border-brand-100/50 grid md:grid-cols-2 gap-4">
+                            <div><label className="text-xs font-bold text-brand-600 uppercase tracking-wider">Card {i} - Title (EN)</label><input type="text" value={(configData as any)[`concept_c${i}t_en`]} onChange={e=>setConfigData({...configData, [`concept_c${i}t_en`]: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
+                            <div><label className="text-xs font-bold text-brand-600 uppercase tracking-wider">Card {i} - Title (TH)</label><input type="text" value={(configData as any)[`concept_c${i}t_th`]} onChange={e=>setConfigData({...configData, [`concept_c${i}t_th`]: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
+                            <div><label className="text-xs font-bold text-brand-600 uppercase tracking-wider">Card {i} - Desc (EN)</label><input type="text" value={(configData as any)[`concept_c${i}d_en`]} onChange={e=>setConfigData({...configData, [`concept_c${i}d_en`]: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
+                            <div><label className="text-xs font-bold text-brand-600 uppercase tracking-wider">Card {i} - Desc (TH)</label><input type="text" value={(configData as any)[`concept_c${i}d_th`]} onChange={e=>setConfigData({...configData, [`concept_c${i}d_th`]: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
                         </div>
-                    ))}
-                 </div>
+                     ))}
+
+                     <div className="mt-8 pt-8 border-t border-gray-100 font-bold text-sm text-gray-400 mb-2">📌 ทำไมถึงเลือกเรา (Why Choose Us - Optional fields used in some sections)</div>
+                     {[1,2,3,4].map((i) => (
+                         <div key={i} className="bg-gray-50 p-4 rounded-xl border border-gray-100 grid md:grid-cols-2 gap-4 opacity-70">
+                             <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Item {i} - Title (EN)</label><input type="text" value={(configData as any)[`why${i}_title_en`]} onChange={e=>setConfigData({...configData, [`why${i}_title_en`]: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
+                             <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Item {i} - Title (TH)</label><input type="text" value={(configData as any)[`why${i}_title_th`]} onChange={e=>setConfigData({...configData, [`why${i}_title_th`]: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
+                             <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Item {i} - Desc (EN)</label><input type="text" value={(configData as any)[`why${i}_desc_en`]} onChange={e=>setConfigData({...configData, [`why${i}_desc_en`]: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
+                             <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Item {i} - Desc (TH)</label><input type="text" value={(configData as any)[`why${i}_desc_th`]} onChange={e=>setConfigData({...configData, [`why${i}_desc_th`]: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
+                         </div>
+                     ))}
+                  </div>
               </div>
 
               {/* SECTION 3 & 4 */}
@@ -420,22 +478,38 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              {/* SECTION 5: CTA & FOOTER BIO */}
-              <div className="bg-white p-6 md:p-8 rounded-2xl border border-gray-200 shadow-sm relative overflow-hidden space-y-4">
-                 <div className="absolute top-0 left-0 w-1 h-full bg-green-500"></div>
-                 <h3 className="text-lg font-bold mb-4 text-brand-600 border-b border-gray-100 pb-3">5. ติดต่อเรา และ Footer Bio</h3>
-                 <div className="grid md:grid-cols-2 gap-4">
-                   <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">CTA Heading (EN)</label><input type="text" value={configData.cta_heading_en} onChange={e=>setConfigData({...configData, cta_heading_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
-                   <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">CTA Heading (TH)</label><input type="text" value={configData.cta_heading_th} onChange={e=>setConfigData({...configData, cta_heading_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
-                 </div>
-                 <div className="grid md:grid-cols-2 gap-4">
-                   <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Footer Bio (EN)</label><textarea rows={2} value={configData.footer_bio_en} onChange={e=>setConfigData({...configData, footer_bio_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
-                   <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Footer Bio (TH)</label><textarea rows={2} value={configData.footer_bio_th} onChange={e=>setConfigData({...configData, footer_bio_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
-                 </div>
-                 <div className="grid md:grid-cols-1 gap-4">
-                   <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ลิงก์ Facebook Fanpage</label><input type="text" value={configData.facebook_url} onChange={e=>setConfigData({...configData, facebook_url: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" placeholder="https://facebook.com/..." /></div>
-                 </div>
-              </div>
+               {/* SECTION 5: CONTACT & FOOTER BIO */}
+               <div className="bg-white p-6 md:p-8 rounded-2xl border border-gray-200 shadow-sm relative overflow-hidden space-y-4">
+                  <div className="absolute top-0 left-0 w-1 h-full bg-green-500"></div>
+                  <h3 className="text-lg font-bold mb-4 text-brand-600 border-b border-gray-100 pb-3">5. ติดต่อเรา และ Footer Bio</h3>
+                  <div className="grid md:grid-cols-2 gap-4 mb-4">
+                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Contact Title (EN)</label><input type="text" value={configData.contact_title_en} onChange={e=>setConfigData({...configData, contact_title_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
+                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Contact Title (TH)</label><input type="text" value={configData.contact_title_th} onChange={e=>setConfigData({...configData, contact_title_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-4 mb-6 pb-6 border-b border-gray-100">
+                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Contact Desc (EN)</label><textarea rows={2} value={configData.contact_description_en} onChange={e=>setConfigData({...configData, contact_description_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
+                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Contact Desc (TH)</label><textarea rows={2} value={configData.contact_description_th} onChange={e=>setConfigData({...configData, contact_description_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
+                  </div>
+                  
+                  <div className="grid md:grid-cols-2 gap-4 p-5 bg-gray-50 rounded-xl border border-gray-100">
+                    <div className="col-span-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">📌 Contact Details & Social</div>
+                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Email Address</label><input type="text" value={configData.contact_email} onChange={e=>setConfigData({...configData, contact_email: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500" /></div>
+                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Phone Number</label><input type="text" value={configData.contact_phone} onChange={e=>setConfigData({...configData, contact_phone: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500" /></div>
+                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Facebook UI Text (EN)</label><input type="text" value={configData.contact_facebook_en} onChange={e=>setConfigData({...configData, contact_facebook_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500" /></div>
+                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Facebook UI Text (TH)</label><input type="text" value={configData.contact_facebook_th} onChange={e=>setConfigData({...configData, contact_facebook_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 font-thai" /></div>
+                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Line ID</label><input type="text" value={configData.contact_line} onChange={e=>setConfigData({...configData, contact_line: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500" /></div>
+                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Facebook Page URL</label><input type="text" value={configData.facebook_url} onChange={e=>setConfigData({...configData, facebook_url: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500" /></div>
+                  </div>
+                  
+                  <div className="grid md:grid-cols-2 gap-4 mt-6 pt-6 border-t border-gray-100">
+                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">CTA Footer Title (EN)</label><input type="text" value={configData.cta_heading_en} onChange={e=>setConfigData({...configData, cta_heading_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500" /></div>
+                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">CTA Footer Title (TH)</label><input type="text" value={configData.cta_heading_th} onChange={e=>setConfigData({...configData, cta_heading_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 font-thai" /></div>
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Footer Bio (EN)</label><textarea rows={2} value={configData.footer_bio_en} onChange={e=>setConfigData({...configData, footer_bio_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500" /></div>
+                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Footer Bio (TH)</label><textarea rows={2} value={configData.footer_bio_th} onChange={e=>setConfigData({...configData, footer_bio_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 font-thai" /></div>
+                  </div>
+               </div>
 
               <div className="sticky bottom-6 z-[100]">
                  <button disabled={isSaving} className="w-full shadow-2xl bg-brand-500 hover:bg-brand-600 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 shadow-[0_8px_30px_rgb(255,107,0,0.3)] transition-all text-lg">
@@ -466,13 +540,25 @@ export default function AdminDashboard() {
                     <input type="text" value={intForm.tag} onChange={(e) => setIntForm({...intForm, tag: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" />
                   </div>
                 </div>
-                <div>
-                  <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">TITLE *</label>
-                  <input required type="text" value={intForm.title} onChange={(e) => setIntForm({...intForm, title: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" />
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">TITLE (EN) *</label>
+                    <input required type="text" value={intForm.title} onChange={(e) => setIntForm({...intForm, title: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">TITLE (TH)</label>
+                    <input type="text" value={intForm.title_th} onChange={(e) => setIntForm({...intForm, title_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all font-thai" />
+                  </div>
                 </div>
-                <div>
-                  <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">DESCRIPTION *</label>
-                  <textarea required rows={3} value={intForm.description} onChange={(e) => setIntForm({...intForm, description: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" />
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">DESCRIPTION (EN) *</label>
+                    <textarea required rows={3} value={intForm.description} onChange={(e) => setIntForm({...intForm, description: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">DESCRIPTION (TH)</label>
+                    <textarea rows={3} value={intForm.description_th} onChange={(e) => setIntForm({...intForm, description_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all font-thai" />
+                  </div>
                 </div>
                 <div>
                   <div className="flex justify-between items-end mb-1.5">
@@ -500,7 +586,7 @@ export default function AdminDashboard() {
                 {integrations.map(int => (
                   <div key={int.id} className="bg-gray-50 border border-gray-200 hover:border-brand-200 p-5 rounded-2xl flex justify-between items-start transition-colors group">
                     <div>
-                      <h3 className="font-bold text-brand-600 text-lg mb-1 group-hover:text-brand-700">{int.title}</h3>
+                      <h3 className="font-bold text-brand-600 text-lg mb-1 group-hover:text-brand-700">{int.title} {int.title_th && <span className="text-gray-400 font-normal">/ {int.title_th}</span>}</h3>
                       <p className="text-sm text-gray-600 line-clamp-2 max-w-2xl leading-relaxed mt-2">{int.description}</p>
                       <div className="flex gap-3 mt-3">
                         <span className="text-xs font-semibold bg-white border border-gray-200 text-gray-500 px-2.5 py-1 rounded-md">ID: {int.id}</span>

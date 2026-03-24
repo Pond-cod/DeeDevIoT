@@ -6,6 +6,8 @@ export interface ServiceData {
   id: string;
   title: string;
   description: string;
+  title_th?: string;
+  description_th?: string;
   icon: string;
   imageUrl: string;
   demoUrl?: string; // เพิ่มฟิลด์ใหม่
@@ -13,19 +15,32 @@ export interface ServiceData {
 
 export async function GET() {
   try {
-    // ดึงข้อมูลจากแท็บ 'Services' ช่วงเซลล์ 'A2:F'
-    const range = 'Services!A2:F';
+    // ดึงข้อมูลจากแท็บ 'Services' ช่วงเซลล์ 'A2:H'
+    const range = 'Services!A2:H';
     const rows = await getSheetValues(range);
 
     // จัดระเบียบข้อมูล (Map) ให้ตรงกับ Interface ที่กำหนดไว้
     const services: ServiceData[] = rows.map((row) => {
+      let imageUrl = row[4] || '';
+      
+      // Transform Google Drive links to bypass CORB/ORB
+      if (imageUrl.includes('drive.google.com')) {
+        const regex = /(?:\/d\/|id=|\/open\?id=)([a-zA-Z0-9_-]{20,})/;
+        const match = imageUrl.match(regex);
+        if (match && match[1]) {
+          imageUrl = `https://lh3.googleusercontent.com/d/${match[1]}=w1000`;
+        }
+      }
+
       return {
         id: row[0] || '',
         title: row[1] || '',
         description: row[2] || '',
         icon: row[3] || '',
-        imageUrl: row[4] || '',
+        imageUrl: imageUrl,
         demoUrl: row[5] || '',
+        title_th: row[6] || '',
+        description_th: row[7] || '',
       };
     });
 
@@ -65,7 +80,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // แปลง Object เป็น Array แถวเดียว ให้ตรงกับลำดับคอลัมน์ [id, title, description, icon, imageUrl, demoUrl] 
+    // แปลง Object เป็น Array แถวเดียว ให้ตรงกับลำดับคอลัมน์ [id, title, description, icon, imageUrl, demoUrl, title_th, description_th] 
     // หากค่าไหนไม่มีให้เป็น string ว่าง ""
     const rowData = [
       id || Date.now().toString(),
@@ -73,7 +88,9 @@ export async function POST(request: Request) {
       description || "",
       icon || "",
       imageUrl || "",
-      demoUrl || ""
+      demoUrl || "",
+      body.title_th || "",
+      body.description_th || ""
     ];
 
     if (isEdit) {
@@ -94,7 +111,7 @@ export async function POST(request: Request) {
       const newRow = [rowData];
 
       // กำหนด Range เป็นทั้งตาราง เพี่อให้ Google Sheets หาบรรทัดว่างต่อท้ายให้อัตโนมัติ
-      const range = 'Services!A:F';
+      const range = 'Services!A:H';
       const result = await appendSheetValues(range, newRow);
 
       return NextResponse.json({

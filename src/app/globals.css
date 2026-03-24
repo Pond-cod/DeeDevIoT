@@ -1,17 +1,39 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-50: #fff7ed;
-  --color-brand-100: #ffedd5;
-  --color-brand-500: #f97316;
-  --color-brand-600: #ea580c;
-  --color-brand-700: #c2410c;
+  --color-brand-50: #eff6ff;
+  --color-brand-100: #dbeafe;
+  --color-brand-500: #1d4ed8;
+  --color-brand-600: #1e40af;
+  --color-brand-700: #1e3a8a;
   
-  --color-accent-50: #fefce8;
-  --color-accent-100: #fef9c3;
-  --color-accent-500: #eab308;
-  --color-accent-600: #ca8a04;
-  
-  --color-palette-light: #EAEAEA;
-  --color-palette-gray: #8C8C8C;
+  --color-accent-50: #fffbeb;
+  --color-accent-100: #fef3c7;
+  --color-accent-500: #ffd200;
+  --color-accent-600: #f59e0b;
+
+  --animate-gear-rotate: gear-rotate 20s linear infinite;
+  --animate-gear-rotate-reverse: gear-rotate-reverse 20s linear infinite;
+
+  @keyframes gear-rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  @keyframes gear-rotate-reverse {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(-360deg); }
+  }
+}
+
+.master-gear-spin {
+    animation: gear-rotate 20s linear infinite;
+}
+.counter-spin {
+    animation: gear-rotate-reverse 20s linear infinite;
+}
+
+@layer base {
+  body {
+    @apply antialiased;
+  }
 }

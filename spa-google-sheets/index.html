@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeeDevIOT | Next-Gen Tech Accelerator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;800&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-blue: #1D4ED8;
+            --accent-yellow: #FFD200;
+            --dark-slate: #0F172A;
+            --light-gray: #F1F5F9;
+            --bg-white: #FFFFFF;
+            
+            /* Brand Colors for Contact */
+            --facebook-color: #1877F2;
+            --line-color: #06C755;
+            --email-color: #EA4335;
+            --phone-color: #34A853;
+        }
+        body { 
+            font-family: 'Kanit', sans-serif; 
+            background-color: var(--bg-white); 
+            color: var(--dark-slate);
+            scroll-behavior: smooth; 
+            overflow-x: hidden;
+        }
+        .font-header { font-family: 'Montserrat', sans-serif; }
+        
+        .bg-electric-blue { background-color: var(--primary-blue); }
+        .text-electric-blue { color: var(--primary-blue); }
+        .bg-vibrant-yellow { background-color: var(--accent-yellow); }
+        .text-vibrant-yellow { color: var(--accent-yellow); }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #172554 100%);
+        }
+        
+        /* Mobile Menu transition */
+        #mobile-menu {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+        }
+        #mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background-color: var(--accent-yellow);
+            color: var(--dark-slate);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 210, 0, 0.5);
+        }
+        
+        .btn-outline {
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .btn-outline:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-color: white;
+            transform: translateY(-3px);
+        }
+
+        /* 3D Hover Effects for Concept Cards */
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .card-hover:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px -10px rgba(29, 78, 216, 0.15);
+            border-color: var(--accent-yellow);
+        }
+
+        /* Contact Cards with Brand Colors */
+        .contact-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .contact-card:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-color: var(--accent-yellow);
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        .icon-box-email { background-color: rgba(234, 67, 53, 0.15); }
+        .icon-box-phone { background-color: rgba(52, 168, 83, 0.15); }
+        .icon-box-facebook { background-color: rgba(24, 119, 242, 0.15); }
+        .icon-box-line { background-color: rgba(6, 199, 85, 0.15); }
+
+        /* Gear Animations (Main Spin & Counter Spin) */
+        .master-gear-spin {
+            animation: gear-rotate 20s linear infinite;
+        }
+        @keyframes gear-rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .counter-spin {
+            animation: gear-rotate-reverse 20s linear infinite;
+        }
+        @keyframes gear-rotate-reverse {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(-360deg); }
+        }
+
+        /* Scroll Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+
+        /* Floating Particles */
+        .floating { animation: float 6s ease-in-out infinite; }
+        .floating-fast { animation: float 4s ease-in-out infinite reverse; }
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        /* Parallax Container */
+        #parallax-wrapper { transition: transform 0.1s ease-out; }
+        
+        /* View Management */
+        .app-view { display: none; }
+        .app-view.active { display: block; }
+
+        /* Loading Overlay */
+        #loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--dark-slate);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay">
+        <div class="flex flex-col items-center">
+            <svg viewBox="0 0 100 100" class="w-16 h-16 master-gear-spin mb-4">
+                <g fill="#FFD200">
+                    <rect x="42" y="10" width="16" height="15" rx="3" transform="rotate(0 50 50)"/>
+                    <rect x="42" y="10" width="16" height="15" rx="3" transform="rotate(45 50 50)"/>
+                    <rect x="42" y="10" width="16" height="15" rx="3" transform="rotate(90 50 50)"/>
+                    <rect x="42" y="10" width="16" height="15" rx="3" transform="rotate(135 50 50)"/>
+                </g>
+                <circle cx="50" cy="50" r="28" fill="none" stroke="#FFD200" stroke-width="8" />
+            </svg>
+            <p class="text-white font-header font-bold tracking-widest text-sm uppercase animate-pulse">Initializing Ecosystem...</p>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 1. PUBLIC FRONT-END VIEW                   -->
+    <!-- ========================================== -->
+    <div id="public-view" class="app-view active">
+        
+        <!-- Navbar -->
+        <nav class="fixed top-0 w-full z-[100] bg-white/90 backdrop-blur-md border-b border-gray-100 transition-all duration-300" id="navbar">
+            <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3 cursor-pointer group" onclick="showPage('main-page')">
+                    <div class="w-12 h-12 flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                        <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-sm">
+                            <g class="master-gear-spin" style="transform-origin: 50px 50px;">
+                                <g fill="#FFD200">
+                                    <rect x="42" y="10" width="16" height="15" rx="3" transform="rotate(0 50 50)"/>
+                                    <rect x="42" y="10" width="16" height="15" rx="3" transform="rotate(45 50 50)"/>
+                                    <rect x="42" y="10" width="16" height="15" rx="3" transform="rotate(90 50 50)"/>
+                                    <rect x="42" y="10" width="16" height="15" rx="3" transform="rotate(135 50 50)"/>
+                                    <rect x="42" y="10" width="16" height="15" rx="3" transform="rotate(180 50 50)"/>
+                                    <rect x="42" y="10" width="16" height="15" rx="3" transform="rotate(225 50 50)"/>
+                                    <rect x="42" y="10" width="16" height="15" rx="3" transform="rotate(270 50 50)"/>
+                                    <rect x="42" y="10" width="16" height="15" rx="3" transform="rotate(315 50 50)"/>
+                                </g>
+                                <circle cx="50" cy="50" r="28" fill="none" stroke="#FFD200" stroke-width="10" />
+                                <circle cx="50" cy="50" r="14" fill="#1D4ED8" />
+                                <circle cx="50" cy="50" r="5" fill="#FFFFFF" />
+                            </g>
+                        </svg>
+                </div>
+                <span class="font-header text-xl md:text-2xl font-black tracking-tighter text-dark-slate uppercase group-hover:text-electric-blue transition-colors">
+                    DEE<span class="text-electric-blue">DEV</span><span class="text-vibrant-yellow">IOT</span>
+                </span>
+            </div>
+            
+            <!-- Desktop Links -->
+                <div class="hidden lg:flex items-center space-x-10 font-semibold text-gray-600">
+                    <a href="#concept" onclick="showPage('main-page')" class="hover:text-electric-blue hover:-translate-y-1 transition-all">Concept</a>
+                    <a href="#solutions" onclick="showPage('main-page')" class="hover:text-electric-blue hover:-translate-y-1 transition-all">Solutions</a>
+                    <a href="#contact" onclick="showPage('main-page')" class="bg-electric-blue text-white px-8 py-3 rounded-full font-bold shadow-lg hover:bg-blue-700 hover:shadow-blue-500/30 hover:-translate-y-1 transition-all">ติดต่อเรา</a>
+                </div>
+
+                <!-- Mobile Menu Toggle -->
+                <button id="menu-toggle" class="lg:hidden text-dark-slate p-2 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+                    <i data-lucide="menu" class="w-7 h-7"></i>
+                </button>
+            </div>
+
+            <!-- Mobile Menu Overlay -->
+            <div id="mobile-menu" class="absolute top-20 left-0 w-full bg-dark-slate lg:hidden shadow-2xl">
+                <div class="flex flex-col p-8 space-y-6 text-xl font-medium text-white">
+                    <a href="#concept" onclick="showPage('main-page')" class="flex items-center justify-between border-b border-white/5 pb-4 hover:text-vibrant-yellow transition-colors">
+                        <span>Concept</span>
+                        <i data-lucide="chevron-right" class="w-5 h-5 opacity-50"></i>
+                    </a>
+                    <a href="#solutions" onclick="showPage('main-page')" class="flex items-center justify-between border-b border-white/5 pb-4 hover:text-vibrant-yellow transition-colors">
+                        <span>ผลงาน (Solutions)</span>
+                        <i data-lucide="chevron-right" class="w-5 h-5 opacity-50"></i>
+                    </a>
+                    <a href="#contact" onclick="showPage('main-page')" class="flex items-center justify-between text-vibrant-yellow font-bold">
+                        <span>ติดต่อสอบถาม</span>
+                        <i data-lucide="send" class="w-5 h-5"></i>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- MAIN PAGE CONTENT -->
+        <main id="main-page" class="page-view active">
+            
+            <!-- Hero Section -->
+            <section class="hero-gradient pt-48 pb-32 px-6 relative overflow-hidden" id="hero-section">
+                
+                <!-- Floating Particles -->
+                <div class="absolute top-32 left-10 text-white/20 floating">
+                    <i data-lucide="code" class="w-12 h-12"></i>
+                </div>
+                <div class="absolute bottom-20 left-1/4 text-white/10 floating-fast">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+                </div>
+                <div class="absolute top-40 right-1/4 text-vibrant-yellow/20 floating" style="animation-delay: 1s;">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 22h20L12 2z"/></svg>
+                </div>
+                <div class="absolute bottom-40 right-10 text-blue-300/20 floating-fast" style="animation-delay: 0.5s;">
+                    <i data-lucide="cpu" class="w-16 h-16"></i>
+                </div>
+                
+                <div class="absolute top-0 right-0 w-1/4 h-full bg-white/5 skew-x-12 translate-x-20 transition-transform duration-1000"></div>
+                
+                <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
+                    <!-- Text Content (Dynamic via JS) -->
+                    <div class="lg:w-3/5 text-white z-10 text-center lg:text-left">
+                        <div class="reveal inline-flex items-center bg-white/10 backdrop-blur-md border border-white/20 px-4 py-1.5 rounded-full mb-8">
+                            <span class="w-2 h-2 bg-vibrant-yellow rounded-full mr-3 animate-ping"></span>
+                            <span class="text-xs font-bold uppercase tracking-widest text-vibrant-yellow" data-bind="hero.badge">Technology Powerhouse</span>
+                        </div>
+                        
+                        <h1 class="reveal delay-100 font-header text-5xl lg:text-8xl font-black mb-8 leading-[1.1] tracking-tight text-white uppercase">
+                            <span data-bind="hero.title1">GEARING UP FOR</span><br>
+                            <span class="text-vibrant-yellow relative inline-block">
+                                <span data-bind="hero.title2">THE FUTURE.</span>
+                                <span class="absolute bottom-2 left-0 w-full h-2 bg-vibrant-yellow/30 -z-10 rounded"></span>
+                            </span>
+                        </h1>
+                        
+                        <p class="reveal delay-200 text-lg md:text-xl text-blue-100/90 mb-12 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-light" data-bind="hero.description">
+                            เราขับเคลื่อนธุรกิจของคุณด้วย <span class="font-bold text-white">โซลูชันอัจฉริยะ</span> และ <span class="font-bold text-white">IOT Ecosystem</span> ที่ทรงพลังเหมือนฟันเฟืองที่ไม่เคยหยุดหมุน
+                        </p>
+                        
+                        <div class="reveal delay-300 flex flex-col sm:flex-row justify-center lg:justify-start gap-5">
+                            <a href="#solutions" class="btn-primary px-10 py-5 rounded-2xl font-black text-lg text-center shadow-2xl uppercase tracking-wider relative overflow-hidden group">
+                                <span class="relative z-10" data-bind="hero.btn1">ผลงานของเรา</span>
+                                <div class="absolute inset-0 h-full w-full bg-white/20 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></div>
+                            </a>
+                            <a href="#contact" class="btn-outline px-10 py-5 rounded-2xl font-bold text-lg text-center uppercase tracking-wider" data-bind="hero.btn2">
+                                ติดต่อสอบถาม
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Main Gear Graphic -->
+                    <div class="lg:w-2/5 relative flex justify-center z-10" id="parallax-container">
+                        <div class="relative w-full max-w-[500px]" id="parallax-wrapper">
+                            <div class="absolute inset-0 bg-vibrant-yellow rounded-full opacity-20 blur-3xl animate-pulse"></div>
+                            <svg viewBox="0 0 250 250" class="w-full h-auto drop-shadow-[0_20px_60px_rgba(255,210,0,0.3)]">
+                                <defs>
+                                    <linearGradient id="gear-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#FFD200" />
+                                        <stop offset="100%" stop-color="#F59E0B" />
+                                    </linearGradient>
+                                </defs>
+                                <g class="master-gear-spin" style="transform-origin: 125px 125px;">
+                                    <g fill="url(#gear-grad)">
+                                        <rect x="112" y="28" width="26" height="34" rx="4" transform="rotate(0 125 125)"/>
+                                        <rect x="112" y="28" width="26" height="34" rx="4" transform="rotate(45 125 125)"/>
+                                        <rect x="112" y="28" width="26" height="34" rx="4" transform="rotate(90 125 125)"/>
+                                        <rect x="112" y="28" width="26" height="34" rx="4" transform="rotate(135 125 125)"/>
+                                        <rect x="112" y="28" width="26" height="34" rx="4" transform="rotate(180 125 125)"/>
+                                        <rect x="112" y="28" width="26" height="34" rx="4" transform="rotate(225 125 125)"/>
+                                        <rect x="112" y="28" width="26" height="34" rx="4" transform="rotate(270 125 125)"/>
+                                        <rect x="112" y="28" width="26" height="34" rx="4" transform="rotate(315 125 125)"/>
+                                    </g>
+                                    <circle cx="125" cy="125" r="65" fill="none" stroke="url(#gear-grad)" stroke-width="20" />
+                                    <circle cx="125" cy="125" r="40" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-dasharray="8 6" opacity="0.8"/>
+                                    <circle cx="125" cy="125" r="22" fill="#1D4ED8" />
+                                    <circle cx="125" cy="125" r="8" fill="#FFD200" />
+                                </g>
+                                <g class="counter-spin" style="transform-origin: 125px 125px;">
+                                    <!-- Tool icons... -->
+                                    <g transform="translate(125, 125) rotate(0) translate(0, -96)"><g class="master-gear-spin"><circle cx="0" cy="0" r="15" fill="#1D4ED8" stroke="#FFD200" stroke-width="2.5"/><path d="M-5 -4 L-9 0 L-5 4 M5 -4 L9 0 L5 4 M-2 -6 L2 6" fill="none" stroke="#FFFFFF" stroke-width="1.5"/></g></g>
+                                    <g transform="translate(125, 125) rotate(60) translate(0, -96)"><g class="master-gear-spin"><circle cx="0" cy="0" r="15" fill="#1D4ED8" stroke="#FFD200" stroke-width="2.5"/><path d="M-6 -4 V4 A6 2 0 0 0 6 4 V-4" fill="none" stroke="#FFFFFF" stroke-width="1.5"/></g></g>
+                                    <g transform="translate(125, 125) rotate(120) translate(0, -96)"><g class="master-gear-spin"><circle cx="0" cy="0" r="15" fill="#1D4ED8" stroke="#FFD200" stroke-width="2.5"/><path d="M-4.5 2.5 L4.5 2.5 A2.5 2.5 0 0 0 4.5 -2.5 A3.5 3.5 0 0 0 -3.5 -2.5" fill="none" stroke="#FFFFFF" stroke-width="1.5"/></g></g>
+                                    <g transform="translate(125, 125) rotate(180) translate(0, -96)"><g class="master-gear-spin"><circle cx="0" cy="0" r="15" fill="#1D4ED8" stroke="#FFD200" stroke-width="2.5"/><rect x="-5" y="-5" width="10" height="10" stroke="#FFFFFF" fill="none"/></g></g>
+                                    <g transform="translate(125, 125) rotate(240) translate(0, -96)"><g class="master-gear-spin"><circle cx="0" cy="0" r="15" fill="#1D4ED8" stroke="#FFD200" stroke-width="2.5"/><path d="M-6 -4 L-2 0 L-6 4" fill="none" stroke="#FFFFFF" stroke-width="1.5"/></g></g>
+                                    <g transform="translate(125, 125) rotate(300) translate(0, -96)"><g class="master-gear-spin"><circle cx="0" cy="0" r="15" fill="#1D4ED8" stroke="#FFD200" stroke-width="2.5"/><path d="M-6 -3 A 8 8 0 0 1 6 -3" fill="none" stroke="#FFFFFF" stroke-width="1.5"/></g></g>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Concept Section -->
+            <section id="concept" class="py-32 px-6 bg-white relative">
+                <div class="max-w-7xl mx-auto relative z-10">
+                    <div class="flex flex-col lg:flex-row items-center gap-16">
+                        <div class="lg:w-1/3 text-center lg:text-left reveal">
+                            <h2 class="font-header text-4xl font-black text-dark-slate mb-6 uppercase leading-tight">
+                                <span data-bind="concept.title1">SMART</span><br><span class="text-electric-blue" data-bind="concept.title2">GEARING</span>
+                            </h2>
+                            <p class="text-gray-500 mb-8 leading-relaxed text-lg" data-bind="concept.description">
+                                ระบบของเราทำงานสอดประสานกันเหมือนฟันเฟืองที่ผ่านการคำนวณมาอย่างแม่นยำ เพื่อผลลัพธ์ที่ดีที่สุดสำหรับธุรกิจคุณ
+                            </p>
+                            <div class="inline-block w-20 h-2 bg-vibrant-yellow rounded-full"></div>
+                        </div>
+                        
+                        <div class="lg:w-2/3 grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <div class="reveal delay-100 p-8 rounded-3xl bg-white shadow-lg border border-gray-100 card-hover relative overflow-hidden group">
+                                <div class="absolute top-0 right-0 w-24 h-24 bg-blue-50 rounded-bl-full -z-10 group-hover:scale-150 transition-transform duration-500"></div>
+                                <div class="w-14 h-14 bg-electric-blue text-white rounded-2xl flex items-center justify-center mb-6 shadow-md shadow-blue-500/30">
+                                    <i data-lucide="settings-2" class="w-7 h-7"></i>
+                                </div>
+                                <h4 class="text-xl font-bold mb-4" data-bind="concept.c1t">Precision Eng.</h4>
+                                <p class="text-gray-500 text-sm leading-relaxed" data-bind="concept.c1d">ทุกบรรทัดของโค้ดและทุกชิ้นส่วน IOT ถูกออกแบบมาให้ทำงานสอดคล้องกันอย่างสมบูรณ์</p>
+                            </div>
+                            <div class="reveal delay-200 p-8 rounded-3xl bg-white shadow-lg border border-gray-100 card-hover relative overflow-hidden group">
+                                <div class="absolute top-0 right-0 w-24 h-24 bg-yellow-50 rounded-bl-full -z-10 group-hover:scale-150 transition-transform duration-500"></div>
+                                <div class="w-14 h-14 bg-vibrant-yellow text-dark-slate rounded-2xl flex items-center justify-center mb-6 shadow-md shadow-yellow-500/30">
+                                    <i data-lucide="zap" class="w-7 h-7"></i>
+                                </div>
+                                <h4 class="text-xl font-bold mb-4" data-bind="concept.c2t">High Velocity</h4>
+                                <p class="text-gray-500 text-sm leading-relaxed" data-bind="concept.c2d">เร่งสปีดให้ธุรกิจคุณด้วยระบบที่ประมวลผลเร็วแรงและมีประสิทธิภาพสูงสุด</p>
+                            </div>
+                            <div class="reveal delay-300 p-8 rounded-3xl bg-white shadow-lg border border-gray-100 card-hover relative overflow-hidden group">
+                                <div class="absolute top-0 right-0 w-24 h-24 bg-blue-50 rounded-bl-full -z-10 group-hover:scale-150 transition-transform duration-500"></div>
+                                <div class="w-14 h-14 bg-dark-slate text-white rounded-2xl flex items-center justify-center mb-6 shadow-md shadow-slate-500/30">
+                                    <i data-lucide="refresh-cw" class="w-7 h-7"></i>
+                                </div>
+                                <h4 class="text-xl font-bold mb-4" data-bind="concept.c3t">Steady Growth</h4>
+                                <p class="text-gray-500 text-sm leading-relaxed" data-bind="concept.c3d">ฟันเฟืองที่ไม่มีวันหยุดนิ่ง พร้อมพาธุรกิจของคุณเติบโตอย่างมั่นคงและยั่งยืน</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Solutions Section -->
+            <section id="solutions" class="py-32 px-6 bg-slate-50 relative">
+                <div class="max-w-7xl mx-auto relative z-10">
+                    <div class="text-center mb-20 reveal">
+                        <h2 class="font-header text-4xl lg:text-5xl font-black text-dark-slate mb-6 uppercase" data-bind="solutions.title">Featured Works</h2>
+                        <p class="text-gray-500 max-w-2xl mx-auto leading-relaxed text-lg" data-bind="solutions.description">โครงการที่เราใช้ฟันเฟืองแห่งเทคโนโลยีขับเคลื่อนสู่ความสำเร็จ</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10" id="projects-container">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact Section -->
+            <section id="contact" class="py-24 px-6 bg-white">
+                <div class="reveal max-w-6xl mx-auto hero-gradient rounded-[3rem] p-10 md:p-20 text-center relative overflow-hidden shadow-[0_30px_60px_-15px_rgba(29,78,216,0.4)]">
+                    <div class="relative z-10">
+                        <h2 class="font-header text-4xl lg:text-7xl font-black text-white mb-6 uppercase leading-tight tracking-tight" data-bind="contact.title">READY TO POWER UP?</h2>
+                        <p class="text-blue-100 text-lg md:text-xl mb-16 max-w-2xl mx-auto font-light leading-relaxed" data-bind="contact.description">ฟันเฟืองของเราพร้อมแล้วที่จะช่วยขับเคลื่อนโครงการของคุณให้สำเร็จ ติดต่อเราเลย!</p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <a id="link-email" href="#" class="contact-card p-8 rounded-[2.5rem] flex flex-col items-center justify-center text-white space-y-4 group">
+                                <div class="w-16 h-16 icon-box-email rounded-3xl flex items-center justify-center mb-2"><i data-lucide="mail" class="w-8 h-8" style="color: var(--email-color);"></i></div>
+                                <span class="text-xs font-bold opacity-60 uppercase tracking-[0.1em]">E-mail</span>
+                                <span class="font-bold text-sm break-all" data-bind="contact.email">hello@deedeviot.com</span>
+                            </a>
+                            <a id="link-phone" href="#" class="contact-card p-8 rounded-[2.5rem] flex flex-col items-center justify-center text-white space-y-4 group">
+                                <div class="w-16 h-16 icon-box-phone rounded-3xl flex items-center justify-center mb-2"><i data-lucide="phone" class="w-8 h-8" style="color: var(--phone-color);"></i></div>
+                                <span class="text-xs font-bold opacity-60 uppercase tracking-[0.1em]">Phone</span>
+                                <span class="font-bold text-base" data-bind="contact.phone">02-123-4567</span>
+                            </a>
+                            <a id="link-facebook" href="#" target="_blank" class="contact-card p-8 rounded-[2.5rem] flex flex-col items-center justify-center text-white space-y-4 group">
+                                <div class="w-16 h-16 icon-box-facebook rounded-3xl flex items-center justify-center mb-2"><i data-lucide="facebook" class="w-8 h-8" style="color: var(--facebook-color);"></i></div>
+                                <span class="text-xs font-bold opacity-60 uppercase tracking-[0.1em]">Facebook</span>
+                                <span class="font-bold text-base" data-bind="contact.facebook">DeeDevIOT Page</span>
+                            </a>
+                            <a id="link-line" href="#" target="_blank" class="contact-card p-8 rounded-[2.5rem] flex flex-col items-center justify-center text-white space-y-4 group">
+                                <div class="w-16 h-16 icon-box-line rounded-3xl flex items-center justify-center mb-2"><i data-lucide="message-circle" class="w-8 h-8" style="color: var(--line-color);"></i></div>
+                                <span class="text-xs font-bold opacity-60 uppercase tracking-[0.1em]">Line</span>
+                                <span class="font-bold text-base" data-bind="contact.line">@DEEDEVIOT</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Project Detail View -->
+        <main id="project-detail" class="page-view pt-40 pb-20 px-6">
+            <div class="max-w-4xl mx-auto">
+                <button onclick="showPage('main-page')" class="flex items-center text-electric-blue font-bold mb-10 hover:-translate-x-2 transition-transform group bg-white px-6 py-2 rounded-full shadow-md">
+                    <i data-lucide="arrow-left" class="mr-3 group-hover:mr-5 transition-all"></i> กลับหน้าหลัก
+                </button>
+                <div id="project-content"></div>
+            </div>
+        </main>
+
+        <footer class="bg-gray-50 border-t border-gray-100 py-16 px-6">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-center md:text-left gap-10">
+                <div><span class="font-header text-xl font-black uppercase text-dark-slate">DEEDEVIOT</span></div>
+                <div class="text-center text-gray-300 text-xs tracking-widest uppercase flex items-center gap-2">
+                    <span>© 2026 DEEDEVIOT ACCELERATOR.</span>
+                    <button onclick="toggleAdminView(true)" class="text-gray-200 hover:text-vibrant-yellow transition-colors"><i data-lucide="settings" class="w-4 h-4"></i></button>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 3. ADMIN PANEL VIEW                        -->
+    <!-- ========================================== -->
+    <div id="admin-view" class="app-view bg-gray-100 min-h-screen font-sans">
+        <div class="flex h-screen overflow-hidden">
+            <!-- Sidebar -->
+            <div class="w-64 bg-dark-slate text-white flex flex-col shadow-xl z-20">
+                <div class="p-6 border-b border-gray-700 flex items-center gap-3">
+                    <i data-lucide="layout-dashboard" class="w-6 h-6 text-vibrant-yellow"></i>
+                    <h2 class="font-bold text-lg tracking-wider">CMS ADMIN</h2>
+                </div>
+                <div class="flex-1 overflow-y-auto py-4">
+                    <ul class="space-y-1 px-3">
+                        <li><button onclick="switchAdminTab('tab-hero')" class="admin-tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left bg-electric-blue text-white"><i data-lucide="monitor" class="w-5 h-5"></i> Hero Section</button></li>
+                        <li><button onclick="switchAdminTab('tab-concept')" class="admin-tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-gray-300 hover:bg-gray-800"><i data-lucide="lightbulb" class="w-5 h-5"></i> Concept</button></li>
+                        <li><button onclick="switchAdminTab('tab-contact')" class="admin-tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-gray-300 hover:bg-gray-800"><i data-lucide="phone-call" class="w-5 h-5"></i> Contact Info</button></li>
+                    </ul>
+                </div>
+                <div class="p-4 border-t border-gray-700">
+                    <button onclick="toggleAdminView(false)" class="w-full flex items-center justify-center gap-2 bg-gray-700 hover:bg-gray-600 text-white px-4 py-3 rounded-lg"><i data-lucide="log-out" class="w-5 h-5"></i> Exit Admin</button>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="flex-1 flex flex-col overflow-hidden relative">
+                <header class="bg-white shadow-sm h-16 flex items-center justify-between px-8 z-10">
+                    <h1 class="text-xl font-bold text-gray-800" id="admin-page-title">จัดการข้อมูล</h1>
+                    <div id="save-status" class="hidden text-sm text-blue-500 font-bold animate-pulse">Saving...</div>
+                    <button id="admin-save-btn" onclick="saveAllChanges()" class="bg-electric-blue hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium flex items-center gap-2 shadow-lg transition transform hover:-translate-y-0.5">
+                        <i data-lucide="save" class="w-4 h-4"></i> บันทึกข้อมูล
+                    </button>
+                </header>
+
+                <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-8">
+                    <!-- HERO FORM -->
+                    <div id="tab-hero" class="admin-tab-content block max-w-4xl bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+                        <div class="space-y-5">
+                            <div><label class="block text-sm font-medium text-gray-700 mb-1">Badge</label><input type="text" id="input-hero-badge" class="w-full border p-2 rounded"></div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div><label class="block text-sm font-medium text-gray-700 mb-1">Title Line 1</label><input type="text" id="input-hero-title1" class="w-full border p-2 rounded"></div>
+                                <div><label class="block text-sm font-medium text-gray-700 mb-1">Title Line 2 (Yellow)</label><input type="text" id="input-hero-title2" class="w-full border p-2 rounded"></div>
+                            </div>
+                            <div><label class="block text-sm font-medium text-gray-700 mb-1">Description (HTML allowed)</label><textarea id="input-hero-desc" rows="3" class="w-full border p-2 rounded"></textarea></div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div><label class="block text-sm font-medium text-gray-700 mb-1">Btn 1</label><input type="text" id="input-hero-btn1" class="w-full border p-2 rounded"></div>
+                                <div><label class="block text-sm font-medium text-gray-700 mb-1">Btn 2</label><input type="text" id="input-hero-btn2" class="w-full border p-2 rounded"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CONCEPT FORM -->
+                    <div id="tab-concept" class="admin-tab-content hidden max-w-4xl space-y-6">
+                        <div class="bg-white p-8 rounded-2xl shadow-sm border">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div><label class="block text-sm text-gray-700 mb-1">Title 1</label><input type="text" id="input-concept-title1" class="w-full border p-2 rounded"></div>
+                                <div><label class="block text-sm text-gray-700 mb-1">Title 2</label><input type="text" id="input-concept-title2" class="w-full border p-2 rounded"></div>
+                            </div>
+                            <div class="mt-4"><label class="block text-sm text-gray-700 mb-1">Description</label><textarea id="input-concept-desc" class="w-full border p-2 rounded"></textarea></div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4">
+                            <div class="bg-white p-6 rounded-2xl shadow-sm border">
+                                <h4 class="font-bold mb-4">Card 1</h4>
+                                <input id="input-concept-c1t" class="w-full border p-2 mb-2 text-sm"><textarea id="input-concept-c1d" class="w-full border p-2 text-sm"></textarea>
+                            </div>
+                            <div class="bg-white p-6 rounded-2xl shadow-sm border">
+                                <h4 class="font-bold mb-4">Card 2</h4>
+                                <input id="input-concept-c2t" class="w-full border p-2 mb-2 text-sm"><textarea id="input-concept-c2d" class="w-full border p-2 text-sm"></textarea>
+                            </div>
+                            <div class="bg-white p-6 rounded-2xl shadow-sm border">
+                                <h4 class="font-bold mb-4">Card 3</h4>
+                                <input id="input-concept-c3t" class="w-full border p-2 mb-2 text-sm"><textarea id="input-concept-c3d" class="w-full border p-2 text-sm"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CONTACT FORM -->
+                    <div id="tab-contact" class="admin-tab-content hidden max-w-4xl bg-white rounded-2xl p-8 shadow-sm border">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><label class="block text-sm text-gray-700 mb-1">Main Title</label><input type="text" id="input-contact-title" class="w-full border p-2 rounded"></div>
+                            <div><label class="block text-sm text-gray-700 mb-1">Description</label><input type="text" id="input-contact-desc" class="w-full border p-2 rounded"></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 mt-6">
+                            <div><label class="text-sm font-bold text-red-500 mb-1">Email</label><input type="text" id="input-contact-email" class="w-full border p-2 rounded"></div>
+                            <div><label class="text-sm font-bold text-green-600 mb-1">Phone</label><input type="text" id="input-contact-phone" class="w-full border p-2 rounded"></div>
+                            <div><label class="text-sm font-bold text-blue-600 mb-1">Facebook</label><input type="text" id="input-contact-facebook" class="w-full border p-2 rounded"></div>
+                            <div><label class="text-sm font-bold text-green-500 mb-1">Line</label><input type="text" id="input-contact-line" class="w-full border p-2 rounded"></div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+        <div id="toast" class="fixed bottom-5 right-5 bg-green-500 text-white px-6 py-3 rounded-lg shadow-2xl flex items-center gap-3 transform translate-y-20 opacity-0 transition-all duration-300 z-50">
+            <i data-lucide="check-circle" class="w-5 h-5"></i>
+            <span id="toast-msg">Saved successfully</span>
+        </div>
+    </div>
+
+    <!-- CORE SCRIPTS -->
+    <script>
+        // REPLACE WITH YOUR ACTUAL DEPLOYED WEB APP URL
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfyc.../exec'; 
+
+        let siteData = {};
+        let projects = {};
+
+        async function initData() {
+            try {
+                const response = await fetch(WEB_APP_URL);
+                const result = await response.json();
+                if(result.success && result.data) {
+                    siteData = result.data;
+                    // Format Projects list into an object for easier lookup if needed, 
+                    // but for rendering the list we just use the array.
+                    // Converting projects array to object by a slug/id for Detail view
+                    projects = {};
+                    result.data.projects.forEach(p => {
+                        const id = p.slug || p.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+                        projects[id] = {
+                            ...p,
+                            tech: p.tech ? p.tech.split(',') : []
+                        };
+                    });
+                    
+                    renderPublicSite();
+                    document.getElementById('loading-overlay').style.opacity = '0';
+                    setTimeout(() => document.getElementById('loading-overlay').remove(), 500);
+                } else {
+                    console.error("API Error:", result.error);
+                    alert("Unable to fetch data. Check WEB_APP_URL.");
+                }
+            } catch (err) {
+                console.error("Network Error:", err);
+                // If it fails, we keep loading overlay or show error
+            }
+        }
+
+        let revealObserver;
+        function initScrollReveal() {
+            if(revealObserver) revealObserver.disconnect();
+            const revealElements = document.querySelectorAll('.reveal');
+            revealObserver = new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    entry.target.classList.add('active');
+                    obs.unobserve(entry.target);
+                });
+            }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+            revealElements.forEach(el => { el.classList.remove('active'); revealObserver.observe(el); });
+        }
+
+        function renderPublicSite() {
+            // Bind text
+            document.querySelectorAll('[data-bind]').forEach(el => {
+                const path = el.getAttribute('data-bind').split('.');
+                let val = siteData;
+                for(let k of path) if(val && val[k] !== undefined) val = val[k];
+                if (typeof val === 'string') el.innerHTML = val;
+            });
+            
+            // Bind Links
+            if(siteData.contact) {
+                document.getElementById('link-email').href = `mailto:${siteData.contact.email}`;
+                document.getElementById('link-phone').href = `tel:${siteData.contact.phone ? siteData.contact.phone.replace(/[^0-9]/g, '') : ''}`;
+                document.getElementById('link-line').href = `https://line.me/ti/p/~${siteData.contact.line ? siteData.contact.line.replace('@','') : ''}`;
+            }
+
+            // Render Projects
+            const container = document.getElementById('projects-container');
+            let html = ''; let delay = 100;
+            for (const [id, p] of Object.entries(projects)) {
+                html += `
+                    <div class="reveal delay-${delay} group bg-white rounded-3xl shadow-md hover:shadow-2xl transition-all duration-500 overflow-hidden cursor-pointer transform hover:-translate-y-2" onclick="viewProject('${id}')">
+                        <div class="relative h-64 overflow-hidden">
+                            <img src="${p.image}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-dark-slate/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <span class="bg-vibrant-yellow text-dark-slate px-6 py-2 rounded-full font-bold text-sm shadow-lg">ดูรายละเอียด</span>
+                            </div>
+                        </div>
+                        <div class="p-8">
+                            <div class="flex items-center space-x-2 text-electric-blue font-bold mb-2"><i data-lucide="${p.icon || 'wifi'}" class="w-4 h-4"></i><span class="text-xs uppercase">${p.category}</span></div>
+                            <h3 class="text-2xl font-black mb-3 text-dark-slate uppercase tracking-tight">${p.title}</h3>
+                            <p class="text-gray-500 text-sm line-clamp-2">${p.shortDesc || p.description}</p>
+                        </div>
+                    </div>`;
+                delay += 100; if(delay > 300) delay = 100;
+            }
+            container.innerHTML = html;
+            lucide.createIcons();
+            setTimeout(initScrollReveal, 100);
+        }
+
+        const showPage = (pageId) => {
+            document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            if(pageId === 'main-page') setTimeout(initScrollReveal, 100);
+        };
+
+        const viewProject = (id) => {
+            const p = projects[id];
+            document.getElementById('project-content').innerHTML = `
+                <div class="animate-in fade-in slide-in-from-bottom-6 duration-700">
+                    <img src="${p.image}" class="w-full h-[300px] md:h-[500px] object-cover rounded-[2.5rem] shadow-2xl mb-12">
+                    <div class="space-y-6">
+                        <span class="bg-vibrant-yellow text-dark-slate px-4 py-1 rounded-full font-bold text-xs uppercase">${p.category}</span>
+                        <h1 class="font-header text-4xl md:text-6xl font-black text-dark-slate uppercase">${p.title}</h1>
+                        <p class="text-xl text-gray-500 leading-relaxed">${p.description}</p>
+                        <div class="pt-8 flex flex-wrap gap-3">
+                            ${p.tech.map(t => `<span class="bg-gray-100 px-6 py-2 rounded-xl font-medium border text-sm">${t}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>`;
+            showPage('project-detail');
+        };
+
+        function toggleAdminView(show) {
+            document.querySelectorAll('.app-view').forEach(el => el.classList.remove('active'));
+            if(show) {
+                document.getElementById('admin-view').classList.add('active');
+                populateAdmin();
+            } else {
+                document.getElementById('public-view').classList.add('active');
+            }
+        }
+
+        function switchAdminTab(tabId) {
+            document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.replace('bg-electric-blue','text-gray-300'));
+            const act = document.querySelector(`button[onclick="switchAdminTab('${tabId}')"]`);
+            if(act) act.classList.replace('text-gray-300','bg-electric-blue');
+            document.querySelectorAll('.admin-tab-content').forEach(c => { c.classList.add('hidden'); c.classList.remove('block'); });
+            document.getElementById(tabId).classList.replace('hidden', 'block');
+        }
+
+        function populateAdmin() {
+            const m = {
+                'input-hero-badge': siteData.hero.badge, 'input-hero-title1': siteData.hero.title1, 
+                'input-hero-title2': siteData.hero.title2, 'input-hero-desc': siteData.hero.description, 
+                'input-hero-btn1': siteData.hero.btn1, 'input-hero-btn2': siteData.hero.btn2,
+                'input-concept-title1': siteData.concept.title1, 'input-concept-title2': siteData.concept.title2, 
+                'input-concept-desc': siteData.concept.description, 
+                'input-concept-c1t': siteData.concept.c1t, 'input-concept-c1d': siteData.concept.c1d,
+                'input-concept-c2t': siteData.concept.c2t, 'input-concept-c2d': siteData.concept.c2d,
+                'input-concept-c3t': siteData.concept.c3t, 'input-concept-c3d': siteData.concept.c3d,
+                'input-contact-title': siteData.contact.title, 'input-contact-desc': siteData.contact.description, 
+                'input-contact-email': siteData.contact.email, 'input-contact-phone': siteData.contact.phone, 
+                'input-contact-facebook': siteData.contact.facebook, 'input-contact-line': siteData.contact.line,
+            };
+            for (const [id, val] of Object.entries(m)) if(document.getElementById(id)) document.getElementById(id).value = val || '';
+        }
+
+        const v = (id) => document.getElementById(id).value;
+
+        async function saveAllChanges() {
+            const btn = document.getElementById('admin-save-btn');
+            const status = document.getElementById('save-status');
+            btn.disabled = true; status.classList.remove('hidden');
+            
+            const updatedData = {
+                hero: { badge: v('input-hero-badge'), title1: v('input-hero-title1'), title2: v('input-hero-title2'), description: v('input-hero-desc'), btn1: v('input-hero-btn1'), btn2: v('input-hero-btn2') },
+                concept: { title1: v('input-concept-title1'), title2: v('input-concept-title2'), description: v('input-concept-desc'), c1t: v('input-concept-c1t'), c1d: v('input-concept-c1d'), c2t: v('input-concept-c2t'), c2d: v('input-concept-c2d'), c3t: v('input-concept-c3t'), c3d: v('input-concept-c3d') },
+                contact: { title: v('input-contact-title'), description: v('input-contact-desc'), email: v('input-contact-email'), phone: v('input-contact-phone'), facebook: v('input-contact-facebook'), line: v('input-contact-line') }
+            };
+            
+            try {
+                const response = await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Standard for simple GAS POSTs without preflight issues
+                    body: JSON.stringify({ action: 'saveSiteData', data: updatedData })
+                });
+                
+                // Note: With no-cors we can't read the response body, but usually if it doesn't throw, it sent.
+                // However, for better UX, we'll assume success and refresh local data state.
+                siteData = { ...siteData, ...updatedData };
+                renderPublicSite();
+                showToast("Data saved to Google Sheets!");
+            } catch (err) {
+                console.error("Save failed:", err);
+                showToast("Save failed. Tech issue.", true);
+            } finally {
+                btn.disabled = false; status.classList.add('hidden');
+            }
+        }
+
+        function showToast(msg, isError = false) {
+            const t = document.getElementById('toast');
+            const tm = document.getElementById('toast-msg');
+            tm.innerText = msg;
+            t.classList.add(isError ? 'bg-red-500' : 'bg-green-500');
+            t.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => t.classList.add('translate-y-20', 'opacity-0'), 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initData();
+            // Navbar Scroll
+            const nav = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                if(window.scrollY > 20) nav.classList.add('shadow-md', 'h-16');
+                else nav.classList.remove('shadow-md', 'h-16');
+            });
+            // Mobile Menu
+            const mBtn = document.getElementById('menu-toggle');
+            const mMenu = document.getElementById('mobile-menu');
+            if(mBtn && mMenu) mBtn.addEventListener('click', () => mMenu.classList.toggle('active'));
+        });
+    </script>
+</body>
+</html>

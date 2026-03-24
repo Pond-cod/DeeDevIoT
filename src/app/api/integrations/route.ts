@@ -8,6 +8,8 @@ export interface IntegrationData {
   id: string;
   title: string;
   description: string;
+  title_th?: string;
+  description_th?: string;
   imageUrl: string;
   tag: string;
   referenceUrl: string;
@@ -15,7 +17,7 @@ export interface IntegrationData {
 
 export async function GET() {
   try {
-    const rows = await getSheetValues('Integrations!A2:F');
+    const rows = await getSheetValues('Integrations!A2:H');
     const integrations: IntegrationData[] = rows.map((row) => ({
       id: row[0] || '',
       title: row[1] || '',
@@ -23,6 +25,8 @@ export async function GET() {
       imageUrl: row[3] || '',
       tag: row[4] || '',
       referenceUrl: row[5] || '',
+      title_th: row[6] || '',
+      description_th: row[7] || '',
     }));
 
     return NextResponse.json({ success: true, data: integrations });
@@ -47,7 +51,9 @@ export async function POST(request: Request) {
       description || "",
       imageUrl || "",
       tag || "",
-      referenceUrl || ""
+      referenceUrl || "",
+      body.title_th || "",
+      body.description_th || ""
     ];
 
     if (isEdit) {
@@ -55,7 +61,7 @@ export async function POST(request: Request) {
       const result = await updateIntegrationRow(id, rowData);
       return NextResponse.json({ success: true, message: 'Integration updated', data: result });
     } else {
-      const result = await appendSheetValues('Integrations!A:F', [rowData]);
+      const result = await appendSheetValues('Integrations!A:H', [rowData]);
       return NextResponse.json({ success: true, message: 'Integration added', data: result });
     }
   } catch (error: any) {

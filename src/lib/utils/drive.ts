@@ -9,8 +9,8 @@ export function convertToDirectLink(driveUrls: string): string {
   const matches = [...cleanStr.matchAll(regex)];
   
   if (matches.length > 0) {
-    // นำ ID ทั้งหมดที่เจอมาแปลงและคั่นด้วยบรรทัดใหม่
-    return matches.map(m => `https://drive.google.com/thumbnail?id=${m[1]}&sz=w1000`).join('\n');
+    // นำ ID ทั้งหมดที่เจอมาแปลงเป็น Direct Link ที่รองรับ CORB/ORB
+    return matches.map(m => `https://lh3.googleusercontent.com/d/${m[1]}=w1000`).join('\n');
   }
 
   // หากไม่มี ID ปรากฏ ส่งสตริงเดิมกลับไป

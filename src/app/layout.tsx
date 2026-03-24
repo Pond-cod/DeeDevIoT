@@ -1,16 +1,22 @@
 import type { Metadata } from 'next'
-import { Prompt } from 'next/font/google'
+import { Kanit, Montserrat } from 'next/font/google'
 import './globals.css'
 
-const prompt = Prompt({
+const kanit = Kanit({
   subsets: ['latin', 'thai'],
-  weight: ['300', '400', '500', '600', '700'],
-  variable: '--font-prompt'
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+  variable: '--font-kanit'
+})
+
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+  variable: '--font-montserrat'
 })
 
 export const metadata: Metadata = {
-  title: 'DeeDevIoT - Web & IoT Solutions',
-  description: 'บริการรับพัฒนา Web Application & IoT Solutions รวดเร็ว ราคาเป็นกันเอง',
+  title: 'DeeDevIOT | Next-Gen Tech Accelerator',
+  description: 'Gearing up for the future with smart IOT Ecosystems and professional software solutions.',
 }
 
 export default function RootLayout({
@@ -19,8 +25,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="th" className={`${prompt.variable}`}>
-      <body className="font-sans text-[#333333] bg-[#F8F9FA] antialiased">
+    <html lang="th" className={`${kanit.variable} ${montserrat.variable}`}>
+      <body className="font-sans antialiased bg-white text-slate-900">
         {children}
       </body>
     </html>

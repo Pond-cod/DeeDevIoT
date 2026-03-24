@@ -69,12 +69,12 @@ export async function updateSheetRow(id: string, values: any[]) {
   try {
     const { sheets, GOOGLE_SHEET_ID } = getGoogleAuth();
 
-    const currentData = await getSheetValues('Services!A2:F');
+    const currentData = await getSheetValues('Services!A2:H');
     const rowIndex = currentData.findIndex((row) => row[0] === id);
 
     if (rowIndex !== -1) {
       const rowNumber = rowIndex + 2;
-      const range = `Services!A${rowNumber}:F${rowNumber}`;
+      const range = `Services!A${rowNumber}:H${rowNumber}`;
 
       const response = await sheets.spreadsheets.values.update({
         spreadsheetId: GOOGLE_SHEET_ID,
@@ -137,7 +137,24 @@ export async function getConfig() {
         ['port_desc', 'Enhance your workflow flawlessly by connecting our custom-built platforms with the everyday tools you already trust.', 'เพิ่มประสิทธิภาพการทำงานด้วยการเชื่อมต่อแพลตฟอร์มของเรากับเครื่องมือที่คุณคุ้นเคย'],
         ['cta_heading', 'Ready to Start Your Next Big Project?', 'พร้อมเริ่มพัฒนาโปรเจกต์ของคุณแล้วหรือยัง?'],
         ['footer_bio', 'Your trusted tech partner in turning innovative ideas into powerful, real-world Web & Hardware platforms.', 'พาร์ทเนอร์ที่พร้อมสานต่อไอเดียของคุณให้กลายเป็นแพลตฟอร์มที่ใช้งานได้จริง'],
-        ['facebook_url', 'https://facebook.com/deedeviot', '']
+        ['facebook_url', 'https://facebook.com/deedeviot', ''],
+        ['nav_item1', 'Concept', 'แนวคิด'],
+        ['nav_btn', 'Contact Us', 'ติดต่อเรา'],
+        ['concept_title1', 'SMART', 'สมาร์ท'],
+        ['concept_title2', 'GEARING', 'เกียร์ริ่ง'],
+        ['concept_description', 'Our systems work in harmony like precision-engineered gears.', 'ระบบของเราทำงานร่วมกันอย่างสมบูรณ์แบบ เหมือนฟันเฟืองที่ผ่านการวิศวกรรมมาอย่างแม่นยำ'],
+        ['concept_c1t', 'Precision Eng.', 'ความแม่นยำสูง'],
+        ['concept_c1d', 'Every line of code and IoT component is designed for perfect harmony.', 'ทุกบรรทัดของโค้ดและส่วนประกอบ IoT ถูกออกแบบมาเพื่อความสอดคล้องที่ลงตัว'],
+        ['concept_c2t', 'High Velocity', 'ความเร็วสูงสุด'],
+        ['concept_c2d', 'Accelerate your business with high-performance systems.', 'เร่งสปีดธุรกิจของคุณด้วยระบบที่มีประสิทธิภาพและรวดเร็ว'],
+        ['concept_c3t', 'Steady Growth', 'การเติบโตที่มั่นคง'],
+        ['concept_c3d', 'Reliable tech that ensures your business thrives consistently.', 'เทคโนโลยีที่เชื่อถือได้ เพื่อให้มั่นใจว่าธุรกิจของคุณจะเติบโตอย่างต่อเนื่อง'],
+        ['contact_title', 'READY TO POWER UP?', 'พร้อมที่จะขับเคลื่อนไปข้างหน้าหรือยัง?'],
+        ['contact_description', 'Our gears are ready. Let us power your success.', 'ฟันเฟืองของเราพร้อมแล้ว ให้เราเป็นส่วนหนึ่งในความสำเร็จของคุณ'],
+        ['contact_email', 'hello@deedeviot.com', 'hello@deedeviot.com'],
+        ['contact_phone', '02-123-4567', '02-123-4567'],
+        ['contact_facebook', 'DeeDevIOT Page', 'เพจ DeeDevIOT'],
+        ['contact_line', '@DEEDEVIOT', '@DEEDEVIOT']
       ];
       
       try {
@@ -155,12 +172,14 @@ export async function getConfig() {
       }
     }
 
-    const bilingualKeys = [
       'hero_badge', 'hero_headline', 'hero_sub', 'hero_btn1_text', 'hero_btn2_text',
       'why_badge', 'why_choose_title', 'why1_title', 'why1_desc', 'why2_title', 'why2_desc',
       'why3_title', 'why3_desc', 'why4_title', 'why4_desc', 'svc_badge', 'solutions_title',
-      'port_badge', 'integrations_title', 'port_desc', 'cta_heading', 'footer_bio'
-    ];
+      'port_badge', 'integrations_title', 'port_desc', 'cta_heading', 'footer_bio',
+      'nav_item1', 'nav_btn',
+      'concept_title1', 'concept_title2', 'concept_description', 
+      'concept_c1t', 'concept_c1d', 'concept_c2t', 'concept_c2d', 'concept_c3t', 'concept_c3d',
+      'contact_title', 'contact_description', 'contact_facebook'
 
     const configObj: Record<string, string> = {};
     for (const row of rows) {
@@ -227,12 +246,12 @@ export async function updateIntegrationRow(id: string, values: any[]) {
   try {
     const { sheets, GOOGLE_SHEET_ID } = getGoogleAuth();
 
-    const currentData = await getSheetValues('Integrations!A2:F');
+    const currentData = await getSheetValues('Integrations!A2:H');
     const rowIndex = currentData.findIndex((row) => row[0] === id);
 
     if (rowIndex !== -1) {
       const rowNumber = rowIndex + 2;
-      const range = `Integrations!A${rowNumber}:F${rowNumber}`;
+      const range = `Integrations!A${rowNumber}:H${rowNumber}`;
 
       const response = await sheets.spreadsheets.values.update({
         spreadsheetId: GOOGLE_SHEET_ID,
