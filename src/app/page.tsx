@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import {
   Cpu, Code, Globe, Smartphone, Database, Wifi, Server, Terminal, ChevronRight,
   ArrowRight, Zap, Activity, Monitor, X, ExternalLink, Blocks, MessageSquare,
-  Mail, Phone, ShieldCheck, Clock, ThumbsUp, Users, Target, Facebook, MessageCircle
+  Mail, Phone, ShieldCheck, Clock, ThumbsUp, Users, Target, Facebook, MessageCircle, Menu
 } from 'lucide-react';
 import { getDriveThumbnailUrl, getDriveDirectUrl, getDriveIframeUrl } from '../lib/drive';
 
@@ -78,6 +78,7 @@ export default function LandingPage() {
   const [loading, setLoading] = useState(true);
   const [selectedService, setSelectedService] = useState<ServiceData | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -131,8 +132,24 @@ export default function LandingPage() {
             <a href="#contact" className="hidden md:inline-flex px-6 py-2.5 bg-accent-500 hover:bg-accent-600 text-[var(--color-brand-700)] font-extrabold rounded-xl transition-all shadow-md shadow-accent-500/20 hover:shadow-lg hover:shadow-accent-500/30 hover:-translate-y-0.5">
               ขอใบเสนอราคา
             </a>
+            <button className="md:hidden text-gray-600 hover:text-brand-500 p-2" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile Menu Dropdown */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-100 shadow-lg py-4 px-6 flex flex-col gap-4 animate-fade-in-up">
+            <a href="#" onClick={() => setIsMobileMenuOpen(false)} className="text-gray-600 hover:text-brand-500 font-semibold transition-colors text-base uppercase tracking-wide py-2 border-b border-gray-50">Home</a>
+            <a href="#services" onClick={() => setIsMobileMenuOpen(false)} className="text-gray-600 hover:text-brand-500 font-semibold transition-colors text-base uppercase tracking-wide py-2 border-b border-gray-50">Services</a>
+            <a href="#portfolio" onClick={() => setIsMobileMenuOpen(false)} className="text-gray-600 hover:text-brand-500 font-semibold transition-colors text-base uppercase tracking-wide py-2 border-b border-gray-50">Integrations</a>
+            <a href="#contact" onClick={() => setIsMobileMenuOpen(false)} className="text-gray-600 hover:text-brand-500 font-semibold transition-colors text-base uppercase tracking-wide py-2 border-b border-gray-50">Contact</a>
+            <a href="#contact" onClick={() => setIsMobileMenuOpen(false)} className="inline-flex justify-center w-full px-6 py-3 bg-accent-500 hover:bg-accent-600 text-[var(--color-brand-700)] font-extrabold rounded-xl transition-all shadow-md mt-2">
+              ขอใบเสนอราคา
+            </a>
+          </div>
+        )}
       </nav>
 
       <main className="pt-20">
