@@ -28,8 +28,27 @@
 .master-gear-spin {
     animation: gear-rotate 20s linear infinite;
 }
+.master-gear-spin-slow {
+    animation: gear-rotate 40s linear infinite;
+}
 .counter-spin {
     animation: gear-rotate-reverse 20s linear infinite;
+}
+
+@keyframes float-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+.animate-float-bounce {
+  animation: float-bounce 4s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.15); }
+}
+.animate-glow-pulse {
+  animation: glow-pulse 6s ease-in-out infinite;
 }
 
 @layer base {

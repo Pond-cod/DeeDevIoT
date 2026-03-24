@@ -15,6 +15,16 @@ export default function LandingPage() {
   const [toast, setToast] = useState({ show: false, msg: '', isError: false });
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [lang, setLang] = useState<'en' | 'th'>('th');
+  const [scrolled, setScrolled] = useState(false);
+
+  // Scroll listener for Navbar Glassmorphism
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Site Data State (Flat Config from /api/config)
   const [siteData, setSiteData] = useState<any>({});
@@ -96,7 +106,9 @@ export default function LandingPage() {
       <div>
         
         {/* Navbar */}
-        <nav className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 h-20">
+        <nav className={`fixed top-0 w-full z-50 h-20 transition-all duration-300 ${
+          scrolled ? 'bg-white/80 backdrop-blur-lg shadow-sm' : 'bg-transparent border-b border-white/5'
+        }`}>
           <div className="max-w-7xl mx-auto px-6 h-full flex justify-between items-center">
             <div className="flex items-center space-x-3 cursor-pointer group" onClick={() => { setView('main'); window.scrollTo(0,0); }}>
               <Settings className="w-10 h-10 text-accent-500 master-gear-spin group-hover:scale-110 transition-transform" />
@@ -152,43 +164,49 @@ export default function LandingPage() {
         {view === 'main' ? (
           <main>
             {/* Hero Section */}
-            <section className="pt-48 pb-32 px-6 bg-slate-900 relative overflow-hidden">
+            <section className="pt-56 pb-40 px-6 bg-slate-900 relative overflow-hidden">
+              {/* Subtle Tech Grid Background */}
+              <div className="absolute inset-0 opacity-[0.15]" style={{ backgroundImage: 'radial-gradient(#1d4ed8 0.5px, transparent 0.5px)', backgroundSize: '30px 30px' }}></div>
+              
               {/* Background Glows */}
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,_var(--color-brand-700)_0%,_transparent_70%)] opacity-30"></div>
-              <div className="absolute top-40 left-10 text-white/5 master-gear-spin"><Code size={64} /></div>
+              <div className="absolute top-40 left-10 text-white/5 master-gear-spin-slow"><Code size={64} /></div>
               <div className="absolute bottom-20 right-1/4 text-accent-500/5 counter-spin"><Cpu size={80} /></div>
               
               <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16 relative z-10">
                 <div className="lg:w-3/5 text-white text-center lg:text-left">
                   <div className="reveal inline-flex items-center bg-white/5 backdrop-blur-md px-4 py-1.5 rounded-full mb-8 border border-white/10">
-                    <div className="w-2 h-2 bg-accent-500 rounded-full mr-3 animate-ping"></div>
-                    <span className="text-xs font-bold uppercase tracking-widest text-accent-500">{t('hero_badge', 'TECHNOLOGY POWERHOUSE')}</span>
+                    <div className="w-2 h-2 bg-brand-500 rounded-full mr-3 animate-ping"></div>
+                    <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-blue-400">{t('hero_badge', 'TECHNOLOGY POWERHOUSE')}</span>
                   </div>
-                  <h1 className="reveal delay-100 font-montserrat text-5xl lg:text-8xl font-black mb-8 leading-tight uppercase tracking-tight">
-                    {t('hero_headline', 'GEARING UP FOR THE FUTURE.')}
-                  </h1>
-                  <p className="reveal delay-200 text-lg md:text-xl text-blue-100/70 mb-12 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-light whitespace-pre-line">
+                  <h1 
+                    className="reveal delay-100 font-montserrat text-4xl sm:text-5xl lg:text-6xl font-semibold mb-8 leading-[1.15] tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent"
+                    dangerouslySetInnerHTML={{ __html: t('hero_headline', 'GEARING UP FOR THE FUTURE.') }}
+                  />
+                  <p className="reveal delay-200 text-lg lg:text-xl text-gray-400 mb-12 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-light whitespace-pre-line">
                     {t('hero_sub', 'Building intelligent software and hardware ecosystems.')}
                   </p>
-                  <div className="reveal delay-300 flex flex-col sm:flex-row gap-5 justify-center lg:justify-start">
-                    <a href="#solutions" className="px-10 py-5 bg-accent-500 text-slate-900 rounded-2xl font-black text-lg shadow-xl shadow-yellow-500/20 hover:bg-yellow-400 hover:-translate-y-1 transition-all uppercase tracking-wide">
-                      {t('hero_btn1_text', 'Explore Solutions')}
+                  <div className="reveal delay-300 flex flex-col sm:flex-row gap-6 justify-center lg:justify-start">
+                    <a href={t('hero_btn1_link', '#contact')} className="px-10 py-5 bg-brand-500 text-white rounded-2xl font-bold text-lg shadow-2xl shadow-brand-500/30 hover:bg-brand-600 hover:scale-105 hover:shadow-brand-500/50 transition-all uppercase tracking-widest flex items-center justify-center gap-3 group">
+                      {t('hero_btn1_text', 'Consult our Expert')}
+                      <ChevronRight className="group-hover:translate-x-1 transition-transform" />
                     </a>
-                    <a href="#contact" className="px-10 py-5 border-2 border-white/10 text-white rounded-2xl font-bold text-lg hover:bg-white/5 transition-all uppercase tracking-wide">
-                      {t('hero_btn2_text', 'Get a Quote')}
+                    <a href={t('hero_btn2_link', '#services')} className="px-10 py-5 border-2 border-white/20 text-white rounded-2xl font-bold text-lg hover:bg-white/5 hover:border-white/50 hover:scale-105 transition-all uppercase tracking-widest flex items-center justify-center">
+                      {t('hero_btn2_text', 'See Our Portfolio')}
                     </a>
                   </div>
                 </div>
                 
                 {/* BIG POLISHED GEAR GRAPHIC */}
                 <div className="lg:w-2/5 flex lg:justify-end">
-                   <div className="relative w-72 h-72 md:w-[450px] md:h-[450px]">
-                      {/* Ambient Glow behind gear */}
-                      <div className="absolute inset-0 bg-accent-500/10 blur-[120px] rounded-full animate-pulse"></div>
+                   <div className="relative w-80 h-80 md:w-[500px] md:h-[500px]">
+                      {/* Ambient Glow behind gear - PULSING */}
+                      <div className="absolute inset-0 bg-brand-500/20 blur-[130px] rounded-full animate-glow-pulse"></div>
+                      <div className="absolute inset-20 bg-accent-500/10 blur-[100px] rounded-full animate-pulse delay-700"></div>
                       
                       {/* Master Gear */}
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="master-gear-spin w-64 h-64 md:w-96 md:h-96 relative">
+                        <div className="master-gear-spin-slow w-72 h-72 md:w-[420px] md:h-[420px] relative">
                           <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-[0_20px_50px_rgba(255,210,0,0.3)]">
                             <defs>
                               <linearGradient id="gearGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -214,14 +232,15 @@ export default function LandingPage() {
                       <div className="absolute inset-0 counter-spin pointer-events-none">
                          {[0,60,120,180,240,300].map((deg, i) => (
                            <div key={i} className="absolute inset-0" style={{ transform: `rotate(${deg}deg)` }}>
-                              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                                 <div className="w-12 h-12 md:w-16 md:h-16 bg-brand-500 rounded-full flex items-center justify-center border-4 border-accent-500 shadow-lg shadow-blue-500/40 master-gear-spin pointer-events-auto">
-                                    {i === 0 && <Wifi className="text-white w-2/3 h-2/3" />}
-                                    {i === 1 && <Code className="text-white w-2/3 h-2/3" />}
-                                    {i === 2 && <Settings2 className="text-white w-2/3 h-2/3" />}
-                                    {i === 3 && <Zap className="text-white w-2/3 h-2/3" />}
-                                    {i === 4 && <Cpu className="text-white w-2/3 h-2/3" />}
-                                    {i === 5 && <RefreshCw className="text-white w-2/3 h-2/3" />}
+                              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-float-bounce" style={{ animationDelay: `${i * 0.5}s` }}>
+                                 <div className="w-14 h-14 md:w-20 md:h-20 bg-slate-900/50 rounded-2xl flex items-center justify-center border border-white/10 shadow-2xl backdrop-blur-xl master-gear-spin pointer-events-auto hover:border-brand-500/50 hover:scale-110 transition-all group overflow-hidden">
+                                    <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-50"></div>
+                                    {i === 0 && <Wifi className="text-white w-1/2 h-1/2 relative z-10" />}
+                                    {i === 1 && <Code className="text-white w-1/2 h-1/2 relative z-10" />}
+                                    {i === 2 && <Settings2 className="text-white w-1/2 h-1/2 relative z-10" />}
+                                    {i === 3 && <Zap className="text-white w-1/2 h-1/2 relative z-10" />}
+                                    {i === 4 && <Cpu className="text-white w-1/2 h-1/2 relative z-10" />}
+                                    {i === 5 && <RefreshCw className="text-white w-1/2 h-1/2 relative z-10" />}
                                  </div>
                               </div>
                            </div>
