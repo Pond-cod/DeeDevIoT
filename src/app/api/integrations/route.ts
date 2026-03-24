@@ -18,16 +18,29 @@ export interface IntegrationData {
 export async function GET() {
   try {
     const rows = await getSheetValues('Integrations!A2:H');
-    const integrations: IntegrationData[] = rows.map((row) => ({
-      id: row[0] || '',
-      title: row[1] || '',
-      description: row[2] || '',
-      imageUrl: row[3] || '',
-      tag: row[4] || '',
-      referenceUrl: row[5] || '',
-      title_th: row[6] || '',
-      description_th: row[7] || '',
-    }));
+    const integrations: IntegrationData[] = rows.map((row) => {
+      let imageUrl = row[3] || ''; // Column D: ImageUrl
+      
+      // Transform Google Drive links to bypass CORB/ORB
+      if (imageUrl.includes('drive.google.com')) {
+        const regex = /(?:\/d\/|id=|\/open\?id=)([a-zA-Z0-9_-]{20,})/;
+        const match = imageUrl.match(regex);
+        if (match && match[1]) {
+          imageUrl = `https://lh3.googleusercontent.com/d/${match[1]}=w1000`;
+        }
+      }
+
+      return {
+        id: row[0] || '',
+        title: row[1] || '',       // Column B: Description (Title in UI)
+        description: row[1] || '', // Fallback to Title
+        imageUrl: imageUrl,
+        tag: row[2] || '',         // Column C: Icon (Tag in UI)
+        referenceUrl: row[5] || '', // Column F: DemoUrl (ReferenceUrl in UI)
+        title_th: row[6] || '',
+        description_th: row[7] || '',
+      };
+    });
 
     return NextResponse.json({ success: true, data: integrations });
   } catch (error: any) {
@@ -47,11 +60,11 @@ export async function POST(request: Request) {
 
     const rowData = [
       id || Date.now().toString(),
-      title || "",
-      description || "",
-      imageUrl || "",
-      tag || "",
-      referenceUrl || "",
+      title || "",        // B: Description header in sheet
+      tag || "",          // C: Icon header in sheet
+      imageUrl || "",     // D: ImageUrl header in sheet
+      "",                 // E: (Empty/Reserved)
+      referenceUrl || "",  // F: DemoUrl header in sheet
       body.title_th || "",
       body.description_th || ""
     ];

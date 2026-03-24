@@ -171,7 +171,7 @@ export async function getConfig() {
         rows = defaultData;
       }
     }
-
+    const bilingualKeys = [
       'hero_badge', 'hero_headline', 'hero_sub', 'hero_btn1_text', 'hero_btn2_text',
       'why_badge', 'why_choose_title', 'why1_title', 'why1_desc', 'why2_title', 'why2_desc',
       'why3_title', 'why3_desc', 'why4_title', 'why4_desc', 'svc_badge', 'solutions_title',
@@ -180,7 +180,7 @@ export async function getConfig() {
       'concept_title1', 'concept_title2', 'concept_description', 
       'concept_c1t', 'concept_c1d', 'concept_c2t', 'concept_c2d', 'concept_c3t', 'concept_c3d',
       'contact_title', 'contact_description', 'contact_facebook'
-
+    ];
     const configObj: Record<string, string> = {};
     for (const row of rows) {
       if (row[0]) {
