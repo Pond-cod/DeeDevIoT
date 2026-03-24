@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getSheetValues, appendSheetValues, updateIntegrationRow } from '../../../lib/google';
+import { getSheetValues, appendSheetValues, updateIntegrationRow, deleteSheetRow } from '../../../lib/google';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -80,5 +80,21 @@ export async function POST(request: Request) {
   } catch (error: any) {
     console.error('Error POST integrations:', error);
     return NextResponse.json({ success: false, error: 'Failed to save', details: error.message }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+
+    if (!id) return NextResponse.json({ success: false, error: 'ID required' }, { status: 400 });
+
+    await deleteSheetRow('Integrations', id);
+
+    return NextResponse.json({ success: true, message: 'Integration deleted successfully' });
+  } catch (error: any) {
+    console.error('Error DELETE integrations:', error);
+    return NextResponse.json({ success: false, error: 'Failed to delete', details: error.message }, { status: 500 });
   }
 }

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getSheetValues, appendSheetValues, updateSheetRow } from '../../../lib/google';
+import { getSheetValues, appendSheetValues, updateSheetRow, deleteSheetRow } from '../../../lib/google';
 
 // กำหนด Interface โครงสร้างของข้อมูล Service
 export interface ServiceData {
@@ -127,6 +127,37 @@ export async function POST(request: Request) {
       { 
         success: false, 
         error: 'Failed to append service to Google Sheets',
+        details: error.message 
+      },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+
+    if (!id) {
+      return NextResponse.json(
+        { success: false, error: 'ID is required to delete service' },
+        { status: 400 }
+      );
+    }
+
+    await deleteSheetRow('Services', id);
+
+    return NextResponse.json({
+      success: true,
+      message: 'Service deleted successfully from Google Sheets',
+    });
+  } catch (error: any) {
+    console.error('Error in /api/services DELETE:', error);
+    return NextResponse.json(
+      { 
+        success: false, 
+        error: 'Failed to delete service',
         details: error.message 
       },
       { status: 500 }

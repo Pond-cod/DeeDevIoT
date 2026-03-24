@@ -26,6 +26,18 @@ function getGoogleAuth() {
   return { sheets, GOOGLE_SHEET_ID };
 }
 
+async function getSheetId(tabName: string) {
+  const { sheets, GOOGLE_SHEET_ID } = getGoogleAuth();
+  const spreadsheet = await sheets.spreadsheets.get({
+    spreadsheetId: GOOGLE_SHEET_ID,
+  });
+  const sheet = spreadsheet.data.sheets?.find(
+    (s) => s.properties?.title === tabName
+  );
+  if (!sheet) throw new Error(`Sheet with title ${tabName} not found`);
+  return sheet.properties?.sheetId;
+}
+
 export async function getSheetValues(range: string) {
   try {
     const { sheets, GOOGLE_SHEET_ID } = getGoogleAuth();
@@ -266,6 +278,49 @@ export async function updateIntegrationRow(id: string, values: any[]) {
     }
   } catch (error) {
     console.error('Error updating Integration row:', error);
+    throw error;
+  }
+}
+
+export async function deleteSheetRow(tabName: string, id: string) {
+  try {
+    const { sheets, GOOGLE_SHEET_ID } = getGoogleAuth();
+
+    // Fetch the IDs to find the row index
+    const range = `${tabName}!A2:A`;
+    const rows = await getSheetValues(range);
+    const rowIndex = rows.findIndex((row) => row[0] === id);
+
+    if (rowIndex !== -1) {
+      const sheetId = await getSheetId(tabName);
+      // Row 2 in sheet is index 0 in our data array (from A2:A)
+      // Spreadsheet Row 2 is 0-indexed index 1.
+      const startIndex = rowIndex + 1; 
+
+      const response = await sheets.spreadsheets.batchUpdate({
+        spreadsheetId: GOOGLE_SHEET_ID,
+        requestBody: {
+          requests: [
+            {
+              deleteDimension: {
+                range: {
+                  sheetId,
+                  dimension: 'ROWS',
+                  startIndex: startIndex,
+                  endIndex: startIndex + 1,
+                },
+              },
+            },
+          ],
+        },
+      });
+
+      return response.data;
+    } else {
+      throw new Error(`Row with ID ${id} not found in ${tabName}.`);
+    }
+  } catch (error) {
+    console.error(`Error deleting row from ${tabName}:`, error);
     throw error;
   }
 }

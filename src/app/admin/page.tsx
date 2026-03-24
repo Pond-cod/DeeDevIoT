@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Save, Loader2, CheckCircle2, AlertCircle, LayoutDashboard, Server, 
-  RefreshCw, LogOut, Settings, Link as LinkIcon
+  RefreshCw, LogOut, Settings, Link as LinkIcon, Trash2, Search,
+  Menu as MenuIcon, X, Type, Zap, Lightbulb, Star, Phone, Globe, ChevronRight
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { convertToDirectLink } from '../../lib/utils/drive';
@@ -23,93 +24,85 @@ interface ConfigData {
   hero_btn1_link: string; 
   hero_btn2_text_en: string; hero_btn2_text_th: string;
   hero_btn2_link: string; 
-  why_badge_en: string; why_badge_th: string;
-  why_choose_title_en: string; why_choose_title_th: string;
-  why1_title_en: string; why1_title_th: string;
-  why1_desc_en: string; why1_desc_th: string;
-  why2_title_en: string; why2_title_th: string;
-  why2_desc_en: string; why2_desc_th: string;
-  why3_title_en: string; why3_title_th: string;
-  why3_desc_en: string; why3_desc_th: string;
-  why4_title_en: string; why4_title_th: string;
-  why4_desc_en: string; why4_desc_th: string;
   svc_badge_en: string; svc_badge_th: string;
   solutions_title_en: string; solutions_title_th: string;
+  solutions_description_en: string; solutions_description_th: string;
   port_badge_en: string; port_badge_th: string;
   integrations_title_en: string; integrations_title_th: string;
   port_desc_en: string; port_desc_th: string;
   cta_heading_en: string; cta_heading_th: string;
   footer_bio_en: string; footer_bio_th: string;
   facebook_url: string;
-  concept_title1_en: string; concept_title1_th: string;
-  concept_title2_en: string; concept_title2_th: string;
-  concept_description_en: string; concept_description_th: string;
-  concept_c1t_en: string; concept_c1t_th: string;
-  concept_c1d_en: string; concept_c1d_th: string;
-  concept_c2t_en: string; concept_c2t_th: string;
-  concept_c2d_en: string; concept_c2d_th: string;
-  concept_c3t_en: string; concept_c3t_th: string;
-  concept_c3d_en: string; concept_c3d_th: string;
   contact_title_en: string; contact_title_th: string;
   contact_description_en: string; contact_description_th: string;
   contact_email: string;
   contact_phone: string;
   contact_facebook_en: string; contact_facebook_th: string;
   contact_line: string;
+  nav_btn_en: string; nav_btn_th: string;
+  back_btn_en: string; back_btn_th: string;
 }
+
+interface NavData { id: string; label_en: string; label_th: string; href: string; }
+interface ConceptData { id: string; title_en: string; title_th: string; desc_en: string; desc_th: string; icon: string; }
+interface SectionData { id: string; title_en: string; title_th: string; subtitle_en: string; subtitle_th: string; is_active: string; }
+interface SectionItemData { id: string; section_id: string; title_en: string; title_th: string; desc_en: string; desc_th: string; icon: string; imageUrl: string; }
 
 const emptySvc: ServiceData = { id: '', title: '', description: '', title_th: '', description_th: '', icon: '', imageUrl: '', demoUrl: '' };
 const emptyInt: IntegrationData = { id: '', title: '', description: '', title_th: '', description_th: '', imageUrl: '', tag: '', referenceUrl: '' };
 const emptyConf: ConfigData = { 
-  hero_badge_en: 'Professional Technology Solutions', hero_badge_th: 'พรีเมียมเทคโนโลยีโซลูชัน',
-  hero_headline_en: 'Transform Your Business with \nIntelligent Web & IoT Solutions', hero_headline_th: 'ยกระดับธุรกิจของคุณด้วย โซลูชัน Web App & IoT อัจฉริยะ',
-  hero_sub_en: 'Bridging the gap between digital platforms and physical hardware. We deliver seamless integration from web-based management software to smart hardware automation.', hero_sub_th: 'จากซอฟต์แวร์จัดการบนเว็บ สู่การควบคุมบอร์ด Arduino/ESP32 ไร้รอยต่อ',
-  hero_btn1_text_en: 'Explore Solutions', hero_btn1_text_th: 'ดูโซลูชันของเรา',
-  hero_btn1_link: '#services', 
-  hero_btn2_text_en: 'Get a Quote', hero_btn2_text_th: 'ขอใบเสนอราคา',
-  hero_btn2_link: '#contact',
-  why_badge_en: 'WHY CHOOSE US', why_badge_th: 'ทำไมถึงต้องเลือกเรา',
-  why_choose_title_en: 'What Makes Us Different', why_choose_title_th: 'ความแตกต่างที่ทำให้เราโดดเด่น',
-  why1_title_en: 'Domain Expertise', why1_title_th: 'ความเชี่ยวชาญเฉพาะด้าน',
-  why1_desc_en: 'Specialized professionals in full-stack web development and IoT hardware engineering.', why1_desc_th: 'ทีมงานมืออาชีพที่มีความเชี่ยวชาญทั้งด้าน Web Development และ IoT Hardware',
-  why2_title_en: 'Agile Delivery', why2_title_th: 'การส่งมอบที่รวดเร็ว',
-  why2_desc_en: 'Rapid deployment with flexible, on-the-fly adaptations to meet your strict deadlines.', why2_desc_th: 'พัฒนาและส่งมอบงานได้อย่างรวดเร็ว พร้อมยืดหยุ่นปรับเปลี่ยนตามความต้องการ',
-  why3_title_en: 'Cost-Effective', why3_title_th: 'คุ้มค่าการลงทุน',
-  why3_desc_en: 'Transparent pricing with high ROI on every digital innovation you receive.', why3_desc_th: 'ราคาโปร่งใส ให้ผลตอบแทนคุ้มค่าในทุกนวัตกรรมดิจิทัลที่คุณได้รับ',
-  why4_title_en: 'Premium Support', why4_title_th: 'บริการดูแลหลังการขาย',
-  why4_desc_en: 'Dedicated system maintenance and highly responsive technical consulting.', why4_desc_th: 'ดูแลรักษาระบบอย่างใกล้ชิด พร้อมให้คำปรึกษาทางเทคนิคอย่างรวดเร็ว',
-  svc_badge_en: 'OUR SOLUTIONS', svc_badge_th: 'โซลูชันของเรา',
-  solutions_title_en: 'Tailored Services for Your Business', solutions_title_th: 'บริการที่ออกแบบมาเพื่อธุรกิจคุณโดยเฉพาะ',
-  port_badge_en: 'INTEGRATIONS', port_badge_th: 'ผลงานของเรา',
-  integrations_title_en: 'Seamless Ecosystem Connectivity', integrations_title_th: 'ทำงานร่วมกับแพลตฟอร์มอื่นอย่างไร้รอยต่อ',
-  port_desc_en: 'Enhance your workflow flawlessly by connecting our custom-built platforms with the everyday tools you already trust.', port_desc_th: 'เพิ่มประสิทธิภาพการทำงานด้วยการเชื่อมต่อแพลตฟอร์มของเรากับเครื่องมือที่คุณคุ้นเคย',
-  cta_heading_en: 'Ready to Start Your Next Big Project?', cta_heading_th: 'พร้อมเริ่มพัฒนาโปรเจกต์ของคุณแล้วหรือยัง?',
-  footer_bio_en: 'Your trusted tech partner in turning innovative ideas into powerful, real-world Web & Hardware platforms.', footer_bio_th: 'พาร์ทเนอร์ที่พร้อมสานต่อไอเดียของคุณให้กลายเป็นแพลตฟอร์มที่ใช้งานได้จริง',
-  facebook_url: 'https://facebook.com/deedeviot',
-  concept_title1_en: 'SMART', concept_title1_th: 'สมาร์ท',
-  concept_title2_en: 'GEARING', concept_title2_th: 'เกียร์ริ่ง',
-  concept_description_en: 'Our systems work in harmony like precision-engineered gears.', concept_description_th: 'ระบบของเราทำงานร่วมกันอย่างสมบูรณ์แบบ เหมือนฟันเฟืองที่ผ่านการวิศวกรรมมาอย่างแม่นยำ',
-  concept_c1t_en: 'Precision Eng.', concept_c1t_th: 'ความแม่นยำสูง',
-  concept_c1d_en: 'Every line of code and IoT component is designed for perfect harmony.', concept_c1d_th: 'ทุกบรรทัดของโค้ดและส่วนประกอบ IoT ถูกออกแบบมาเพื่อความสอดคล้องที่ลงตัว',
-  concept_c2t_en: 'High Velocity', concept_c2t_th: 'ความเร็วสูงสุด',
-  concept_c2d_en: 'Accelerate your business with high-performance systems.', concept_c2d_th: 'เร่งสปีดธุรกิจของคุณด้วยระบบที่มีประสิทธิภาพและรวดเร็ว',
-  concept_c3t_en: 'Steady Growth', concept_c3t_th: 'การเติบโตที่มั่นคง',
-  concept_c3d_en: 'Reliable tech that ensures your business thrives consistently.', concept_c3d_th: 'เทคโนโลยีที่เชื่อถือได้ เพื่อให้มั่นใจว่าธุรกิจของคุณจะเติบโตอย่างต่อเนื่อง',
-  contact_title_en: 'READY TO POWER UP?', contact_title_th: 'พร้อมที่จะขับเคลื่อนไปข้างหน้าหรือยัง?',
-  contact_description_en: 'Our gears are ready. Let us power your success.', contact_description_th: 'ฟันเฟืองของเราพร้อมแล้ว ให้เราเป็นส่วนหนึ่งในความสำเร็จของคุณ',
-  contact_email: 'hello@deedeviot.com',
-  contact_phone: '02-123-4567',
-  contact_facebook_en: 'DeeDevIOT Page', contact_facebook_th: 'เพจ DeeDevIOT',
-  contact_line: '@DEEDEVIOT'
+  hero_badge_en: '', hero_badge_th: '',
+  hero_headline_en: '', hero_headline_th: '',
+  hero_sub_en: '', hero_sub_th: '',
+  hero_btn1_text_en: '', hero_btn1_text_th: '',
+  hero_btn1_link: '', 
+  hero_btn2_text_en: '', hero_btn2_text_th: '',
+  hero_btn2_link: '', 
+  svc_badge_en: '', svc_badge_th: '',
+  solutions_title_en: '', solutions_title_th: '',
+  solutions_description_en: '', solutions_description_th: '',
+  port_badge_en: '', port_badge_th: '',
+  integrations_title_en: '', integrations_title_th: '',
+  port_desc_en: '', port_desc_th: '',
+  cta_heading_en: '', cta_heading_th: '',
+  footer_bio_en: '', footer_bio_th: '',
+  facebook_url: '',
+  contact_title_en: '', contact_title_th: '',
+  contact_description_en: '', contact_description_th: '',
+  contact_email: '',
+  contact_phone: '',
+  contact_facebook_en: '', contact_facebook_th: '',
+  contact_line: '',
+  nav_btn_en: '', nav_btn_th: '',
+  back_btn_en: '', back_btn_th: '',
 };
+
+const emptyNav: NavData = { id: '', label_en: '', label_th: '', href: '' };
+const emptyConcept: ConceptData = { id: '', title_en: '', title_th: '', desc_en: '', desc_th: '', icon: '' };
+const emptySection: SectionData = { id: '', title_en: '', title_th: '', subtitle_en: '', subtitle_th: '', is_active: 'TRUE' };
+const emptySectionItem: SectionItemData = { id: '', section_id: '', title_en: '', title_th: '', desc_en: '', desc_th: '', icon: '', imageUrl: '' };
 
 export default function AdminDashboard() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<'services' | 'config' | 'integrations'>('services');
-
+  
+  const MENU_ITEMS = [
+    { id: 'dashboard', label: 'ภาพรวมระบบ (Overview)', icon: LayoutDashboard },
+    { id: 'services', label: 'บริการและผลงาน (Services)', icon: Server },
+    { id: 'integrations', label: 'ระบบการทำงาน (Portfolio)', icon: LinkIcon },
+    { divider: true },
+    { id: 'nav', label: 'เมนูและส่วนหัว (Header)', icon: Type },
+    { id: 'hero', label: 'ส่วนหลัก (Hero Section)', icon: Zap },
+    { id: 'concept', label: 'คอนเซปต์ (Concept)', icon: Lightbulb },
+    { id: 'sections', label: 'ส่วนเสริม (Site Sections)', icon: Settings },
+    { id: 'titles', label: 'หัวข้อเนื้อหา (Site Titles)', icon: Star },
+    { id: 'contact', label: 'ข้อมูลติดต่อ (Contact)', icon: Phone },
+    { id: 'footer', label: 'ฟุตเตอร์ (Footer)', icon: Globe },
+  ];
   // Shared State
   const [isSaving, setIsSaving] = useState(false);
   const [status, setStatus] = useState<{ type: 'success' | 'error' | null; message: string }>({ type: null, message: '' });
+  const [activeMenu, setActiveMenu] = useState('dashboard');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   // Services State
   const [services, setServices] = useState<ServiceData[]>([]);
@@ -126,6 +119,31 @@ export default function AdminDashboard() {
   // Config State
   const [configData, setConfigData] = useState<ConfigData>(emptyConf);
   const [isLoadingConf, setIsLoadingConf] = useState(false);
+
+  // Search State
+  const [svcSearch, setSvcSearch] = useState('');
+  const [intSearch, setIntSearch] = useState('');
+
+  // Nav Dynamic State
+  const [navItems, setNavItems] = useState<NavData[]>([]);
+  const [navForm, setNavForm] = useState<NavData>(emptyNav);
+  const [isNavEdit, setIsNavEdit] = useState(false);
+
+  // Concept Dynamic State
+  const [concepts, setConcepts] = useState<ConceptData[]>([]);
+  const [conceptForm, setConceptForm] = useState<ConceptData>(emptyConcept);
+  const [isConceptEdit, setIsConceptEdit] = useState(false);
+
+  // Sections Dynamic State
+  const [sections, setSections] = useState<SectionData[]>([]);
+  const [sectionForm, setSectionForm] = useState<SectionData>(emptySection);
+  const [isSectionEdit, setIsSectionEdit] = useState(false);
+
+  // Section Items Dynamic State
+  const [sectionItems, setSectionItems] = useState<SectionItemData[]>([]);
+  const [sectionItemForm, setSectionItemForm] = useState<SectionItemData>(emptySectionItem);
+  const [isSectionItemEdit, setIsSectionItemEdit] = useState(false);
+  const [selectedSectionId, setSelectedSectionId] = useState<string | null>(null);
 
   // ================= FETCHING =================
   const fetchServices = async () => {
@@ -152,18 +170,51 @@ export default function AdminDashboard() {
       const res = await fetch('/api/config', { cache: 'no-store' });
       const json = await res.json();
       if (json.success && json.data) {
-        setConfigData({
-          ...emptyConf,
-          ...json.data
-        });
+        setConfigData({ ...emptyConf, ...json.data });
       }
     } catch { } finally { setIsLoadingConf(false); }
+  };
+
+  const fetchNav = async () => {
+    try {
+      const res = await fetch('/api/nav', { cache: 'no-store' });
+      const json = await res.json();
+      if (json.success) setNavItems(json.data);
+    } catch { }
+  };
+
+  const fetchConcepts = async () => {
+    try {
+      const res = await fetch('/api/concept', { cache: 'no-store' });
+      const json = await res.json();
+      if (json.success) setConcepts(json.data);
+    } catch { }
+  };
+
+  const fetchSections = async () => {
+    try {
+      const res = await fetch('/api/sections', { cache: 'no-store' });
+      const json = await res.json();
+      if (json.success) setSections(json.data);
+    } catch { }
+  };
+
+  const fetchSectionItems = async () => {
+    try {
+      const res = await fetch('/api/section-items', { cache: 'no-store' });
+      const json = await res.json();
+      if (json.success) setSectionItems(json.data);
+    } catch { }
   };
 
   useEffect(() => {
     fetchServices();
     fetchIntegrations();
     fetchConfig();
+    fetchNav();
+    fetchConcepts();
+    fetchSections();
+    fetchSectionItems();
   }, []);
 
   const handleLogout = async () => {
@@ -216,11 +267,156 @@ export default function AdminDashboard() {
     try {
       const res = await fetch('/api/config', { method: 'POST', body: JSON.stringify(configData) });
       const data = await res.json();
-      if (data.success) setStatus({ type: 'success', message: 'บันทึกการตั้งค่าเรียบร้อย!' });
-      else throw new Error(data.error);
+      if (data.success) {
+        setStatus({ type: 'success', message: 'บันทึกการตั้งค่าเรียบร้อย!' });
+        fetchConfig();
+      } else throw new Error(data.error);
     } catch (err: any) {
       setStatus({ type: 'error', message: err.message || 'บันทึกไม่สำเร็จ' });
     } finally { setIsSaving(false); }
+  };
+
+  const handleNavSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSaving(true);
+    setStatus({ type: null, message: '' });
+    try {
+      const res = await fetch('/api/nav', { method: 'POST', body: JSON.stringify({ ...navForm, isEdit: isNavEdit }) });
+      const data = await res.json();
+      if (data.success) {
+        setStatus({ type: 'success', message: 'บันทึกเมนูเรียบร้อย!' });
+        setNavForm(emptyNav); setIsNavEdit(false); fetchNav();
+      } else throw new Error(data.error);
+    } catch (err: any) {
+      setStatus({ type: 'error', message: err.message || 'บันทึกไม่สำเร็จ' });
+    } finally { setIsSaving(false); }
+  };
+
+  const handleConceptSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSaving(true);
+    setStatus({ type: null, message: '' });
+    try {
+      const res = await fetch('/api/concept', { method: 'POST', body: JSON.stringify({ ...conceptForm, isEdit: isConceptEdit }) });
+      const data = await res.json();
+      if (data.success) {
+        setStatus({ type: 'success', message: 'บันทึกคอนเซปต์เรียบร้อย!' });
+        setConceptForm(emptyConcept); setIsConceptEdit(false); fetchConcepts();
+      } else throw new Error(data.error);
+    } catch (err: any) {
+      setStatus({ type: 'error', message: err.message || 'บันทึกไม่สำเร็จ' });
+    } finally { setIsSaving(false); }
+  };
+
+  const handleSectionSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSaving(true);
+    setStatus({ type: null, message: '' });
+    try {
+      const res = await fetch('/api/sections', { method: 'POST', body: JSON.stringify({ ...sectionForm, isEdit: isSectionEdit }) });
+      const data = await res.json();
+      if (data.success) {
+        setStatus({ type: 'success', message: 'บันทึกส่วนเสริมเรียบร้อย!' });
+        setSectionForm(emptySection); setIsSectionEdit(false); fetchSections();
+      } else throw new Error(data.error);
+    } catch (err: any) {
+      setStatus({ type: 'error', message: err.message || 'บันทึกไม่สำเร็จ' });
+    } finally { setIsSaving(false); }
+  };
+
+  const handleSectionItemSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSaving(true);
+    setStatus({ type: null, message: '' });
+    try {
+      const payload = { ...sectionItemForm, section_id: selectedSectionId, imageUrl: convertToDirectLink(sectionItemForm.imageUrl), isEdit: isSectionItemEdit };
+      const res = await fetch('/api/section-items', { method: 'POST', body: JSON.stringify(payload) });
+      const data = await res.json();
+      if (data.success) {
+        setStatus({ type: 'success', message: 'บันทึกข้อมูลเรียบร้อย!' });
+        setSectionItemForm(emptySectionItem); setIsSectionItemEdit(false); fetchSectionItems();
+      } else throw new Error(data.error);
+    } catch (err: any) {
+      setStatus({ type: 'error', message: err.message || 'บันทึกไม่สำเร็จ' });
+    } finally { setIsSaving(false); }
+  };
+
+  const handleDeleteSvc = async (id: string) => {
+    if (!confirm('คุณแน่ใจหรือไม่ว่าต้องการลบบริการนี้?')) return;
+    setIsSaving(true);
+    try {
+      const res = await fetch(`/api/services?id=${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) {
+        setStatus({ type: 'success', message: 'ลบบริการเรียบร้อย!' });
+        fetchServices();
+      } else throw new Error(data.error);
+    } catch (err: any) {
+      setStatus({ type: 'error', message: err.message || 'ลบไม่สำเร็จ' });
+    } finally { setIsSaving(false); }
+  };
+
+  const handleDeleteInt = async (id: string) => {
+    if (!confirm('คุณแน่ใจหรือไม่ว่าต้องการลบโปรเจกต์นี้?')) return;
+    setIsSaving(true);
+    try {
+      const res = await fetch(`/api/integrations?id=${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) {
+        setStatus({ type: 'success', message: 'ลบโปรเจกต์เรียบร้อย!' });
+        fetchIntegrations();
+      } else throw new Error(data.error);
+    } catch (err: any) {
+      setStatus({ type: 'error', message: err.message || 'ลบไม่สำเร็จ' });
+    } finally { setIsSaving(false); }
+  };
+
+  const handleDeleteNav = async (id: string) => {
+    if (!confirm('ยืนยันหน้าลบเมนู?')) return;
+    setIsSaving(true);
+    try {
+      const res = await fetch(`/api/nav?id=${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) { fetchNav(); setStatus({ type: 'success', message: 'ลบเมนูเรียบร้อย!' }); }
+      else throw new Error(data.error);
+    } catch (err: any) { setStatus({ type: 'error', message: err.message }); }
+    finally { setIsSaving(false); }
+  };
+
+  const handleDeleteConcept = async (id: string) => {
+    if (!confirm('ยืนยันหน้าลบคอนเซปต์?')) return;
+    setIsSaving(true);
+    try {
+      const res = await fetch(`/api/concept?id=${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) { fetchConcepts(); setStatus({ type: 'success', message: 'ลบคอนเซปต์เรียบร้อย!' }); }
+      else throw new Error(data.error);
+    } catch (err: any) { setStatus({ type: 'error', message: err.message }); }
+    finally { setIsSaving(false); }
+  };
+
+  const handleDeleteSection = async (id: string) => {
+    if (!confirm('ยืนยันหน้าลบส่วนเสริม?')) return;
+    setIsSaving(true);
+    try {
+      const res = await fetch(`/api/sections?id=${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) { fetchSections(); setStatus({ type: 'success', message: 'ลบส่วนเสริมเรียบร้อย!' }); }
+      else throw new Error(data.error);
+    } catch (err: any) { setStatus({ type: 'error', message: err.message }); }
+    finally { setIsSaving(false); }
+  };
+
+  const handleDeleteSectionItem = async (id: string) => {
+    if (!confirm('ยืนยันหน้าลบรายการ?')) return;
+    setIsSaving(true);
+    try {
+      const res = await fetch(`/api/section-items?id=${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) { fetchSectionItems(); setStatus({ type: 'success', message: 'ลบรายการเรียบร้อย!' }); }
+      else throw new Error(data.error);
+    } catch (err: any) { setStatus({ type: 'error', message: err.message }); }
+    finally { setIsSaving(false); }
   };
 
   // ================= RENDER TOOLS =================
@@ -232,47 +428,119 @@ export default function AdminDashboard() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900 pb-12 font-sans selection:bg-brand-500/20">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 shadow-sm mb-8">
-        <div className="max-w-7xl mx-auto px-6 py-6 flex justify-between items-start">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-brand-50 border border-brand-100 rounded-2xl"><LayoutDashboard className="w-8 h-8 text-brand-500" /></div>
-            <div>
-              <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Admin CMS</h1>
-              <p className="text-gray-500 text-sm mt-1">จัดการหน้าเว็บและบริการทั้งหมด</p>
+    <div className="flex h-screen bg-gray-100 overflow-hidden font-sans selection:bg-brand-500/20">
+      {/* --- Sidebar --- */}
+      <aside className={`bg-white border-r border-gray-200 transition-all duration-300 flex flex-col z-50 ${isSidebarOpen ? 'w-72' : 'w-20'}`}>
+        <div className="p-6 flex items-center justify-between border-b border-gray-50 h-24">
+          {isSidebarOpen ? (
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 bg-brand-50 border border-brand-100 rounded-xl"><LayoutDashboard className="w-6 h-6 text-brand-500" /></div>
+              <div>
+                <h1 className="font-extrabold text-gray-900 leading-tight text-lg">Admin CMS</h1>
+                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Control Panel</p>
+              </div>
             </div>
-          </div>
-          <button onClick={handleLogout} className="flex items-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2.5 rounded-xl border border-red-200 font-semibold text-sm transition-colors">
-            <LogOut className="w-4 h-4" /> <span className="hidden sm:inline">ออกจากระบบ</span>
+          ) : (
+             <div className="p-2.5 bg-brand-50 border border-brand-100 rounded-xl mx-auto"><LayoutDashboard className="w-6 h-6 text-brand-500" /></div>
+          )}
+        </div>
+
+        <nav className="flex-1 overflow-y-auto py-6 px-4 space-y-1 custom-scrollbar">
+          {MENU_ITEMS.map((item, idx) => {
+            if ('divider' in item) return <div key={idx} className="h-px bg-gray-100 my-4 mx-2" />;
+            const Icon = item.icon as any;
+            const isActive = activeMenu === item.id;
+            return (
+              <button key={item.id} onClick={() => { setActiveMenu(item.id!); setStatus({type:null,message:''}); }}
+                className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all group ${isActive ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/25' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'}`}>
+                <Icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-white' : 'group-hover:text-brand-500'}`} />
+                {isSidebarOpen && <span className="font-bold text-sm tracking-tight">{item.label}</span>}
+                {isActive && isSidebarOpen && <ChevronRight className="w-4 h-4 ml-auto opacity-50" />}
+              </button>
+            );
+          })}
+        </nav>
+
+        <div className="p-4 border-t border-gray-50 space-y-2">
+          <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="w-full flex items-center justify-center p-2.5 text-gray-400 hover:bg-gray-50 hover:text-gray-600 rounded-lg transition-all">
+            {isSidebarOpen ? <X className="w-5 h-5" /> : <MenuIcon className="w-5 h-5" />}
+          </button>
+          <button onClick={handleLogout} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 transition-all font-bold text-sm ${!isSidebarOpen && 'justify-center'}`}>
+            <LogOut className="w-5 h-5" />
+            {isSidebarOpen && <span>ออกจากระบบ</span>}
           </button>
         </div>
-      </div>
+      </aside>
 
-      <div className="max-w-7xl mx-auto px-6">
-        {/* Tabs */}
-        <div className="mb-8 border-b border-gray-200 flex gap-6 overflow-x-auto">
-          {[
-            { id: 'services', label: 'บริการและผลงาน (Services)', icon: Server },
-            { id: 'config', label: 'ตั้งค่าหน้าหลัก (Site Config)', icon: Settings },
-            { id: 'integrations', label: 'ระบบการทำงานรวมกัน (Portfolio)', icon: LinkIcon }
-          ].map(t => (
-            <button key={t.id} onClick={() => { setActiveTab(t.id as any); setStatus({ type: null, message: '' }); }}
-              className={`flex items-center gap-2 px-4 py-3 font-semibold whitespace-nowrap border-b-2 transition-all ${activeTab === t.id ? 'border-brand-500 text-brand-600' : 'border-transparent text-gray-500 hover:text-gray-800'}`}>
-              <t.icon className="w-4 h-4" /> {t.label}
-            </button>
-          ))}
-        </div>
+      {/* --- Main Content Area --- */}
+      <main className="flex-1 overflow-y-auto relative bg-gray-50/50">
+        {/* Sticky Sub-Header */}
+        <header className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-gray-100 z-40 px-8 py-5 flex justify-between items-center h-24">
+          <div>
+            <h2 className="text-2xl font-black text-gray-900 tracking-tight uppercase">{activeMenu.replace('_', ' ')}</h2>
+            <p className="text-xs text-gray-400 font-bold tracking-widest mt-1">DEEDEV IOT MANAGEMENT SYSTEM</p>
+          </div>
+          <div className="flex items-center gap-4">
+             {renderStatus()}
+          </div>
+        </header>
 
-        {/* ================= SERVICES TAB ================= */}
-        {activeTab === 'services' && (
-          <div className="grid xl:grid-cols-12 gap-8">
+        <div className="p-8 max-w-7xl mx-auto">
+
+        {/* ================= DASHBOARD ================= */}
+        {activeMenu === 'dashboard' && (
+          <div className="space-y-6 animate-fade-in">
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
+                 <div className="flex justify-between items-start mb-4">
+                    <div className="p-3 bg-blue-50 text-blue-500 rounded-xl"><Server className="w-6 h-6" /></div>
+                    <span className="text-2xl font-black text-gray-900">{services.length}</span>
+                 </div>
+                 <h3 className="font-bold text-gray-500 text-sm uppercase tracking-wider">บริการและผลงานทั้งหมด</h3>
+                 <p className="text-xs text-gray-400 mt-1">Total Services & Works</p>
+              </div>
+              <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
+                 <div className="flex justify-between items-start mb-4">
+                    <div className="p-3 bg-purple-50 text-purple-500 rounded-xl"><LinkIcon className="w-6 h-6" /></div>
+                    <span className="text-2xl font-black text-gray-900">{integrations.length}</span>
+                 </div>
+                 <h3 className="font-bold text-gray-500 text-sm uppercase tracking-wider">ระบบที่เชื่อมต่อทั้งหมด</h3>
+                 <p className="text-xs text-gray-400 mt-1">Total Portfolio Integrations</p>
+              </div>
+              <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm bg-gradient-to-br from-brand-500 to-indigo-600 text-white border-none">
+                 <div className="flex justify-between items-start mb-4">
+                    <div className="p-3 bg-white/20 text-white rounded-xl"><Globe className="w-6 h-6" /></div>
+                    <span className="text-xs font-bold uppercase tracking-widest bg-white/20 px-2 py-1 rounded">Live Site</span>
+                 </div>
+                 <h3 className="font-bold text-sm uppercase tracking-wider">สถานะการแสดงผลหน้าบ้าน</h3>
+                 <p className="text-xs text-white/70 mt-1">เชื่อมต่อกับ Google Sheets เรียบร้อย</p>
+              </div>
+            </div>
+
+            <div className="bg-white p-8 rounded-2xl border border-gray-200 shadow-sm">
+               <h3 className="text-lg font-bold text-gray-900 mb-4 border-b border-gray-50 pb-4 uppercase tracking-tight">Recent Activity & Quick Links</h3>
+               <div className="grid md:grid-cols-2 gap-4">
+                  <button onClick={()=>setActiveMenu('services')} className="flex items-center gap-4 p-4 border border-gray-100 rounded-xl hover:bg-gray-50 transition-all text-left">
+                     <div className="w-10 h-10 bg-brand-50 text-brand-500 rounded-lg flex items-center justify-center font-bold">1</div>
+                     <div><p className="font-bold text-sm text-gray-900">จัดการบริการและผลงาน</p><p className="text-xs text-gray-400">เพิ่ม/ลบ/แก้ไข รายละเอียดบริการ</p></div>
+                  </button>
+                  <button onClick={()=>setActiveMenu('hero')} className="flex items-center gap-4 p-4 border border-gray-100 rounded-xl hover:bg-gray-50 transition-all text-left">
+                     <div className="w-10 h-10 bg-brand-50 text-brand-500 rounded-lg flex items-center justify-center font-bold">2</div>
+                     <div><p className="font-bold text-sm text-gray-900">แก้ไขหน้าแรก (Hero Section)</p><p className="text-xs text-gray-400">เปลี่ยนพาดหัวและคำโปรยหน้าหลัก</p></div>
+                  </button>
+               </div>
+            </div>
+          </div>
+        )}
+
+        {/* ================= SERVICES ================= */}
+        {activeMenu === 'services' && (
+          <div className="grid xl:grid-cols-12 gap-8 animate-fade-in">
             <div className="xl:col-span-4 bg-white border border-gray-200 shadow-sm rounded-2xl p-6 h-fit sticky top-6">
               <h2 className="text-xl font-bold mb-6 pb-4 border-b border-gray-100 flex justify-between text-gray-900">
                 <span>{isSvcEdit ? 'แก้ไขบริการและผลงาน' : 'เพิ่มบริการและผลงานใหม่'}</span>
                 {isSvcEdit && <button type="button" onClick={() => { setSvcForm(emptySvc); setIsSvcEdit(false); }} className="text-xs px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg transition-colors">ยกเลิก</button>}
               </h2>
-              {renderStatus()}
               <form onSubmit={handleSvcSubmit} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
@@ -290,8 +558,8 @@ export default function AdminDashboard() {
                     <input required type="text" value={svcForm.title} onChange={(e) => setSvcForm({...svcForm, title: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" />
                   </div>
                   <div>
-                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Title (TH)</label>
-                    <input type="text" value={svcForm.title_th} onChange={(e) => setSvcForm({...svcForm, title_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all font-thai" />
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Title (TH) *</label>
+                    <input required type="text" value={svcForm.title_th} onChange={(e) => setSvcForm({...svcForm, title_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all font-thai" />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
@@ -300,310 +568,479 @@ export default function AdminDashboard() {
                     <textarea required rows={3} value={svcForm.description} onChange={(e) => setSvcForm({...svcForm, description: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" />
                   </div>
                   <div>
-                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Description (TH)</label>
-                    <textarea rows={3} value={svcForm.description_th} onChange={(e) => setSvcForm({...svcForm, description_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all font-thai" />
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Description (TH) *</label>
+                    <textarea required rows={3} value={svcForm.description_th} onChange={(e) => setSvcForm({...svcForm, description_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all font-thai" />
                   </div>
                 </div>
-                <div>
-                  <div className="flex justify-between items-end mb-1.5">
-                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Image URL(s)</label>
-                    <a href="https://drive.google.com/drive/folders/1l4tMjzpPTGsXduc2Cu-kgrKqfp3JfJMQ?usp=sharing" target="_blank" className="text-[10px] text-brand-600 font-semibold hover:underline bg-brand-50 px-2 py-0.5 rounded">📂 เปิดโฟลเดอร์ภาพ</a>
-                  </div>
-                  <textarea rows={3} value={svcForm.imageUrl} onChange={(e) => setSvcForm({...svcForm, imageUrl: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" />
-                </div>
-                <div>
-                  <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Demo URL</label>
-                  <input type="url" value={svcForm.demoUrl} onChange={(e) => setSvcForm({...svcForm, demoUrl: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" />
-                </div>
-                <button disabled={isSaving} className="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 mx-auto mt-6 rounded-xl flex items-center justify-center gap-2 shadow-md shadow-brand-500/20 transition-all">
-                  {isSaving ? <Loader2 className="animate-spin w-5 h-5" /> : <Save className="w-5 h-5" />} บันทึกข้อมูลบริการและผลงาน
+                <button disabled={isSaving} className="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3.5 mx-auto mt-6 rounded-xl flex items-center justify-center gap-2 shadow-md transition-all">
+                  {isSaving ? <Loader2 className="animate-spin w-5 h-5" /> : <Save className="w-5 h-5" />} บันทึกข้อมูล
                 </button>
               </form>
             </div>
             
             <div className="xl:col-span-8 bg-white border border-gray-200 shadow-sm rounded-2xl p-6 min-h-[500px]">
-              <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-100">
-                <h2 className="text-xl font-bold text-gray-900">รายการบริการและผลงาน ({services.length})</h2>
-                <button onClick={fetchServices} className="text-gray-400 hover:text-brand-500 transition-colors p-2 hover:bg-brand-50 rounded-lg"><RefreshCw className={`w-5 h-5 ${isLoadingSvc && 'animate-spin'}`} /></button>
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 pb-4 border-b border-gray-100 gap-4">
+                <h2 className="text-xl font-bold text-gray-900 uppercase">รายการบริการ ({services.length})</h2>
+                <div className="relative flex-grow md:w-64">
+                   <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                   <input type="text" placeholder="ค้นหาบริการ..." value={svcSearch} onChange={(e) => setSvcSearch(e.target.value)} className="w-full pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none focus:bg-white focus:border-brand-500 transition-all" />
+                </div>
               </div>
               <div className="space-y-4">
-                {services.map(s => (
-                  <div key={s.id} className="bg-gray-50 border border-gray-200 hover:border-brand-200 p-5 rounded-2xl flex justify-between items-start transition-colors group">
+                {services
+                  .filter(svc => svc.title.toLowerCase().includes(svcSearch.toLowerCase()) || (svc.title_th && svc.title_th.toLowerCase().includes(svcSearch.toLowerCase())) || svc.id.toLowerCase().includes(svcSearch.toLowerCase()))
+                  .map(svc => (
+                  <div key={svc.id} className="bg-gray-50 border border-gray-200 hover:border-brand-200 p-5 rounded-2xl flex justify-between items-start transition-all group text-left">
                     <div>
-                      <h3 className="font-bold text-brand-600 text-lg mb-1 group-hover:text-brand-700">{s.title} {s.title_th && <span className="text-gray-400 font-normal">/ {s.title_th}</span>}</h3>
-                      <p className="text-sm text-gray-600 line-clamp-2 max-w-2xl leading-relaxed">{s.description}</p>
-                      <div className="flex gap-3 mt-3">
-                        <span className="text-xs font-semibold bg-white border border-gray-200 text-gray-500 px-2.5 py-1 rounded-md">ID: {s.id}</span>
-                        <span className="text-xs font-semibold bg-white border border-gray-200 text-gray-500 px-2.5 py-1 rounded-md">Icon: {s.icon}</span>
-                      </div>
+                      <h3 className="font-bold text-brand-600 text-lg mb-1 group-hover:text-brand-700">{svc.title} {svc.title_th && <span className="text-gray-400 font-normal">/ {svc.title_th}</span>}</h3>
+                      <p className="text-sm text-gray-600 line-clamp-2 max-w-2xl leading-relaxed mt-2">{svc.description}</p>
                     </div>
-                    <button onClick={() => { setSvcForm(s); setIsSvcEdit(true); setStatus({type:null,message:''}); window.scrollTo(0,0); }} className="text-amber-600 bg-amber-50 hover:bg-amber-100 px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-colors border border-amber-200/50 ml-4 shrink-0">แก้ไข</button>
+                    <div className="flex gap-2 ml-4 shrink-0">
+                      <button onClick={() => { setSvcForm(svc); setIsSvcEdit(true); window.scrollTo(0,0); }} className="text-amber-600 bg-amber-50 hover:bg-amber-100 px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-colors border border-amber-200/50">แก้ไข</button>
+                      <button onClick={() => handleDeleteSvc(svc.id)} className="text-red-600 bg-red-50 hover:bg-red-100 p-2 rounded-xl shadow-sm transition-colors border border-red-200/50"><Trash2 className="w-5 h-5" /></button>
+                    </div>
                   </div>
                 ))}
-                {services.length === 0 && !isLoadingSvc && (
-                  <div className="text-center py-12 text-gray-400 font-medium">ยังไม่มีข้อมูลบริการและผลงาน</div>
-                )}
               </div>
             </div>
           </div>
         )}
 
-        {/* ================= CONFIG TAB ================= */}
-        {activeTab === 'config' && (
-          <div className="max-w-4xl mx-auto pb-12">
-            <h2 className="text-2xl font-bold mb-8 pb-4 border-b border-gray-100 text-gray-900">ตั้งค่าส่วนประกอบหน้าหลัก (Site Content)</h2>
-            {renderStatus()}
-            <form onSubmit={handleConfSubmit} className="space-y-8">
-              
-              {/* SECTION 1: HERO */}
-              <div className="bg-white p-6 md:p-8 rounded-2xl border border-gray-200 shadow-sm relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-1 h-full bg-brand-500"></div>
-                <h3 className="text-lg font-bold mb-6 text-brand-600 border-b border-gray-100 pb-3">1. ส่วนหน้าหลัก (Hero Section)</h3>
-                <div className="space-y-4">
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ป้ายกำกับบนสุด (Badge EN)</label>
-                      <input type="text" value={configData.hero_badge_en} onChange={e=>setConfigData({...configData, hero_badge_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" />
-                    </div>
-                    <div>
-                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ป้ายกำกับบนสุด (Badge TH)</label>
-                      <input type="text" value={configData.hero_badge_th} onChange={e=>setConfigData({...configData, hero_badge_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" />
-                    </div>
-                  </div>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">พาดหัวหลัก (Headline EN)</label>
-                      <textarea rows={2} value={configData.hero_headline_en} onChange={e=>setConfigData({...configData, hero_headline_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" />
-                    </div>
-                    <div>
-                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">พาดหัวหลัก (Headline TH)</label>
-                      <textarea rows={2} value={configData.hero_headline_th} onChange={e=>setConfigData({...configData, hero_headline_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all font-thai" />
-                    </div>
-                  </div>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">คำอธิบาย (Sub-headline EN)</label>
-                      <textarea rows={2} value={configData.hero_sub_en} onChange={e=>setConfigData({...configData, hero_sub_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" />
-                    </div>
-                    <div>
-                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">คำอธิบาย (Sub-headline TH)</label>
-                      <textarea rows={2} value={configData.hero_sub_th} onChange={e=>setConfigData({...configData, hero_sub_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all font-thai" />
-                    </div>
-                  </div>
-                  <div className="grid sm:grid-cols-3 gap-4 mt-6 bg-gray-50 p-5 rounded-xl border border-gray-100">
-                    <div className="col-span-3 text-sm font-bold text-gray-700">📌 ปุ่มหลัก (สีหลัก)</div>
-                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ข้อความเป้าหมาย (EN)</label><input type="text" value={configData.hero_btn1_text_en} onChange={e=>setConfigData({...configData, hero_btn1_text_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
-                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ข้อความเป้าหมาย (TH)</label><input type="text" value={configData.hero_btn1_text_th} onChange={e=>setConfigData({...configData, hero_btn1_text_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
-                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ลิงก์ URL</label><input type="text" value={configData.hero_btn1_link} onChange={e=>setConfigData({...configData, hero_btn1_link: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
-                  </div>
-                  <div className="grid sm:grid-cols-3 gap-4 bg-gray-50 p-5 rounded-xl border border-gray-100">
-                    <div className="col-span-3 text-sm font-bold text-gray-700">📌 ปุ่มรอง (สีรอง)</div>
-                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ข้อความเป้าหมาย (EN)</label><input type="text" value={configData.hero_btn2_text_en} onChange={e=>setConfigData({...configData, hero_btn2_text_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
-                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ข้อความเป้าหมาย (TH)</label><input type="text" value={configData.hero_btn2_text_th} onChange={e=>setConfigData({...configData, hero_btn2_text_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
-                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ลิงก์ URL</label><input type="text" value={configData.hero_btn2_link} onChange={e=>setConfigData({...configData, hero_btn2_link: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
-                  </div>
-                </div>
-              </div>
-
-              {/* SECTION 2: CONCEPT (GEARING) */}
-              <div className="bg-white p-6 md:p-8 rounded-2xl border border-gray-200 shadow-sm relative overflow-hidden">
-                 <div className="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
-                 <h3 className="text-lg font-bold mb-6 text-brand-600 border-b border-gray-100 pb-3">2. แนวคิดของแบรนด์ (Brand Concept - Gearing)</h3>
-                 <div className="grid md:grid-cols-2 gap-4 mb-6">
-                     <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">หัวข้อ (Title EN)</label><input type="text" value={configData.concept_title1_en} onChange={e=>setConfigData({...configData, concept_title1_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-bold" /></div>
-                     <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">หัวข้อ (Title TH)</label><input type="text" value={configData.concept_title1_th} onChange={e=>setConfigData({...configData, concept_title1_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai font-bold" /></div>
-                 </div>
-                 <div className="grid md:grid-cols-2 gap-4 mb-6">
-                     <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">หัวข้อรอง (Subtitle EN)</label><input type="text" value={configData.concept_title2_en} onChange={e=>setConfigData({...configData, concept_title2_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-bold text-brand-500" /></div>
-                     <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">หัวข้อรอง (Subtitle TH)</label><input type="text" value={configData.concept_title2_th} onChange={e=>setConfigData({...configData, concept_title2_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai font-bold text-brand-500" /></div>
-                 </div>
-                 <div className="grid md:grid-cols-2 gap-4 mb-8 pb-8 border-b border-gray-100">
-                     <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">คำอธิบายรวม (Description EN)</label><textarea rows={2} value={configData.concept_description_en} onChange={e=>setConfigData({...configData, concept_description_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
-                     <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">คำอธิบายรวม (Description TH)</label><textarea rows={2} value={configData.concept_description_th} onChange={e=>setConfigData({...configData, concept_description_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
-                 </div>
-
-                 <div className="space-y-4">
-                     <div className="font-bold text-sm text-gray-400 mb-2">📌 การนำเสนอรูปประโยคแบบฟันเฟือง (Gearing Cards - 3 items)</div>
-                     {[1,2,3].map((i) => (
-                        <div key={`c${i}`} className="bg-brand-50/50 p-4 rounded-xl border border-brand-100/50 grid md:grid-cols-2 gap-4">
-                            <div><label className="text-xs font-bold text-brand-600 uppercase tracking-wider">Card {i} - Title (EN)</label><input type="text" value={(configData as any)[`concept_c${i}t_en`]} onChange={e=>setConfigData({...configData, [`concept_c${i}t_en`]: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
-                            <div><label className="text-xs font-bold text-brand-600 uppercase tracking-wider">Card {i} - Title (TH)</label><input type="text" value={(configData as any)[`concept_c${i}t_th`]} onChange={e=>setConfigData({...configData, [`concept_c${i}t_th`]: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
-                            <div><label className="text-xs font-bold text-brand-600 uppercase tracking-wider">Card {i} - Desc (EN)</label><input type="text" value={(configData as any)[`concept_c${i}d_en`]} onChange={e=>setConfigData({...configData, [`concept_c${i}d_en`]: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
-                            <div><label className="text-xs font-bold text-brand-600 uppercase tracking-wider">Card {i} - Desc (TH)</label><input type="text" value={(configData as any)[`concept_c${i}d_th`]} onChange={e=>setConfigData({...configData, [`concept_c${i}d_th`]: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
-                        </div>
-                     ))}
-
-                     <div className="mt-8 pt-8 border-t border-gray-100 font-bold text-sm text-gray-400 mb-2">📌 ทำไมถึงเลือกเรา (Why Choose Us - Optional fields used in some sections)</div>
-                     {[1,2,3,4].map((i) => (
-                         <div key={i} className="bg-gray-50 p-4 rounded-xl border border-gray-100 grid md:grid-cols-2 gap-4 opacity-70">
-                             <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Item {i} - Title (EN)</label><input type="text" value={(configData as any)[`why${i}_title_en`]} onChange={e=>setConfigData({...configData, [`why${i}_title_en`]: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
-                             <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Item {i} - Title (TH)</label><input type="text" value={(configData as any)[`why${i}_title_th`]} onChange={e=>setConfigData({...configData, [`why${i}_title_th`]: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
-                             <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Item {i} - Desc (EN)</label><input type="text" value={(configData as any)[`why${i}_desc_en`]} onChange={e=>setConfigData({...configData, [`why${i}_desc_en`]: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
-                             <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Item {i} - Desc (TH)</label><input type="text" value={(configData as any)[`why${i}_desc_th`]} onChange={e=>setConfigData({...configData, [`why${i}_desc_th`]: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
-                         </div>
-                     ))}
-                  </div>
-              </div>
-
-              {/* SECTION 3 & 4 */}
-              <div className="grid md:grid-cols-2 gap-8">
-                <div className="bg-white p-6 md:p-8 rounded-2xl border border-gray-200 shadow-sm relative overflow-hidden space-y-4">
-                   <div className="absolute top-0 left-0 w-1 h-full bg-amber-500"></div>
-                   <h3 className="text-lg font-bold mb-4 text-brand-600 border-b border-gray-100 pb-3">3. บริการ (Services)</h3>
-                   <div className="grid md:grid-cols-2 gap-4">
-                       <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ป้ายกำกับ (Badge EN)</label><input type="text" value={configData.svc_badge_en} onChange={e=>setConfigData({...configData, svc_badge_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
-                       <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ป้ายกำกับ (Badge TH)</label><input type="text" value={configData.svc_badge_th} onChange={e=>setConfigData({...configData, svc_badge_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
-                   </div>
-                   <div className="grid md:grid-cols-2 gap-4 mt-4">
-                       <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">หัวข้อสรุป (Title EN)</label><input type="text" value={configData.solutions_title_en} onChange={e=>setConfigData({...configData, solutions_title_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
-                       <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">หัวข้อสรุป (Title TH)</label><input type="text" value={configData.solutions_title_th} onChange={e=>setConfigData({...configData, solutions_title_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
-                   </div>
-                </div>
-
-                <div className="bg-white p-6 md:p-8 rounded-2xl border border-gray-200 shadow-sm relative overflow-hidden space-y-4">
-                   <div className="absolute top-0 left-0 w-1 h-full bg-purple-500"></div>
-                   <h3 className="text-lg font-bold mb-4 text-brand-600 border-b border-gray-100 pb-3">4. ระบบเชื่อมต่อ (Integrations)</h3>
-                   <div className="grid md:grid-cols-2 gap-4">
-                       <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ป้ายกำกับ (Badge EN)</label><input type="text" value={configData.port_badge_en} onChange={e=>setConfigData({...configData, port_badge_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
-                       <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">ป้ายกำกับ (Badge TH)</label><input type="text" value={configData.port_badge_th} onChange={e=>setConfigData({...configData, port_badge_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
-                   </div>
-                   <div className="grid md:grid-cols-2 gap-4">
-                       <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">หัวข้อสรุป (Title EN)</label><input type="text" value={configData.integrations_title_en} onChange={e=>setConfigData({...configData, integrations_title_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
-                       <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">หัวข้อสรุป (Title TH)</label><input type="text" value={configData.integrations_title_th} onChange={e=>setConfigData({...configData, integrations_title_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
-                   </div>
-                   <div className="grid md:grid-cols-2 gap-4">
-                       <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">คำอธิบาย (EN)</label><textarea rows={2} value={configData.port_desc_en} onChange={e=>setConfigData({...configData, port_desc_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
-                       <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">คำอธิบาย (TH)</label><textarea rows={2} value={configData.port_desc_th} onChange={e=>setConfigData({...configData, port_desc_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
-                   </div>
-                </div>
-              </div>
-
-               {/* SECTION 5: CONTACT & FOOTER BIO */}
-               <div className="bg-white p-6 md:p-8 rounded-2xl border border-gray-200 shadow-sm relative overflow-hidden space-y-4">
-                  <div className="absolute top-0 left-0 w-1 h-full bg-green-500"></div>
-                  <h3 className="text-lg font-bold mb-4 text-brand-600 border-b border-gray-100 pb-3">5. ติดต่อเรา และ Footer Bio</h3>
-                  <div className="grid md:grid-cols-2 gap-4 mb-4">
-                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Contact Title (EN)</label><input type="text" value={configData.contact_title_en} onChange={e=>setConfigData({...configData, contact_title_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
-                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Contact Title (TH)</label><input type="text" value={configData.contact_title_th} onChange={e=>setConfigData({...configData, contact_title_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
-                  </div>
-                  <div className="grid md:grid-cols-2 gap-4 mb-6 pb-6 border-b border-gray-100">
-                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Contact Desc (EN)</label><textarea rows={2} value={configData.contact_description_en} onChange={e=>setConfigData({...configData, contact_description_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" /></div>
-                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Contact Desc (TH)</label><textarea rows={2} value={configData.contact_description_th} onChange={e=>setConfigData({...configData, contact_description_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" /></div>
-                  </div>
-                  
-                  <div className="grid md:grid-cols-2 gap-4 p-5 bg-gray-50 rounded-xl border border-gray-100">
-                    <div className="col-span-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">📌 Contact Details & Social</div>
-                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Email Address</label><input type="text" value={configData.contact_email} onChange={e=>setConfigData({...configData, contact_email: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500" /></div>
-                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Phone Number</label><input type="text" value={configData.contact_phone} onChange={e=>setConfigData({...configData, contact_phone: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500" /></div>
-                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Facebook UI Text (EN)</label><input type="text" value={configData.contact_facebook_en} onChange={e=>setConfigData({...configData, contact_facebook_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500" /></div>
-                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Facebook UI Text (TH)</label><input type="text" value={configData.contact_facebook_th} onChange={e=>setConfigData({...configData, contact_facebook_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 font-thai" /></div>
-                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Line ID</label><input type="text" value={configData.contact_line} onChange={e=>setConfigData({...configData, contact_line: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500" /></div>
-                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Facebook Page URL</label><input type="text" value={configData.facebook_url} onChange={e=>setConfigData({...configData, facebook_url: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500" /></div>
-                  </div>
-                  
-                  <div className="grid md:grid-cols-2 gap-4 mt-6 pt-6 border-t border-gray-100">
-                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">CTA Footer Title (EN)</label><input type="text" value={configData.cta_heading_en} onChange={e=>setConfigData({...configData, cta_heading_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500" /></div>
-                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">CTA Footer Title (TH)</label><input type="text" value={configData.cta_heading_th} onChange={e=>setConfigData({...configData, cta_heading_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 font-thai" /></div>
-                  </div>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Footer Bio (EN)</label><textarea rows={2} value={configData.footer_bio_en} onChange={e=>setConfigData({...configData, footer_bio_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500" /></div>
-                    <div><label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Footer Bio (TH)</label><textarea rows={2} value={configData.footer_bio_th} onChange={e=>setConfigData({...configData, footer_bio_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 font-thai" /></div>
-                  </div>
-               </div>
-
-              <div className="sticky bottom-6 z-[100]">
-                 <button disabled={isSaving} className="w-full shadow-2xl bg-brand-500 hover:bg-brand-600 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 shadow-[0_8px_30px_rgb(255,107,0,0.3)] transition-all text-lg">
-                   {isSaving ? <Loader2 className="animate-spin w-6 h-6" /> : <Save className="w-6 h-6"/>} บันทึกการตั้งค่าหน้าเว็บทั้งหมด
-                 </button>
-              </div>
-            </form>
-          </div>
-        )}
-
-        {/* ================= INTEGRATIONS (PORTFOLIO) TAB ================= */}
-        {activeTab === 'integrations' && (
-          <div className="grid xl:grid-cols-12 gap-8">
+        {/* ================= INTEGRATIONS ================= */}
+        {activeMenu === 'integrations' && (
+          <div className="grid xl:grid-cols-12 gap-8 animate-fade-in">
             <div className="xl:col-span-4 bg-white border border-gray-200 shadow-sm rounded-2xl p-6 h-fit sticky top-6">
               <h2 className="text-xl font-bold mb-6 pb-4 border-b border-gray-100 flex justify-between text-gray-900">
                 <span>{isIntEdit ? 'แก้ไขระบบการทำงาน' : 'เพิ่มระบบการทำงานใหม่'}</span>
                 {isIntEdit && <button type="button" onClick={() => { setIntForm(emptyInt); setIsIntEdit(false); }} className="text-xs px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg transition-colors">ยกเลิก</button>}
               </h2>
-              {renderStatus()}
               <form onSubmit={handleIntSubmit} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">PROJECT ID</label>
-                    <input type="text" value={intForm.id} onChange={(e) => setIntForm({...intForm, id: e.target.value})} readOnly={isIntEdit} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 disabled:bg-gray-50 disabled:text-gray-500 transition-all" />
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Project ID</label>
+                    <input type="text" value={intForm.id} onChange={(e) => setIntForm({...intForm, id: e.target.value})} readOnly={isIntEdit} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" />
                   </div>
                   <div>
-                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">TAG NAME</label>
-                    <input type="text" value={intForm.tag} onChange={(e) => setIntForm({...intForm, tag: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" />
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Tag Name</label>
+                    <input type="text" value={intForm.tag} onChange={(e) => setIntForm({...intForm, tag: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">TITLE (EN) *</label>
-                    <input required type="text" value={intForm.title} onChange={(e) => setIntForm({...intForm, title: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" />
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Title (EN) *</label>
+                    <input required type="text" value={intForm.title} onChange={(e) => setIntForm({...intForm, title: e.target.value})} className="w-full bg-white border border-gray-100 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" />
                   </div>
                   <div>
-                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">TITLE (TH)</label>
-                    <input type="text" value={intForm.title_th} onChange={(e) => setIntForm({...intForm, title_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all font-thai" />
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Title (TH) *</label>
+                    <input required type="text" value={intForm.title_th} onChange={(e) => setIntForm({...intForm, title_th: e.target.value})} className="w-full bg-white border border-gray-100 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">DESCRIPTION (EN) *</label>
-                    <textarea required rows={3} value={intForm.description} onChange={(e) => setIntForm({...intForm, description: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" />
-                  </div>
-                  <div>
-                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">DESCRIPTION (TH)</label>
-                    <textarea rows={3} value={intForm.description_th} onChange={(e) => setIntForm({...intForm, description_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all font-thai" />
-                  </div>
+                   <div>
+                     <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Description (EN) *</label>
+                     <textarea required rows={3} value={intForm.description} onChange={(e) => setIntForm({...intForm, description: e.target.value})} className="w-full bg-white border border-gray-100 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" />
+                   </div>
+                   <div>
+                     <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Description (TH) *</label>
+                     <textarea required rows={3} value={intForm.description_th} onChange={(e) => setIntForm({...intForm, description_th: e.target.value})} className="w-full bg-white border border-gray-100 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" />
+                   </div>
                 </div>
                 <div>
-                  <div className="flex justify-between items-end mb-1.5">
-                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">IMAGE URL(S)</label>
-                    <a href="https://drive.google.com/drive/folders/1l4tMjzpPTGsXduc2Cu-kgrKqfp3JfJMQ?usp=sharing" target="_blank" className="text-[10px] text-brand-600 font-semibold hover:underline bg-brand-50 px-2 py-0.5 rounded">📂 เปิดโฟลเดอร์ภาพ</a>
-                  </div>
-                  <textarea rows={3} value={intForm.imageUrl} onChange={(e) => setIntForm({...intForm, imageUrl: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" />
+                  <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Image URL</label>
+                  <textarea rows={3} value={intForm.imageUrl} onChange={(e) => setIntForm({...intForm, imageUrl: e.target.value})} className="w-full bg-white border border-gray-100 rounded-xl px-4 py-2 text-sm outline-none focus:border-brand-500 transition-all" />
                 </div>
                 <div>
                   <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">REFERENCE URL</label>
-                  <input type="url" placeholder="e.g. https://github.com/..." value={intForm.referenceUrl || ''} onChange={(e) => setIntForm({...intForm, referenceUrl: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" />
+                  <input type="url" placeholder="e.g. https://github.com/..." value={intForm.referenceUrl || ''} onChange={(e) => setIntForm({...intForm, referenceUrl: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" />
                 </div>
-                <button disabled={isSaving} className="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 mx-auto mt-6 rounded-xl flex items-center justify-center gap-2 shadow-md shadow-brand-500/20 transition-all">
-                  {isSaving ? <Loader2 className="animate-spin w-5 h-5" /> : <Save className="w-5 h-5" />} บันทึกข้อมูลระบบการทำงาน
+                <button disabled={isSaving} className="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 mx-auto mt-6 rounded-xl flex items-center justify-center gap-2 shadow-md transition-all">
+                  {isSaving ? <Loader2 className="animate-spin w-5 h-5" /> : <Save className="w-5 h-5" />} บันทึกข้อมูลระบบ
                 </button>
               </form>
             </div>
             
             <div className="xl:col-span-8 bg-white border border-gray-200 shadow-sm rounded-2xl p-6 min-h-[500px]">
-              <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-100">
-                <h2 className="text-xl font-bold text-gray-900">รายการระบบการทำงาน ({integrations.length})</h2>
-                <button onClick={fetchIntegrations} className="text-gray-400 hover:text-brand-500 transition-colors p-2 hover:bg-brand-50 rounded-lg"><RefreshCw className={`w-5 h-5 ${isLoadingInt && 'animate-spin'}`} /></button>
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 pb-4 border-b border-gray-100 gap-4">
+                <h2 className="text-xl font-bold text-gray-900 uppercase tracking-tight">รายการระบบ ({integrations.length})</h2>
+                <div className="relative flex-grow md:w-64">
+                   <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                   <input type="text" placeholder="ค้นหา..." value={intSearch} onChange={(e) => setIntSearch(e.target.value)} className="w-full pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none focus:bg-white focus:border-brand-500 transition-all" />
+                </div>
               </div>
               <div className="space-y-4">
-                {integrations.map(int => (
-                  <div key={int.id} className="bg-gray-50 border border-gray-200 hover:border-brand-200 p-5 rounded-2xl flex justify-between items-start transition-colors group">
+                {integrations
+                  .filter(int => int.title.toLowerCase().includes(intSearch.toLowerCase()) || (int.title_th && int.title_th.toLowerCase().includes(intSearch.toLowerCase())) || int.id.toLowerCase().includes(intSearch.toLowerCase()))
+                  .map(int => (
+                  <div key={int.id} className="bg-gray-50 border border-gray-200 hover:border-brand-200 p-5 rounded-2xl flex justify-between items-start transition-all group text-left">
                     <div>
                       <h3 className="font-bold text-brand-600 text-lg mb-1 group-hover:text-brand-700">{int.title} {int.title_th && <span className="text-gray-400 font-normal">/ {int.title_th}</span>}</h3>
                       <p className="text-sm text-gray-600 line-clamp-2 max-w-2xl leading-relaxed mt-2">{int.description}</p>
-                      <div className="flex gap-3 mt-3">
-                        <span className="text-xs font-semibold bg-white border border-gray-200 text-gray-500 px-2.5 py-1 rounded-md">ID: {int.id}</span>
-                        <span className="text-xs font-semibold bg-white border border-gray-200 text-gray-500 px-2.5 py-1 rounded-md">Tag: {int.tag}</span>
-                      </div>
                     </div>
-                    <button onClick={() => { setIntForm(int); setIsIntEdit(true); setStatus({type:null,message:''}); window.scrollTo(0,0); }} className="text-amber-600 bg-amber-50 hover:bg-amber-100 px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-colors border border-amber-200/50 ml-4 shrink-0">แก้ไข</button>
+                    <div className="flex gap-2 ml-4 shrink-0">
+                      <button onClick={() => { setIntForm(int); setIsIntEdit(true); window.scrollTo(0,0); }} className="text-amber-600 bg-amber-50 hover:bg-amber-100 px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-colors border border-amber-200/50">แก้ไข</button>
+                      <button onClick={() => handleDeleteInt(int.id)} className="text-red-600 bg-red-50 hover:bg-red-100 p-2 rounded-xl shadow-sm transition-colors border border-red-200/50"><Trash2 className="w-5 h-5" /></button>
+                    </div>
                   </div>
                 ))}
-                {integrations.length === 0 && !isLoadingInt && (
-                  <div className="text-center py-12 text-gray-400 font-medium">ยังไม่มีข้อมูลระบบการทำงาน</div>
-                )}
               </div>
             </div>
           </div>
         )}
+
+        {/* ================= HEADER & NAV ================= */}
+        {activeMenu === 'nav' && (
+          <div className="grid xl:grid-cols-12 gap-8 animate-fade-in">
+            <div className="xl:col-span-4 bg-white border border-gray-200 shadow-sm rounded-2xl p-6 h-fit sticky top-6">
+              <h2 className="text-xl font-bold mb-6 pb-4 border-b border-gray-100 flex justify-between text-gray-900">
+                <span>{isNavEdit ? 'แก้ไขเมนู' : 'เพิ่มเมนูใหม่'}</span>
+                {isNavEdit && <button type="button" onClick={() => { setNavForm(emptyNav); setIsNavEdit(false); }} className="text-xs px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg transition-colors">ยกเลิก</button>}
+              </h2>
+              <form onSubmit={handleNavSubmit} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Label (EN) *</label>
+                    <input required type="text" value={navForm.label_en} onChange={(e) => setNavForm({...navForm, label_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Label (TH) *</label>
+                    <input required type="text" value={navForm.label_th} onChange={(e) => setNavForm({...navForm, label_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" />
+                  </div>
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Href (Link/Anchor) *</label>
+                  <input required type="text" value={navForm.href} onChange={(e) => setNavForm({...navForm, href: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-mono" placeholder="#section-id or /page" />
+                </div>
+                <button disabled={isSaving} className="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3.5 mx-auto mt-6 rounded-xl flex items-center justify-center gap-2 shadow-md transition-all">
+                  {isSaving ? <Loader2 className="animate-spin w-5 h-5" /> : <Save className="w-5 h-5" />} บันทึกเมนู
+                </button>
+              </form>
+
+              <div className="mt-10 pt-6 border-t border-gray-100">
+                <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">Header Settings</h3>
+                <form onSubmit={handleConfSubmit} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-[10px] font-bold text-gray-500 uppercase">Button Text (EN)</label>
+                      <input type="text" value={configData.nav_btn_en} onChange={e=>setConfigData({...configData, nav_btn_en: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 mt-1 text-xs" />
+                    </div>
+                    <div>
+                      <label className="text-[10px] font-bold text-gray-500 uppercase">Button Text (TH)</label>
+                      <input type="text" value={configData.nav_btn_th} onChange={e=>setConfigData({...configData, nav_btn_th: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 mt-1 text-xs font-thai" />
+                    </div>
+                  </div>
+                  <button disabled={isSaving} className="w-full bg-gray-900 text-white py-2 rounded-lg text-xs font-bold">บันทึกส่วนหัว</button>
+                </form>
+              </div>
+            </div>
+            
+            <div className="xl:col-span-8 bg-white border border-gray-200 shadow-sm rounded-2xl p-6 min-h-[500px]">
+              <h2 className="text-xl font-bold text-gray-900 uppercase mb-6 pb-4 border-b border-gray-100 uppercase tracking-tight">รายการเมนู ({navItems.length})</h2>
+              <div className="space-y-4">
+                {navItems.map(nav => (
+                  <div key={nav.id} className="bg-gray-50 border border-gray-200 p-5 rounded-2xl flex justify-between items-center transition-all group">
+                    <div>
+                      <h3 className="font-bold text-brand-600 text-lg">{nav.label_en} <span className="text-gray-400 font-normal">/ {nav.label_th}</span></h3>
+                      <p className="text-xs text-brand-500 font-mono mt-1">{nav.href}</p>
+                    </div>
+                    <div className="flex gap-2">
+                      <button onClick={() => { setNavForm(nav); setIsNavEdit(true); window.scrollTo(0,0); }} className="text-amber-600 bg-amber-50 hover:bg-amber-100 px-4 py-2 rounded-xl text-sm font-bold border border-amber-200/50">แก้ไข</button>
+                      <button onClick={() => handleDeleteNav(nav.id)} className="text-red-600 bg-red-50 hover:bg-red-100 p-2 rounded-xl border border-red-200/50"><Trash2 className="w-5 h-5" /></button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ================= HERO SECTION ================= */}
+        {activeMenu === 'hero' && (
+          <form onSubmit={handleConfSubmit} className="max-w-4xl mx-auto space-y-8 animate-fade-in">
+             <div className="bg-white p-8 rounded-3xl border border-gray-200 shadow-xl space-y-6">
+                <h3 className="text-xl font-black text-gray-900 border-b border-gray-50 pb-4 uppercase tracking-tight">ข้อความส่วนต้อนรับ (Hero Section)</h3>
+                <div className="grid md:grid-cols-2 gap-6">
+                   <div className="space-y-4">
+                      <label className="text-xs font-bold text-brand-500 uppercase tracking-widest">Badge (EN/TH)</label>
+                      <input type="text" value={configData.hero_badge_en} onChange={e=>setConfigData({...configData, hero_badge_en: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:bg-white focus:border-brand-500 transition-all outline-none" placeholder="EN" />
+                      <input type="text" value={configData.hero_badge_th} onChange={e=>setConfigData({...configData, hero_badge_th: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:bg-white focus:border-brand-500 transition-all outline-none font-thai" placeholder="TH" />
+                   </div>
+                   <div className="space-y-4">
+                      <label className="text-xs font-bold text-brand-500 uppercase tracking-widest">Headline (EN/TH)</label>
+                      <textarea rows={3} value={configData.hero_headline_en} onChange={e=>setConfigData({...configData, hero_headline_en: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:bg-white focus:border-brand-500 transition-all outline-none" placeholder="EN" />
+                      <textarea rows={3} value={configData.hero_headline_th} onChange={e=>setConfigData({...configData, hero_headline_th: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:bg-white focus:border-brand-500 transition-all outline-none font-thai" placeholder="TH" />
+                   </div>
+                </div>
+                <div className="grid md:grid-cols-2 gap-6">
+                   <div className="space-y-4">
+                      <label className="text-xs font-bold text-brand-500 uppercase tracking-widest">Sub-headline (EN/TH)</label>
+                      <textarea rows={4} value={configData.hero_sub_en} onChange={e=>setConfigData({...configData, hero_sub_en: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:bg-white focus:border-brand-500 transition-all outline-none" placeholder="EN" />
+                      <textarea rows={4} value={configData.hero_sub_th} onChange={e=>setConfigData({...configData, hero_sub_th: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:bg-white focus:border-brand-500 transition-all outline-none font-thai" placeholder="TH" />
+                   </div>
+                   <div className="space-y-6">
+                      <div className="space-y-3">
+                         <label className="text-xs font-bold text-brand-500 uppercase tracking-widest">Button 1: Text & Link</label>
+                         <div className="grid grid-cols-2 gap-3">
+                            <input type="text" value={configData.hero_btn1_text_en} onChange={e=>setConfigData({...configData, hero_btn1_text_en: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-xs" placeholder="Btn 1 (EN)" />
+                            <input type="text" value={configData.hero_btn1_text_th} onChange={e=>setConfigData({...configData, hero_btn1_text_th: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-xs font-thai" placeholder="Btn 1 (TH)" />
+                         </div>
+                         <input type="text" value={configData.hero_btn1_link} onChange={e=>setConfigData({...configData, hero_btn1_link: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-xs text-brand-600 font-bold" placeholder="Link (e.g. #services)" />
+                      </div>
+                      <div className="space-y-3">
+                         <label className="text-xs font-bold text-brand-500 uppercase tracking-widest">Button 2: Text & Link</label>
+                         <div className="grid grid-cols-2 gap-3">
+                            <input type="text" value={configData.hero_btn2_text_en} onChange={e=>setConfigData({...configData, hero_btn2_text_en: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-xs" placeholder="Btn 2 (EN)" />
+                            <input type="text" value={configData.hero_btn2_text_th} onChange={e=>setConfigData({...configData, hero_btn2_text_th: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-xs font-thai" placeholder="Btn 2 (TH)" />
+                         </div>
+                         <input type="text" value={configData.hero_btn2_link} onChange={e=>setConfigData({...configData, hero_btn2_link: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-xs text-brand-600 font-bold" placeholder="Link (e.g. #contact)" />
+                      </div>
+                   </div>
+                </div>
+             </div>
+             <button disabled={isSaving} className="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-5 rounded-3xl flex items-center justify-center gap-2 shadow-xl shadow-brand-500/20 transition-all text-xl">
+               {isSaving ? <Loader2 className="animate-spin w-7 h-7" /> : <Save className="w-7 h-7"/>} บันทึก Hero Section
+             </button>
+          </form>
+        )}
+
+        {/* ================= CONCEPT SECTION ================= */}
+        {activeMenu === 'concept' && (
+          <div className="grid xl:grid-cols-12 gap-8 animate-fade-in text-left">
+            <div className="xl:col-span-4 bg-white border border-gray-200 shadow-sm rounded-2xl p-6 h-fit sticky top-6">
+              <h2 className="text-xl font-bold mb-6 pb-4 border-b border-gray-100 flex justify-between text-gray-900 uppercase">
+                <span>{isConceptEdit ? 'แก้ไขคอนเซปต์' : 'เพิ่มหัวข้อคอนเซปต์ใหม่'}</span>
+                {isConceptEdit && <button type="button" onClick={() => { setConceptForm(emptyConcept); setIsConceptEdit(false); }} className="text-xs px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg transition-colors">ยกเลิก</button>}
+              </h2>
+              <form onSubmit={handleConceptSubmit} className="space-y-4">
+                <div>
+                  <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Icon Name (Lucide)</label>
+                  <input type="text" value={conceptForm.icon} onChange={(e) => setConceptForm({...conceptForm, icon: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-mono" placeholder="e.g. Zap, Cpu, Code" />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Title (EN) *</label>
+                    <input required type="text" value={conceptForm.title_en} onChange={(e) => setConceptForm({...conceptForm, title_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Title (TH) *</label>
+                    <input required type="text" value={conceptForm.title_th} onChange={(e) => setConceptForm({...conceptForm, title_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Desc (EN) *</label>
+                    <textarea required rows={3} value={conceptForm.desc_en} onChange={(e) => setConceptForm({...conceptForm, desc_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Desc (TH) *</label>
+                    <textarea required rows={3} value={conceptForm.desc_th} onChange={(e) => setConceptForm({...conceptForm, desc_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 transition-all font-thai" />
+                  </div>
+                </div>
+                <button disabled={isSaving} className="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3.5 mx-auto mt-6 rounded-xl flex items-center justify-center gap-2 shadow-md transition-all">
+                  {isSaving ? <Loader2 className="animate-spin w-5 h-5" /> : <Save className="w-5 h-5" />} บันทึกคอนเซปต์
+                </button>
+              </form>
+            </div>
+            
+            <div className="xl:col-span-8 bg-white border border-gray-200 shadow-sm rounded-2xl p-6 min-h-[500px]">
+              <h2 className="text-xl font-bold text-gray-900 uppercase mb-6 pb-4 border-b border-gray-100 uppercase tracking-tight">รายการคอนเซปต์ ({concepts.length})</h2>
+              <div className="grid md:grid-cols-2 gap-4">
+                {concepts.map(concept => (
+                  <div key={concept.id} className="bg-gray-50 border border-gray-200 p-6 rounded-3xl flex flex-col justify-between transition-all group hover:border-brand-200">
+                    <div>
+                      <h3 className="font-bold text-brand-600 text-lg mb-2">{concept.title_en} <span className="text-gray-400 font-normal">/ {concept.title_th}</span></h3>
+                      <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed">{concept.desc_en}</p>
+                    </div>
+                    <div className="flex gap-2 mt-6">
+                      <button onClick={() => { setConceptForm(concept); setIsConceptEdit(true); window.scrollTo(0,0); }} className="flex-grow text-amber-600 bg-amber-50 hover:bg-amber-100 py-2 rounded-xl text-xs font-bold border border-amber-200/50">แก้ไข</button>
+                      <button onClick={() => handleDeleteConcept(concept.id)} className="text-red-600 bg-red-50 hover:bg-red-100 p-2 rounded-xl border border-red-200/50"><Trash2 className="w-4 h-4" /></button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ================= SITE SECTIONS ================= */}
+        {activeMenu === 'sections' && (
+          <div className="grid xl:grid-cols-12 gap-8 animate-fade-in text-left">
+            <div className="xl:col-span-4 space-y-6">
+              <div className="bg-white border border-gray-200 shadow-sm rounded-2xl p-6 h-fit">
+                <h2 className="text-xl font-bold mb-6 pb-4 border-b border-gray-100 flex justify-between text-gray-900 uppercase">
+                  <span>{isSectionEdit ? 'แก้ไขส่วนหลัก' : 'เพิ่มส่วนหลักใหม่'}</span>
+                  {isSectionEdit && <button type="button" onClick={() => { setSectionForm(emptySection); setIsSectionEdit(false); }} className="text-xs px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg transition-colors">ยกเลิก</button>}
+                </h2>
+                <form onSubmit={handleSectionSubmit} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Section Title (EN)</label>
+                      <input required type="text" value={sectionForm.title_en} onChange={(e) => setSectionForm({...sectionForm, title_en: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm" />
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Section Title (TH)</label>
+                      <input required type="text" value={sectionForm.title_th} onChange={(e) => setSectionForm({...sectionForm, title_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm font-thai" />
+                    </div>
+                  </div>
+                  <button disabled={isSaving} className="w-full bg-gray-900 text-white font-bold py-3 mx-auto mt-4 rounded-xl flex items-center justify-center gap-2">
+                    <Save className="w-4 h-4" /> บันทึกส่วนหลัก
+                  </button>
+                </form>
+              </div>
+
+              {selectedSectionId && (
+                <div className="bg-white border border-gray-200 shadow-sm rounded-2xl p-6 h-fit animate-fade-in-up">
+                  <h2 className="text-xl font-bold mb-6 pb-4 border-b border-gray-100 flex justify-between text-gray-900 uppercase">
+                    <span>{isSectionItemEdit ? 'แก้ไขรายการย่อย' : 'เพิ่มรายการย่อย'}</span>
+                  </h2>
+                  <form onSubmit={handleSectionItemSubmit} className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <input required type="text" value={sectionItemForm.title_en} onChange={(e) => setSectionItemForm({...sectionItemForm, title_en: e.target.value})} className="w-full border rounded-xl px-4 py-2 text-sm" placeholder="Title (EN)" />
+                      <input required type="text" value={sectionItemForm.title_th} onChange={(e) => setSectionItemForm({...sectionItemForm, title_th: e.target.value})} className="w-full border rounded-xl px-4 py-2 text-sm font-thai" placeholder="Title (TH)" />
+                    </div>
+                    <textarea rows={2} value={sectionItemForm.desc_en} onChange={(e) => setSectionItemForm({...sectionItemForm, desc_en: e.target.value})} className="w-full border rounded-xl px-4 py-2 text-sm" placeholder="Description (EN)" />
+                    <textarea rows={2} value={sectionItemForm.desc_th} onChange={(e) => setSectionItemForm({...sectionItemForm, desc_th: e.target.value})} className="w-full border rounded-xl px-4 py-2 text-sm font-thai" placeholder="Description (TH)" />
+                    <input type="text" value={sectionItemForm.imageUrl} onChange={(e) => setSectionItemForm({...sectionItemForm, imageUrl: e.target.value})} className="w-full border rounded-xl px-4 py-2 text-sm font-mono" placeholder="Image URL (Drive/Web)" />
+                    <button disabled={isSaving} className="w-full bg-brand-500 text-white font-bold py-3 mx-auto mt-2 rounded-xl flex items-center justify-center gap-2">
+                      <Save className="w-4 h-4" /> บันทึกรายการย่อย
+                    </button>
+                  </form>
+                </div>
+              )}
+            </div>
+            
+            <div className="xl:col-span-8 bg-white border border-gray-200 shadow-sm rounded-2xl p-6 min-h-[500px]">
+              <h2 className="text-xl font-bold text-gray-900 uppercase mb-6 pb-4 border-b border-gray-100 uppercase tracking-tight">ผังเว็บไซต์และส่วนเสริม</h2>
+              <div className="space-y-6">
+                {sections.map(sec => (
+                  <div key={sec.id} className={`border p-6 rounded-3xl transition-all ${selectedSectionId === sec.id ? 'border-brand-500 bg-brand-50/20 ring-4 ring-brand-500/5' : 'border-gray-100 hover:border-brand-200 bg-gray-50'}`}>
+                    <div className="flex justify-between items-start mb-6">
+                      <div onClick={() => setSelectedSectionId(sec.id)} className="cursor-pointer">
+                        <h3 className="font-bold text-gray-900 text-xl">{sec.title_en} <span className="text-gray-400 font-normal">/ {sec.title_th}</span></h3>
+                        <p className="text-xs text-brand-500 font-bold uppercase tracking-widest mt-1">Section ID: {sec.id}</p>
+                      </div>
+                      <div className="flex gap-2">
+                        <button onClick={() => { setSectionForm(sec); setIsSectionEdit(true); }} className="text-amber-600 bg-white-50 p-2 rounded-xl border border-amber-100 hover:bg-amber-50 transition-colors"><Settings className="w-5 h-5" /></button>
+                        <button onClick={() => handleDeleteSection(sec.id)} className="text-red-500 bg-white-50 p-2 rounded-xl border border-red-100 hover:bg-red-50 transition-colors"><Trash2 className="w-5 h-5" /></button>
+                      </div>
+                    </div>
+
+                    {selectedSectionId === sec.id && (
+                      <div className="grid md:grid-cols-2 gap-4 mt-6 animate-fade-in animate-slide-up">
+                        {sectionItems.filter(item => item.section_id === sec.id).map(item => (
+                          <div key={item.id} className="bg-white border border-gray-100 p-4 rounded-2xl flex gap-4 shadow-sm group">
+                             {item.imageUrl && <img src={item.imageUrl} className="w-16 h-16 rounded-xl object-cover" />}
+                             <div className="flex-grow">
+                                <h4 className="font-bold text-gray-900 text-sm">{item.title_en}</h4>
+                                <p className="text-[11px] text-gray-400 line-clamp-2">{item.desc_en}</p>
+                                <div className="flex gap-2 mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                                   <button onClick={()=> { setSectionItemForm(item); setIsSectionItemEdit(true); }} className="text-amber-600 text-xs font-bold">แก้ไข</button>
+                                   <button onClick={()=> handleDeleteSectionItem(item.id)} className="text-red-500 text-xs font-bold">ลบออก</button>
+                                </div>
+                             </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ================= SITE TITLES ================= */}
+        {activeMenu === 'titles' && (
+          <form onSubmit={handleConfSubmit} className="max-w-4xl mx-auto space-y-8 animate-fade-in text-left">
+             <div className="bg-white p-8 rounded-3xl border border-gray-200 shadow-xl space-y-6 text-left">
+                <h3 className="text-xl font-black text-gray-900 border-b border-gray-50 pb-4 uppercase tracking-tight text-left">หัวข้อและการเน้นย้ำ (Site Titles & Badges)</h3>
+                <div className="space-y-6 text-left">
+                   <div className="p-6 bg-amber-50 rounded-2xl border border-amber-100 space-y-4 text-left">
+                      <p className="text-xs font-black text-amber-600 uppercase tracking-widest text-left">Section: Services</p>
+                      <div className="grid md:grid-cols-2 gap-4 text-left">
+                         <input type="text" value={configData.svc_badge_en} onChange={e=>setConfigData({...configData, svc_badge_en: e.target.value})} className="w-full bg-white border border-amber-200 rounded-xl px-4 py-2 text-sm" placeholder="Badge (EN)" />
+                         <input type="text" value={configData.svc_badge_th} onChange={e=>setConfigData({...configData, svc_badge_th: e.target.value})} className="w-full bg-white border border-amber-200 rounded-xl px-4 py-2 text-sm font-thai" placeholder="Badge (TH)" />
+                      </div>
+                      <div className="grid md:grid-cols-2 gap-4 text-left">
+                         <input type="text" value={configData.solutions_title_en} onChange={e=>setConfigData({...configData, solutions_title_en: e.target.value})} className="w-full bg-white border border-amber-200 rounded-xl px-4 py-2 text-sm" placeholder="Title (EN)" />
+                         <input type="text" value={configData.solutions_title_th} onChange={e=>setConfigData({...configData, solutions_title_th: e.target.value})} className="w-full bg-white border border-amber-200 rounded-xl px-4 py-2 text-sm font-thai" placeholder="Title (TH)" />
+                      </div>
+                      <div className="grid md:grid-cols-2 gap-4 text-left">
+                         <textarea rows={2} value={configData.solutions_description_en} onChange={e=>setConfigData({...configData, solutions_description_en: e.target.value})} className="w-full bg-white border border-amber-200 rounded-xl px-4 py-2 text-sm" placeholder="Description (EN)" />
+                         <textarea rows={2} value={configData.solutions_description_th} onChange={e=>setConfigData({...configData, solutions_description_th: e.target.value})} className="w-full bg-white border border-amber-200 rounded-xl px-4 py-2 text-sm font-thai" placeholder="Description (TH)" />
+                      </div>
+                   </div>
+
+                   <div className="p-6 bg-purple-50 rounded-2xl border border-purple-100 space-y-4 text-left">
+                      <p className="text-xs font-black text-purple-600 uppercase tracking-widest text-left">Section: Portfolio / Integrations</p>
+                      <div className="grid md:grid-cols-2 gap-4 text-left">
+                         <input type="text" value={configData.port_badge_en} onChange={e=>setConfigData({...configData, port_badge_en: e.target.value})} className="w-full bg-white border border-purple-200 rounded-xl px-4 py-2 text-sm" placeholder="Badge (EN)" />
+                         <input type="text" value={configData.port_badge_th} onChange={e=>setConfigData({...configData, port_badge_th: e.target.value})} className="w-full bg-white border border-purple-200 rounded-xl px-4 py-2 text-sm font-thai" placeholder="Badge (TH)" />
+                      </div>
+                      <div className="grid md:grid-cols-2 gap-4 text-left">
+                         <input type="text" value={configData.integrations_title_en} onChange={e=>setConfigData({...configData, integrations_title_en: e.target.value})} className="w-full bg-white border border-purple-200 rounded-xl px-4 py-2 text-sm" placeholder="Title (EN)" />
+                         <input type="text" value={configData.integrations_title_th} onChange={e=>setConfigData({...configData, integrations_title_th: e.target.value})} className="w-full bg-white border border-purple-200 rounded-xl px-4 py-2 text-sm font-thai" placeholder="Title (TH)" />
+                      </div>
+                      <div className="grid md:grid-cols-2 gap-4 text-left">
+                         <textarea rows={2} value={configData.port_desc_en} onChange={e=>setConfigData({...configData, port_desc_en: e.target.value})} className="w-full bg-white border border-purple-200 rounded-xl px-4 py-2 text-sm" placeholder="Description (EN)" />
+                         <textarea rows={2} value={configData.port_desc_th} onChange={e=>setConfigData({...configData, port_desc_th: e.target.value})} className="w-full bg-white border border-purple-200 rounded-xl px-4 py-2 text-sm font-thai" placeholder="Description (TH)" />
+                      </div>
+                   </div>
+                </div>
+             </div>
+
+             <button disabled={isSaving} className="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-5 rounded-3xl flex items-center justify-center gap-2 shadow-xl transition-all">
+                {isSaving ? <Loader2 className="animate-spin w-7 h-7" /> : <Save className="w-7 h-7"/>} บันทึกหัวข้อทั้งหมด
+             </button>
+          </form>
+        )}
+
+        {/* ================= CONTACT INFO ================= */}
+        {activeMenu === 'contact' && (
+          <form onSubmit={handleConfSubmit} className="max-w-4xl mx-auto space-y-8 animate-fade-in bg-white p-8 rounded-3xl border border-gray-200 shadow-xl text-left">
+             <h3 className="text-xl font-black text-gray-900 border-b border-gray-50 pb-4 uppercase tracking-tight text-left">ข้อมูลติดต่อ (Contact Information)</h3>
+             <div className="grid md:grid-cols-2 gap-6 text-left">
+                <div><label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Title (EN)</label><input type="text" value={configData.contact_title_en} onChange={e=>setConfigData({...configData, contact_title_en: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 mt-2" /></div>
+                <div><label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Title (TH)</label><input type="text" value={configData.contact_title_th} onChange={e=>setConfigData({...configData, contact_title_th: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 mt-2 font-thai" /></div>
+             </div>
+             <div className="grid md:grid-cols-2 gap-6 text-left">
+                <div><label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Description (EN)</label><textarea rows={3} value={configData.contact_description_en} onChange={e=>setConfigData({...configData, contact_description_en: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 mt-2" /></div>
+                <div><label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Description (TH)</label><textarea rows={3} value={configData.contact_description_th} onChange={e=>setConfigData({...configData, contact_description_th: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 mt-2 font-thai" /></div>
+             </div>
+             <div className="grid md:grid-cols-3 gap-6 pt-6 border-t border-gray-50 text-left">
+                <div><label className="text-xs font-bold text-gray-400 uppercase">Email</label><input type="text" value={configData.contact_email} onChange={e=>setConfigData({...configData, contact_email: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 mt-2 text-sm" /></div>
+                <div><label className="text-xs font-bold text-gray-400 uppercase">Phone</label><input type="text" value={configData.contact_phone} onChange={e=>setConfigData({...configData, contact_phone: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 mt-2 text-sm" /></div>
+                <div><label className="text-xs font-bold text-gray-400 uppercase">Line ID</label><input type="text" value={configData.contact_line} onChange={e=>setConfigData({...configData, contact_line: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 mt-2 text-sm" /></div>
+             </div>
+             <button disabled={isSaving} className="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-4 rounded-2xl flex items-center justify-center gap-2 shadow-lg transition-all text-left">
+                {isSaving ? <Loader2 className="animate-spin w-5 h-5" /> : <Save className="w-5 h-5" />} บันทึกข้อมูลติดต่อ
+             </button>
+          </form>
+        )}
+
+        {/* ================= FOOTER BIO & CTA ================= */}
+        {activeMenu === 'footer' && (
+          <form onSubmit={handleConfSubmit} className="max-w-4xl mx-auto space-y-8 animate-fade-in bg-white p-8 rounded-3xl border border-gray-200 shadow-xl text-left">
+             <h3 className="text-xl font-black text-gray-900 border-b border-gray-50 pb-4 uppercase tracking-tight text-left">ฟุตเตอร์และป้ายกำกับ (Footer & Call to Action)</h3>
+             <div className="grid md:grid-cols-2 gap-6 text-left">
+                <div><label className="text-xs font-bold text-gray-400 uppercase tracking-widest">CTA Heading (EN)</label><input type="text" value={configData.cta_heading_en} onChange={e=>setConfigData({...configData, cta_heading_en: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 mt-2 font-bold" /></div>
+                <div><label className="text-xs font-bold text-gray-400 uppercase tracking-widest">CTA Heading (TH)</label><input type="text" value={configData.cta_heading_th} onChange={e=>setConfigData({...configData, cta_heading_th: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 mt-2 font-thai font-bold" /></div>
+             </div>
+             <div className="grid md:grid-cols-2 gap-6 text-left">
+                <div><label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Facebook Display Name (EN)</label><input type="text" value={configData.contact_facebook_en} onChange={e=>setConfigData({...configData, contact_facebook_en: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 mt-2" /></div>
+                <div><label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Facebook Display Name (TH)</label><input type="text" value={configData.contact_facebook_th} onChange={e=>setConfigData({...configData, contact_facebook_th: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 mt-2 font-thai" /></div>
+             </div>
+             <div className="pt-2 text-left"><label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Facebook URL</label><input type="text" value={configData.facebook_url} onChange={e=>setConfigData({...configData, facebook_url: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 mt-2 text-brand-500 font-bold" /></div>
+             <div className="grid md:grid-cols-2 gap-6 text-left">
+                <div><label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Footer Bio (EN)</label><textarea rows={3} value={configData.footer_bio_en} onChange={e=>setConfigData({...configData, footer_bio_en: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 mt-2 text-sm" /></div>
+                <div><label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Footer Bio (TH)</label><textarea rows={3} value={configData.footer_bio_th} onChange={e=>setConfigData({...configData, footer_bio_th: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 mt-2 text-sm font-thai" /></div>
+             </div>
+             <button disabled={isSaving} className="w-full bg-gray-900 text-white font-black py-4 rounded-2xl flex items-center justify-center gap-2 shadow-lg transition-all text-left">
+                {isSaving ? <Loader2 className="animate-spin w-5 h-5" /> : <Save className="w-5 h-5" />} บันทึกฟุตเตอร์และโซเชียล
+             </button>
+          </form>
+        )}
       </div>
+      </main>
     </div>
   );
 }

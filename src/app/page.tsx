@@ -4,7 +4,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import {
   Settings, Monitor, Lightbulb, PhoneCall, CheckCircle,
   Menu, ChevronRight, Send, Code, Cpu, Wifi, Zap, RefreshCw, ArrowLeft,
-  Mail, Phone, Facebook, MessageCircle, Settings2, Link
+  Mail, Phone, Facebook, MessageCircle, Settings2, Link, Star
 } from 'lucide-react';
 
 // --- STYLES (Tailwind + Custom Animations in globals.css) ---
@@ -37,23 +37,41 @@ export default function LandingPage() {
   const [projects, setProjects] = useState<any[]>([]);
   const [integrations, setIntegrations] = useState<any[]>([]);
 
+  // --- Dynamic Content State ---
+  const [navItems, setNavItems] = useState<any[]>([]);
+  const [concepts, setConcepts] = useState<any[]>([]);
+  const [sections, setSections] = useState<any[]>([]);
+  const [sectionItems, setSectionItems] = useState<any[]>([]);
+
   // Fetch Data on Load
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [configRes, servicesRes, integrationsRes] = await Promise.all([
+        const [configRes, servicesRes, integrationsRes, navRes, conceptRes, sectionsRes, sectionItemsRes] = await Promise.all([
           fetch('/api/config', { cache: 'no-store' }),
           fetch('/api/services', { cache: 'no-store' }),
-          fetch('/api/integrations', { cache: 'no-store' })
+          fetch('/api/integrations', { cache: 'no-store' }),
+          fetch('/api/nav', { cache: 'no-store' }),
+          fetch('/api/concept', { cache: 'no-store' }),
+          fetch('/api/sections', { cache: 'no-store' }),
+          fetch('/api/section-items', { cache: 'no-store' })
         ]);
         
         const configJson = await configRes.json();
         const servicesJson = await servicesRes.json();
         const integrationsJson = await integrationsRes.json();
+        const navJson = await navRes.json();
+        const conceptJson = await conceptRes.json();
+        const sectionsJson = await sectionsRes.json();
+        const sectionItemsJson = await sectionItemsRes.json();
 
         if (configJson.success) setSiteData(configJson.data);
         if (servicesJson.success) setProjects(servicesJson.data);
         if (integrationsJson.success) setIntegrations(integrationsJson.data);
+        if (navJson.success) setNavItems(navJson.data);
+        if (conceptJson.success) setConcepts(conceptJson.data);
+        if (sectionsJson.success) setSections(sectionsJson.data);
+        if (sectionItemsJson.success) setSectionItems(sectionItemsJson.data);
       } catch (err) {
         console.error("Fetch error:", err);
       } finally {
@@ -118,8 +136,11 @@ export default function LandingPage() {
             </div>
             
             <div className="hidden lg:flex items-center space-x-10 font-bold text-slate-600">
-              <a href="#concept" className="hover:text-brand-500 transition-colors uppercase tracking-wider text-sm">{t('nav_item1', 'Concept')}</a>
-              <a href="#solutions" className="hover:text-brand-500 transition-colors uppercase tracking-wider text-sm">{t('solutions_title', 'Featured Works')}</a>
+              {navItems.map(item => (
+                <a key={item.id} href={item.href} className="hover:text-brand-500 transition-colors uppercase tracking-wider text-sm">
+                  {lang === 'th' ? item.label_th : item.label_en}
+                </a>
+              ))}
               
               {/* Language Toggle */}
               <div className="flex bg-slate-100 p-1 rounded-xl items-center border border-slate-200">
@@ -137,7 +158,7 @@ export default function LandingPage() {
                 </button>
               </div>
 
-              <a href="#contact" className="bg-brand-500 text-white px-8 py-3 rounded-full shadow-lg shadow-brand-500/30 hover:bg-brand-600 hover:-translate-y-1 transition-all uppercase text-sm tracking-wide">{t('nav_btn', 'Contact Us')}</a>
+              <a href={t('hero_btn1_link', '#contact')} className="bg-brand-500 text-white px-8 py-3 rounded-full shadow-lg shadow-brand-500/30 hover:bg-brand-600 hover:-translate-y-1 transition-all uppercase text-sm tracking-wide">{t('nav_btn', 'Contact Us')}</a>
             </div>
 
             <div className="lg:hidden flex items-center gap-4">
@@ -155,9 +176,12 @@ export default function LandingPage() {
           
           {/* Mobile Menu */}
           <div className={`absolute top-20 left-0 w-full bg-slate-900 p-8 flex flex-col space-y-6 lg:hidden transition-all duration-300 origin-top ${mobileMenuOpen ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0 pointer-events-none'}`}>
-            <a href="#concept" onClick={() => setMobileMenuOpen(false)} className="text-white text-xl font-bold flex justify-between items-center border-b border-white/10 pb-4">{t('nav_item1', 'Concept')} <ChevronRight /></a>
-            <a href="#solutions" onClick={() => setMobileMenuOpen(false)} className="text-white text-xl font-bold flex justify-between items-center border-b border-white/10 pb-4">{t('solutions_title', 'Featured Works')} <ChevronRight /></a>
-            <a href="#contact" onClick={() => setMobileMenuOpen(false)} className="text-accent-500 text-xl font-bold flex justify-between items-center">{t('nav_btn', 'Contact Us')} <Send /></a>
+            {navItems.map(item => (
+              <a key={item.id} href={item.href} onClick={() => setMobileMenuOpen(false)} className="text-white text-xl font-bold flex justify-between items-center border-b border-white/10 pb-4">
+                {lang === 'th' ? item.label_th : item.label_en} <ChevronRight />
+              </a>
+            ))}
+            <a href={t('hero_btn1_link', '#contact')} onClick={() => setMobileMenuOpen(false)} className="text-accent-500 text-xl font-bold flex justify-between items-center">{t('nav_btn', 'Contact Us')} <Send /></a>
           </div>
         </nav>
 
@@ -264,29 +288,20 @@ export default function LandingPage() {
                         <p className="text-slate-500 mb-8 leading-relaxed text-lg">{t('concept_description', 'Our systems work in harmony like precision-engineered gears.')}</p>
                         <div className="inline-block w-20 h-2 bg-accent-500 rounded-full"></div>
                      </div>
-                     <div className="lg:w-2/3 grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div className="reveal delay-100 p-8 rounded-3xl bg-white border border-slate-100 shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all group">
-                           <div className="w-14 h-14 bg-brand-500 text-white rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-brand-500/30 group-hover:rotate-12 transition-transform">
-                              <Settings2 size={28} />
-                           </div>
-                           <h4 className="text-xl font-bold mb-4">{t('concept_c1t', 'Precision Eng.')}</h4>
-                           <p className="text-slate-500 text-sm leading-relaxed">{t('concept_c1d', 'Every line of code and IoT component is designed for perfect harmony.')}</p>
-                        </div>
-                        <div className="reveal delay-200 p-8 rounded-3xl bg-white border border-slate-100 shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all group">
-                           <div className="w-14 h-14 bg-accent-500 text-slate-900 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-yellow-500/30 group-hover:rotate-12 transition-transform">
-                              <Zap size={28} />
-                           </div>
-                           <h4 className="text-xl font-bold mb-4">{t('concept_c2t', 'High Velocity')}</h4>
-                           <p className="text-slate-500 text-sm leading-relaxed">{t('concept_c2d', 'Accelerate your business with high-performance systems.')}</p>
-                        </div>
-                        <div className="reveal delay-300 p-8 rounded-3xl bg-white border border-slate-100 shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all group">
-                           <div className="w-14 h-14 bg-slate-900 text-white rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-slate-900/30 group-hover:rotate-12 transition-transform">
-                              <RefreshCw size={28} />
-                           </div>
-                           <h4 className="text-xl font-bold mb-4">{t('concept_c3t', 'Steady Growth')}</h4>
-                           <p className="text-slate-500 text-sm leading-relaxed">{t('concept_c3d', 'Reliable tech that ensures your business thrives consistently.')}</p>
-                        </div>
-                     </div>
+                      <div className="lg:w-2/3 grid grid-cols-1 md:grid-cols-3 gap-8">
+                        {concepts.map((c, i) => {
+                          const IconComp = (require('lucide-react') as any)[c.icon] || Settings2;
+                          return (
+                            <div key={c.id || i} className={`reveal delay-${(i + 1) * 100} p-8 rounded-3xl bg-white border border-slate-100 shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all group`}>
+                               <div className="w-14 h-14 bg-brand-500 text-white rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-brand-500/30 group-hover:rotate-12 transition-transform">
+                                  <IconComp size={28} />
+                               </div>
+                               <h4 className="text-xl font-bold mb-4">{lang === 'th' ? c.title_th : c.title_en}</h4>
+                               <p className="text-slate-500 text-sm leading-relaxed">{lang === 'th' ? c.desc_th : c.desc_en}</p>
+                            </div>
+                          );
+                        })}
+                      </div>
                   </div>
                </div>
             </section>
@@ -362,6 +377,49 @@ export default function LandingPage() {
                   </div>
                </div>
             </section>
+
+            {/* Dynamic Site Sections */}
+            {sections.filter(s => s.is_active === 'TRUE').map((sec, idx) => (
+               <section key={sec.id} id={sec.id} className={`py-32 px-6 ${idx % 2 === 0 ? 'bg-slate-50' : 'bg-white'} overflow-hidden`}>
+                  <div className="max-w-7xl mx-auto">
+                     <div className="text-center mb-20 reveal">
+                        <h2 className="font-montserrat text-4xl lg:text-5xl font-black text-slate-900 mb-6 uppercase tracking-tight">
+                           {lang === 'th' ? sec.title_th : sec.title_en}
+                        </h2>
+                        { (sec.subtitle_en || sec.subtitle_th) && (
+                           <p className="text-slate-500 max-w-2xl mx-auto leading-relaxed text-lg">
+                              {lang === 'th' ? sec.subtitle_th : sec.subtitle_en}
+                           </p>
+                        )}
+                     </div>
+                     
+                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                        {sectionItems.filter(item => item.section_id === sec.id).map((item, i) => {
+                           const ItemIcon = (require('lucide-react') as any)[item.icon] || Star;
+                           return (
+                              <div key={item.id || i} className="reveal p-10 rounded-[2.5rem] bg-white border border-slate-100 shadow-xl hover:shadow-2xl transition-all group hover:-translate-y-2">
+                                 {item.imageUrl ? (
+                                    <div className="h-48 mb-8 rounded-3xl overflow-hidden">
+                                       <img src={item.imageUrl} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={item.title_en} />
+                                    </div>
+                                 ) : (
+                                    <div className="w-16 h-16 bg-slate-100 text-brand-500 rounded-2xl flex items-center justify-center mb-8 shadow-sm group-hover:rotate-12 transition-transform">
+                                       <ItemIcon size={32} />
+                                    </div>
+                                 )}
+                                 <h3 className="text-2xl font-black text-slate-900 mb-4 uppercase leading-tight font-montserrat">
+                                    {lang === 'th' ? item.title_th : item.title_en}
+                                 </h3>
+                                 <p className="text-slate-500 leading-relaxed text-sm">
+                                    {lang === 'th' ? item.desc_th : item.desc_en}
+                                 </p>
+                              </div>
+                           );
+                        })}
+                     </div>
+                  </div>
+               </section>
+            ))}
 
             {/* Contact Section */}
             <section id="contact" className="py-24 px-6 bg-white">
