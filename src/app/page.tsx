@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import {
   Cpu, Code, Globe, Smartphone, Database, Wifi, Server, Terminal, ChevronRight,
   ArrowRight, Zap, Activity, Monitor, X, ExternalLink, Blocks, MessageSquare,
-  Mail, Phone, ShieldCheck, Clock, ThumbsUp, Users, Target, Facebook, MessageCircle, Menu
+  Mail, Phone, ShieldCheck, Clock, ThumbsUp, Users, Target, Facebook, MessageCircle, Menu, FileText
 } from 'lucide-react';
 import { getDriveThumbnailUrl, getDriveDirectUrl, getDriveIframeUrl } from '../lib/drive';
 
@@ -116,123 +116,119 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 text-[#333333] font-sans selection:bg-brand-500/20">
-      {/* ================= NAVIGATION ================= */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm py-4 transition-all duration-300">
-        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-          <div className="text-2xl font-bold tracking-tighter flex items-center gap-2 cursor-pointer text-gray-900">
-            DeeDev<span className="text-brand-500 font-extrabold">IoT</span>
-          </div>
-          <div className="flex items-center gap-8 ml-auto">
-            <div className="hidden md:flex items-center gap-8 mr-6">
-              <a href="#" className="text-gray-600 hover:text-brand-500 font-semibold transition-colors text-sm uppercase tracking-wide">Home</a>
-              <a href="#services" className="text-gray-600 hover:text-brand-500 font-semibold transition-colors text-sm uppercase tracking-wide">Services</a>
-              <a href="#portfolio" className="text-gray-600 hover:text-brand-500 font-semibold transition-colors text-sm uppercase tracking-wide">Integrations</a>
-              <a href="#contact" className="text-gray-600 hover:text-brand-500 font-semibold transition-colors text-sm uppercase tracking-wide">Contact</a>
-            </div>
-            <a href="#contact" className="hidden md:inline-flex px-6 py-2.5 bg-accent-500 hover:bg-accent-600 text-[var(--color-brand-700)] font-extrabold rounded-xl transition-all shadow-md shadow-accent-500/20 hover:shadow-lg hover:shadow-accent-500/30 hover:-translate-y-0.5">
-              ขอใบเสนอราคา
-            </a>
-            <button className="md:hidden text-gray-600 hover:text-brand-500 p-2" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-          </div>
+      <div className="bg-white">
+        {/* ================= TOP CONTACT BAR ================= */}
+        <div className="flex flex-col items-center sm:flex-row justify-center sm:justify-end px-6 py-2 pb-0 sm:pb-2 text-xs sm:text-sm text-gray-800 font-medium border-b border-gray-100 gap-2 sm:gap-4 relative z-50">
+           <div className="flex flex-wrap items-center justify-center gap-2">
+              <Phone className="w-4 h-4 text-gray-400" />
+              <span>081-591-0000 <span className="text-gray-400 font-normal">(24HR)</span></span>
+              <span className="text-brand-200">/</span>
+              <span>02-424-5559</span>
+              <div className="w-6 h-6 bg-[#00B900] rounded-full flex items-center justify-center text-white ml-1 shadow-sm">
+                 <MessageCircle className="w-3.5 h-3.5 fill-current" />
+              </div>
+           </div>
+           <div className="flex items-center gap-2 justify-center pb-2 sm:pb-0 sm:pl-4 sm:border-l sm:border-gray-200 h-full">
+              <span className="text-lg leading-none cursor-pointer">🇹🇭</span>
+              <span className="text-lg leading-none cursor-pointer grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all">🇬🇧</span>
+           </div>
         </div>
 
-        {/* Mobile Menu Dropdown */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-100 shadow-lg py-4 px-6 flex flex-col gap-4 animate-fade-in-up">
-            <a href="#" onClick={() => setIsMobileMenuOpen(false)} className="text-gray-600 hover:text-brand-500 font-semibold transition-colors text-base uppercase tracking-wide py-2 border-b border-gray-50">Home</a>
-            <a href="#services" onClick={() => setIsMobileMenuOpen(false)} className="text-gray-600 hover:text-brand-500 font-semibold transition-colors text-base uppercase tracking-wide py-2 border-b border-gray-50">Services</a>
-            <a href="#portfolio" onClick={() => setIsMobileMenuOpen(false)} className="text-gray-600 hover:text-brand-500 font-semibold transition-colors text-base uppercase tracking-wide py-2 border-b border-gray-50">Integrations</a>
-            <a href="#contact" onClick={() => setIsMobileMenuOpen(false)} className="text-gray-600 hover:text-brand-500 font-semibold transition-colors text-base uppercase tracking-wide py-2 border-b border-gray-50">Contact</a>
-            <a href="#contact" onClick={() => setIsMobileMenuOpen(false)} className="inline-flex justify-center w-full px-6 py-3 bg-accent-500 hover:bg-accent-600 text-[var(--color-brand-700)] font-extrabold rounded-xl transition-all shadow-md mt-2">
-              ขอใบเสนอราคา
-            </a>
-          </div>
-        )}
-      </nav>
-
-      <main className="pt-20">
-        {/* ================= HERO SECTION (2 COLUMNS) ================= */}
-        <section className="relative overflow-hidden bg-white pt-24 pb-24 sm:pt-32 sm:pb-32 lg:pb-36 lg:pt-36">
-          {/* subtle background effects */}
-          <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:32px_32px]"></div>
-            <div className="absolute top-[-10%] right-[-5%] w-[50vh] h-[50vh] bg-brand-50 rounded-full blur-3xl opacity-70 animate-float" />
-            <div className="absolute bottom-[-10%] left-[-5%] w-[40vh] h-[40vh] bg-sky-50 rounded-full blur-3xl opacity-60 animate-float" style={{ animationDelay: '1.5s' }} />
-          </div>
-
-          <div className="max-w-7xl mx-auto px-6 relative z-10">
-            <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
-              {/* Left Col - text */}
-              <div className="text-left">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 border border-brand-100 text-brand-600 text-sm font-semibold mb-6 animate-fade-in-up">
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-500 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-500"></span>
-                  </span>
-                  {config.hero_badge_en}
-                  <span className="text-gray-400 font-normal ml-1 border-l pl-2 border-brand-200">{config.hero_badge_th}</span>
-                </div>
-                <h1 className="text-4xl lg:text-5xl xl:text-6xl font-extrabold tracking-tight mb-6 leading-[1.2] text-gray-900 whitespace-pre-line animate-fade-in-up font-sans" style={{ animationDelay: '0.1s' }}>
-                  {config.hero_headline_en?.replace('\n', ' ')}
-                  <div className="mt-3 text-lg lg:text-xl font-medium text-gray-500 font-thai tracking-wide">
-                    {config.hero_headline_th}
-                  </div>
-                </h1>
-                <p className="mt-6 text-lg sm:text-xl text-gray-600 max-w-xl leading-relaxed whitespace-pre-line animate-fade-in-up font-sans" style={{ animationDelay: '0.2s' }}>
-                  {config.hero_sub_en}
-                  <span className="block mt-2 text-sm lg:text-base text-gray-400 font-thai">{config.hero_sub_th}</span>
-                </p>
-                <div className="mt-10 flex flex-col sm:flex-row items-center gap-4 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-                  <a href={config.hero_btn1_link} className="w-full sm:w-auto px-8 py-4 bg-brand-500 hover:bg-brand-600 text-white rounded-xl font-semibold transition-all shadow-md shadow-brand-500/20 flex flex-col items-center justify-center gap-1 group duration-300 transform hover:-translate-y-1">
-                    <span className="flex items-center gap-2">{config.hero_btn1_text_en} <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform" /></span>
-                    <span className="text-xs text-brand-100 font-medium font-thai">{config.hero_btn1_text_th}</span>
-                  </a>
-                  <a href={config.hero_btn2_link} className="w-full sm:w-auto px-8 py-4 bg-accent-500 hover:bg-accent-600 text-[var(--color-brand-700)] rounded-xl font-bold transition-all flex flex-col items-center justify-center gap-1 duration-300 shadow-md shadow-accent-500/20 transform hover:-translate-y-1">
-                    <span className="flex items-center gap-2">{config.hero_btn2_text_en}</span>
-                    <span className="text-xs text-[var(--color-brand-600)] font-medium font-thai">{config.hero_btn2_text_th}</span>
-                  </a>
-                </div>
-              </div>
-
-              {/* Right Col - illustration */}
-              <div className="relative mx-auto w-full max-w-lg lg:max-w-none h-80 sm:h-96 lg:h-[500px] flex items-center justify-center animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-                <div className="absolute inset-0 bg-brand-50 rounded-full blur-[100px] opacity-60 animate-pulse" />
-                <div className="relative w-full h-full flex items-center justify-center animate-float">
-                  <div className="w-64 h-64 sm:w-80 sm:h-80 bg-white shadow-2xl shadow-gray-200/50 rounded-full border border-gray-100 flex items-center justify-center relative animate-[spin_60s_linear_infinite]">
-                    {/* Floating Icons connecting */}
-                    <div className="absolute top-[-15px] left-1/2 -translate-x-1/2 p-4 bg-white shadow-lg shadow-gray-200/50 rounded-2xl border border-gray-100 -rotate-[0deg] text-brand-500 transition-transform duration-300 hover:scale-110"><Server className="w-8 h-8" /></div>
-                    <div className="absolute bottom-[-15px] left-1/2 -translate-x-1/2 p-4 bg-white shadow-lg shadow-gray-200/50 rounded-2xl border border-gray-100 -rotate-[0deg] text-gray-700 transition-transform duration-300 hover:scale-110"><Globe className="w-8 h-8" /></div>
-                    <div className="absolute left-[-15px] top-1/2 -translate-y-1/2 p-4 bg-white shadow-lg shadow-gray-200/50 rounded-2xl border border-gray-100 -rotate-[0deg] text-gray-700 transition-transform duration-300 hover:scale-110"><Terminal className="w-8 h-8" /></div>
-                    <div className="absolute right-[-15px] top-1/2 -translate-y-1/2 p-4 bg-white shadow-lg shadow-gray-200/50 rounded-2xl border border-gray-100 -rotate-[0deg] text-brand-500 transition-transform duration-300 hover:scale-110"><Cpu className="w-8 h-8" /></div>
-
-                    <div className="w-32 h-32 sm:w-40 sm:h-40 bg-gray-50 rounded-full flex items-center justify-center border-4 border-white shadow-inner animate-[spin_60s_linear_infinite_reverse]">
-                      <Activity className="w-12 h-12 sm:w-16 sm:h-16 text-brand-500 animate-pulse" />
-                    </div>
-                  </div>
-                </div>
-              </div>
+        {/* ================= NAVIGATION ================= */}
+        <nav className="sticky top-0 z-40 bg-white/95 backdrop-blur-md py-4 transition-all shadow-sm border-b border-gray-100">
+          <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+            <div className="text-3xl font-light tracking-tighter cursor-pointer text-brand-500 flex items-center">
+              orange<div className="w-4 h-1.5 bg-brand-500 rounded-full ml-1 mb-1 shadow-sm shadow-brand-500/30"></div>
             </div>
+            
+            <div className="flex items-center gap-3">
+               <a href="#contact" className="hidden sm:flex items-center gap-2 px-6 py-2.5 bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold rounded-full transition-all shadow-lg shadow-brand-500/20 hover:-translate-y-0.5">
+                  <FileText className="w-4 h-4" /> สอบถามราคา
+               </a>
+               <button className="flex items-center justify-center w-11 h-11 bg-accent-500 text-white rounded-full hover:bg-accent-600 shadow-lg shadow-accent-500/20 transition-all hover:-translate-y-0.5" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+                  {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+               </button>
+            </div>
+          </div>
+
+          {/* Mobile Menu Dropdown */}
+          {isMobileMenuOpen && (
+            <div className="absolute top-full left-0 right-0 bg-white border-b border-gray-100 shadow-xl py-4 px-6 flex flex-col gap-4 animate-fade-in-up">
+              <a href="#" onClick={() => setIsMobileMenuOpen(false)} className="text-gray-700 hover:text-brand-500 font-bold transition-colors text-base uppercase tracking-wide py-2 border-b border-gray-50 flex items-center justify-between">Home <ChevronRight className="w-4 h-4 text-gray-400" /></a>
+              <a href="#services" onClick={() => setIsMobileMenuOpen(false)} className="text-gray-700 hover:text-brand-500 font-bold transition-colors text-base uppercase tracking-wide py-2 border-b border-gray-50 flex items-center justify-between">Services <ChevronRight className="w-4 h-4 text-gray-400" /></a>
+              <a href="#portfolio" onClick={() => setIsMobileMenuOpen(false)} className="text-gray-700 hover:text-brand-500 font-bold transition-colors text-base uppercase tracking-wide py-2 border-b border-gray-50 flex items-center justify-between">Integrations <ChevronRight className="w-4 h-4 text-gray-400" /></a>
+              <a href="#contact" onClick={() => setIsMobileMenuOpen(false)} className="text-gray-700 hover:text-brand-500 font-bold transition-colors text-base uppercase tracking-wide py-2 border-b border-gray-50 flex items-center justify-between">Contact <ChevronRight className="w-4 h-4 text-gray-400" /></a>
+              <a href="#contact" onClick={() => setIsMobileMenuOpen(false)} className="inline-flex justify-center items-center gap-2 w-full px-6 py-3.5 bg-gradient-to-r from-brand-500 to-brand-600 text-white font-bold rounded-xl transition-all shadow-md mt-4">
+                <FileText className="w-4 h-4" /> สอบถามราคา
+              </a>
+            </div>
+          )}
+        </nav>
+      </div>
+      <main className="pt-20">
+        {/* ================= HERO SECTION (ORANGE DESIGN) ================= */}
+        <section className="bg-white pt-10 pb-20 relative">
+          <div className="absolute top-1/4 left-0 w-64 h-64 bg-brand-50 rounded-full blur-[100px] opacity-50 point-events-none" />
+          <div className="absolute bottom-1/4 right-0 w-64 h-64 bg-accent-50 rounded-full blur-[100px] opacity-50 point-events-none" />
+          
+          <div className="max-w-7xl mx-auto px-6 text-center relative z-10">
+             <h1 className="text-2xl md:text-3xl lg:text-4xl font-medium text-gray-900 leading-[1.4] mb-4 font-thai max-w-4xl mx-auto tracking-tight pt-10">
+                บริษัทรับเขียนโปรแกรมทุกประเภท<br/>
+                ด้วยทีม <span className="text-brand-500 font-bold">In House กว่า 80 คน</span>
+             </h1>
+
+             {/* Pills */}
+             <div className="flex overflow-x-auto gap-3 justify-start md:justify-center py-8 no-scrollbar snap-x mx-auto max-w-5xl px-4 md:px-0">
+               {['WEB APPLICATION', 'MOBILE APPLICATION', 'LINE APPLICATION', 'PLC'].map((cat, i) => (
+                 <div key={i} className="shrink-0 flex-1 min-w-[140px] max-w-[200px] snap-center px-4 md:px-6 py-3 md:py-4 bg-black text-white text-xs md:text-sm font-bold rounded-xl tracking-wider hover:bg-gray-800 transition-colors shadow-lg shadow-black/20 cursor-pointer border border-gray-800 flex items-center justify-center text-center">
+                    {cat}
+                 </div>
+               ))}
+             </div>
+
+             {/* Monitor Image Fake / CSS */}
+             <div className="mt-6 md:mt-12 relative max-w-4xl mx-auto animate-fade-in-up">
+               <div className="w-full aspect-video bg-gray-900 rounded-t-[1.5rem] md:rounded-t-[2.5rem] border-[8px] md:border-[12px] border-black overflow-hidden relative shadow-2xl">
+                  {/* Fake Screen UI */}
+                  <div className="absolute inset-0 bg-gray-50 flex">
+                     {/* Sidebar */}
+                     <div className="w-1/4 bg-[#1e293b] flex flex-col p-4 md:p-6 gap-3 md:gap-4 border-r border-gray-800 hidden sm:flex">
+                        <div className="w-full h-8 bg-brand-500 rounded-lg flex items-center px-3 mb-4 shadow"><div className="w-4 h-4 bg-white/50 rounded-full"></div></div>
+                        <div className="w-3/4 h-3 bg-white/10 rounded-md"></div>
+                        <div className="w-full h-3 bg-white/10 rounded-md"></div>
+                        <div className="w-2/3 h-3 bg-white/10 rounded-md mt-6"></div>
+                        <div className="w-full h-3 bg-white/10 rounded-md"></div>
+                     </div>
+                     {/* Main Content */}
+                     <div className="flex-1 p-4 md:p-8 flex flex-col gap-4 md:gap-6 bg-gray-50">
+                        {/* Top Nav in fake dashboard */}
+                        <div className="w-full h-10 bg-white rounded-xl shadow-sm flex items-center px-4 justify-between shrink-0">
+                           <div className="w-1/3 h-3 bg-gray-100 rounded"></div>
+                           <div className="w-10 h-6 bg-brand-100 rounded border border-brand-200"></div>
+                        </div>
+                        {/* Chart Area */}
+                        <div className="flex-1 bg-white shadow-sm border border-gray-100 rounded-xl p-4 flex gap-4">
+                           <div className="flex-1 flex items-end relative border-b border-l border-gray-100 pb-2 pl-2">
+                             <svg className="w-full h-full text-brand-500/20" viewBox="0 0 100 50" preserveAspectRatio="none">
+                               <polyline fill="currentColor" points="0,50 10,40 20,45 30,20 40,30 50,15 60,20 70,5 80,10 90,5 100,20 100,50" />
+                               <polyline fill="none" stroke="var(--color-brand-500)" strokeWidth="2" points="0,50 10,40 20,45 30,20 40,30 50,15 60,20 70,5 80,10 90,5 100,20" />
+                             </svg>
+                           </div>
+                           <div className="w-[120px] border-l border-gray-100 pl-4 hidden md:flex flex-col gap-4 items-center justify-center shrink-0">
+                              <div className="w-16 h-16 rounded-full border-8 border-brand-500 border-r-accent-500 border-t-gray-100 flex items-center justify-center shadow-inner">
+                                <div className="w-8 h-8 bg-gray-50 rounded-full"></div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               {/* Monitor Base */}
+               <div className="w-24 md:w-48 h-10 md:h-16 bg-gradient-to-b from-gray-200 to-gray-400 mx-auto rounded-b-xl shadow-md relative z-[-1] -mt-1 border-x border-b border-gray-300"></div>
+               <div className="w-32 md:w-64 h-3 md:h-4 bg-gradient-to-r from-gray-200 via-white to-gray-300 mx-auto rounded-t-full shadow-[0_10px_20px_rgba(0,0,0,0.15)] -mt-1 relative z-10 border-t border-gray-100"></div>
+             </div>
           </div>
         </section>
-
-        {/* ================= TECH STACK MARQUEE ================= */}
-        <div className="py-8 border-b border-gray-100 bg-white relative flex overflow-hidden group">
-          <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-white to-transparent z-10" />
-          <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-white to-transparent z-10" />
-          <div className="animate-marquee whitespace-nowrap flex gap-12 md:gap-20 items-center opacity-70 group-hover:opacity-100 transition-opacity duration-300">
-            {['Next.js', 'React', 'Node.js', 'TypeScript', 'Tailwind CSS', 'Arduino', 'ESP32', 'MQTT', 'LINE API'].map((tech, i) => (
-              <span key={i} className="text-xl md:text-2xl font-black text-gray-300 hover:text-brand-500 transition-colors duration-300 select-none cursor-default">{tech}</span>
-            ))}
-            {['Next.js', 'React', 'Node.js', 'TypeScript', 'Tailwind CSS', 'Arduino', 'ESP32', 'MQTT', 'LINE API'].map((tech, i) => (
-              <span key={`dup-${i}`} className="text-xl md:text-2xl font-black text-gray-300 hover:text-brand-500 transition-colors duration-300 select-none cursor-default">{tech}</span>
-            ))}
-            {['Next.js', 'React', 'Node.js', 'TypeScript', 'Tailwind CSS', 'Arduino', 'ESP32', 'MQTT', 'LINE API'].map((tech, i) => (
-              <span key={`dup2-${i}`} className="text-xl md:text-2xl font-black text-gray-300 hover:text-brand-500 transition-colors duration-300 select-none cursor-default">{tech}</span>
-            ))}
-          </div>
-        </div>
 
         {/* ================= WHY CHOOSE US ================= */}
         <section className="py-20 bg-palette-light border-t border-gray-200/50">
@@ -366,80 +362,31 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ================= PORTFOLIO (FEATURED PROJECTS) SECTION ================= */}
-        <section id="portfolio" className="py-24 bg-palette-light relative scroll-mt-20 border-t border-gray-200/50">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="mb-16 text-center">
-              <h2 className="text-brand-500 font-bold tracking-wide uppercase text-sm mb-2">{config.port_badge_en} <span className="ml-2 font-normal text-gray-400 border-l border-brand-200 pl-2">{config.port_badge_th}</span></h2>
-              <h3 className="text-3xl md:text-4xl font-extrabold text-gray-900">{config.integrations_title_en}</h3>
-              <p className="mt-2 text-lg text-gray-500 font-medium font-thai">{config.integrations_title_th}</p>
-              <div className="w-16 h-1 bg-brand-500 mx-auto mt-6 rounded-full" />
-              <p className="text-gray-600 mt-6 max-w-2xl mx-auto whitespace-pre-line">{config.port_desc_en}</p>
-              <p className="text-gray-400 mt-2 text-sm max-w-2xl mx-auto whitespace-pre-line font-thai">{config.port_desc_th}</p>
+        {/* ================= PORTFOLIO LIST SECTION ================= */}
+        <section id="portfolio" className="py-24 bg-white relative scroll-mt-20 border-t border-gray-100">
+          <div className="max-w-5xl mx-auto px-6">
+            <div className="mb-12 flex flex-col md:flex-row items-center justify-center gap-4 text-center md:text-left">
+              <div className="w-14 h-14 bg-brand-50 rounded-xl flex items-center justify-center text-brand-500 shrink-0 shadow-sm border border-brand-100">
+                <Monitor className="w-8 h-8" />
+              </div>
+              <h3 className="text-2xl md:text-3xl font-extrabold text-gray-900 font-thai tracking-tight max-w-md mt-2 md:mt-0">ตัวอย่างผลงานรับเขียนโปรแกรม</h3>
             </div>
 
-            {loading ? (
-              <div className="flex justify-center py-20"><div className="w-12 h-12 border-4 border-gray-200 border-t-brand-500 rounded-full animate-spin" /></div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {integrations.map(project => {
-                  const CardWrapper = project.referenceUrl ? 'a' : 'div';
-                  const wrapperProps = project.referenceUrl ? { href: project.referenceUrl, target: '_blank', rel: 'noopener noreferrer' } : {};
-                  return (
-                    <CardWrapper key={project.id} {...(wrapperProps as any)} className="bg-white border text-left border-gray-100 shadow-sm hover:shadow-xl hover:shadow-brand-500/10 hover:-translate-y-2 rounded-3xl overflow-hidden transition-all duration-300 group flex flex-col h-full cursor-pointer block">
-                      <div className="w-full aspect-[4/3] bg-gray-100 overflow-hidden relative">
-                        {project.imageUrl && project.imageUrl.includes('http') ? (() => {
-                          const isVideoPrefix = project.imageUrl.toLowerCase().startsWith('video:');
-                          const rawUrl = isVideoPrefix ? project.imageUrl.substring(6) : project.imageUrl;
-                          const directUrl = getDriveDirectUrl(rawUrl);
-                          const thumbUrl = getDriveThumbnailUrl(rawUrl);
-                          const iframeUrl = getDriveIframeUrl(rawUrl);
-
-                          return (
-                            <>
-                              {isVideoPrefix ? (
-                                <iframe src={iframeUrl} className="w-full h-full border-0" allow="autoplay; encrypted-media" allowFullScreen />
-                              ) : (
-                                <video 
-                                  src={directUrl} 
-                                  autoPlay loop muted playsInline
-                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                  onError={(e) => {
-                                    (e.target as HTMLVideoElement).style.display = 'none';
-                                    const img = (e.target as HTMLVideoElement).nextElementSibling as HTMLImageElement;
-                                    if (img) img.style.display = 'block';
-                                  }}
-                                />
-                              )}
-                              {!isVideoPrefix && (
-                                <img src={thumbUrl} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 hidden" referrerPolicy="no-referrer" />
-                              )}
-                            </>
-                          );
-                        })() : (
-                          <div className="w-full h-full flex flex-col items-center justify-center text-gray-400 gap-3">
-                            <Code className="w-12 h-12 opacity-30" />
-                            <span className="text-sm font-medium">No Image</span>
-                          </div>
-                        )}
-                        {project.tag && (
-                          <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-brand-600 text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
-                            {project.tag}
-                          </div>
-                        )}
-                      </div>
-                      <div className="p-6 flex flex-col flex-grow">
-                        <div className="flex items-start justify-between gap-2 mb-3">
-                          <h4 className="font-bold text-xl text-gray-900 group-hover:text-brand-500 transition-colors">{project.title}</h4>
-                          {project.referenceUrl && <ExternalLink className="w-4 h-4 mt-1 text-gray-400 group-hover:text-brand-500 shrink-0" />}
-                        </div>
-                        <p className="text-sm text-gray-600 line-clamp-3 leading-relaxed">{project.description}</p>
-                      </div>
-                    </CardWrapper>
-                  )
-                })}
-              </div>
-            )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6 max-w-4xl mx-auto mb-16">
+               {[
+                 'โปรแกรมจัดการประชุมผู้ถือหุ้นออนไลน์',
+                 'โปรแกรมระบบงานสารบรรณ',
+                 'โปรแกรม Fulfillment',
+                 'โปรแกรมระบบจัดการสปา',
+                 'โปรแกรมจองรถตู้ผ่านมือถือ',
+                 'โปรแกรมจองห้องประชุม',
+               ].map((item, i) => (
+                 <div key={i} className="flex items-center gap-4 p-4 rounded-xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100 group shadow-sm bg-white">
+                   <div className="w-2.5 h-2.5 rounded-full bg-accent-500 shadow-sm shadow-accent-500/50 group-hover:scale-125 transition-transform shrink-0"></div>
+                   <p className="text-gray-700 font-thai text-base md:text-lg font-medium">{item}</p>
+                 </div>
+               ))}
+            </div>
           </div>
         </section>
 
@@ -541,6 +488,22 @@ export default function LandingPage() {
           </div>
         </div>
       )}
+
+      {/* ================= STACKED FABs ================= */}
+      <div className="fixed bottom-6 md:bottom-10 right-6 md:right-10 z-[100] flex flex-col gap-3 items-center group">
+         <a href="#" className="w-12 h-12 md:w-14 md:h-14 bg-[#00B900] text-white rounded-full flex items-center justify-center shadow-lg hover:-translate-y-1 transition-all border-2 border-white shadow-[#00B900]/30 hover:scale-110">
+           <MessageCircle className="w-6 h-6 md:w-7 md:h-7 fill-current" />
+         </a>
+         <a href="tel:0815910000" className="w-12 h-12 md:w-14 md:h-14 bg-accent-500 text-white rounded-full flex items-center justify-center shadow-lg hover:-translate-y-1 transition-all border-2 border-white shadow-accent-500/30 hover:scale-110">
+           <Phone className="w-5 h-5 md:w-6 md:h-6 fill-current" />
+         </a>
+         <a href="mailto:contact@orange.com" className="w-12 h-12 md:w-14 md:h-14 bg-brand-500 text-white rounded-full flex items-center justify-center shadow-lg hover:-translate-y-1 transition-all border-2 border-white shadow-brand-500/30 hover:scale-110">
+           <Mail className="w-5 h-5 md:w-6 md:h-6" />
+         </a>
+         <button className="w-14 h-14 md:w-16 md:h-16 bg-indigo-500 text-white rounded-full flex items-center justify-center shadow-xl hover:-translate-y-1 transition-all border-[3px] border-white shadow-indigo-500/40 hover:scale-105 mt-2 bg-gradient-to-br from-indigo-500 to-indigo-600">
+           <X className="w-6 h-6 md:w-8 md:h-8" />
+         </button>
+      </div>
     </div>
   );
 }

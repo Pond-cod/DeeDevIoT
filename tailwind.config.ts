@@ -13,16 +13,16 @@ const config: Config = {
       },
       colors: {
         brand: {
-          50: '#F0F5FF',
-          100: '#E5EDFF',
-          500: '#0047FF', // Vivid Blue
-          600: '#003BE0',
+          50: '#fff7ed',
+          100: '#ffedd5',
+          500: '#f97316', // Orange 500
+          600: '#ea580c',
         },
         accent: {
-          50: '#FFFDF0',
-          100: '#FFF9CC',
-          500: '#FFCE00', // Vivid Yellow
-          600: '#E6BA00',
+          50: '#fefce8',
+          100: '#fef9c3',
+          500: '#eab308', // Yellow 500
+          600: '#ca8a04',
         },
         palette: {
           light: '#EAEAEA',
