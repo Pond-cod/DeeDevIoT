@@ -81,12 +81,12 @@ export async function updateSheetRow(id: string, values: any[]) {
   try {
     const { sheets, GOOGLE_SHEET_ID } = getGoogleAuth();
 
-    const currentData = await getSheetValues('Services!A2:H');
+    const currentData = await getSheetValues('Services!A2:I');
     const rowIndex = currentData.findIndex((row) => row[0] === id);
 
     if (rowIndex !== -1) {
       const rowNumber = rowIndex + 2;
-      const range = `Services!A${rowNumber}:H${rowNumber}`;
+      const range = `Services!A${rowNumber}:I${rowNumber}`;
 
       const response = await sheets.spreadsheets.values.update({
         spreadsheetId: GOOGLE_SHEET_ID,
