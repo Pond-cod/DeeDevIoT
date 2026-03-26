@@ -332,7 +332,7 @@ export default function LandingPage() {
             </section>
 
             {/* Solutions Section (Services) */}
-            <section id="solutions" className="py-32 px-6 bg-slate-50">
+            <section id="services" className="py-32 px-6 bg-slate-50">
                <div className="max-w-7xl mx-auto">
                   <div className="text-center mb-20 reveal">
                      <h2 className="font-montserrat text-4xl lg:text-5xl font-black text-slate-900 mb-6 uppercase">{t('solutions_title', 'Featured Works')}</h2>
