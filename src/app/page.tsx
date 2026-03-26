@@ -342,7 +342,7 @@ export default function LandingPage() {
                      {projects.length > 0 ? projects.map((p, i) => (
                         <div key={p.id || i} className={`reveal delay-${(i % 3) * 100 + 100} group bg-white rounded-[2rem] shadow-lg hover:shadow-2xl transition-all cursor-pointer overflow-hidden transform hover:-translate-y-2`} onClick={() => { setSelectedProjectId(p.id || String(i)); setView('detail'); window.scrollTo(0,0); }}>
                            <div className="h-64 overflow-hidden relative">
-                              <img src={p.imageUrl} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={p.title} />
+                              <img src={p.imageUrl.split(',')[0]} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={p.title} />
                               <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                  <span className="bg-accent-500 text-slate-900 px-6 py-2 rounded-full font-bold text-sm">ดูรายละเอียด</span>
                               </div>
@@ -497,7 +497,16 @@ export default function LandingPage() {
              </button>
              {selectedProject ? (
                <div className="animate-fade-in-up">
-                  <img src={selectedProject.imageUrl} className="w-full h-[300px] md:h-[500px] object-cover rounded-[3rem] shadow-2xl mb-12" alt={selectedProject.title} />
+                   <div className="flex flex-col gap-4 mb-12">
+                      {selectedProject.imageUrl.split(',').filter((u: string) => u.trim()).map((url: string, index: number) => (
+                        <img 
+                          key={index} 
+                          src={url.trim()} 
+                          className="w-full h-auto object-cover rounded-[2rem] md:rounded-[3rem] shadow-2xl" 
+                          alt={`${selectedProject.title} ${index + 1}`} 
+                        />
+                      ))}
+                   </div>
                    <div className="space-y-6">
                       <span className="bg-accent-500 text-slate-900 px-4 py-1 rounded-full font-bold text-xs uppercase">{selectedProject.icon || selectedProject.tag}</span>
                       <h1 className="font-montserrat text-4xl md:text-6xl font-black text-slate-900 uppercase">{selectedProject[`title_${lang}`] || selectedProject.title}</h1>

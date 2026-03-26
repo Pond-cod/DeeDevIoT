@@ -22,16 +22,20 @@ export async function GET() {
 
     // จัดระเบียบข้อมูล (Map) ให้ตรงกับ Interface ที่กำหนดไว้
     const services: ServiceData[] = rows.map((row) => {
-      let imageUrl = row[4] || '';
+      let imageUrlsStr = row[4] || '';
       
-      // Transform Google Drive links to bypass CORB/ORB
-      if (imageUrl.includes('drive.google.com')) {
-        const regex = /(?:\/d\/|id=|\/open\?id=)([a-zA-Z0-9_-]{20,})/;
-        const match = imageUrl.match(regex);
-        if (match && match[1]) {
-          imageUrl = `https://lh3.googleusercontent.com/d/${match[1]}=w1000`;
+      // Transform Google Drive links to bypass CORB/ORB for multiple URLs
+      const imageUrl = imageUrlsStr.split(',').map(url => {
+        let cleanUrl = url.trim();
+        if (cleanUrl.includes('drive.google.com')) {
+          const regex = /(?:\/d\/|id=|\/open\?id=)([a-zA-Z0-9_-]{20,})/;
+          const match = cleanUrl.match(regex);
+          if (match && match[1]) {
+            return `https://lh3.googleusercontent.com/d/${match[1]}=w1000`;
+          }
         }
-      }
+        return cleanUrl;
+      }).filter(u => u).join(',');
 
       return {
         id: row[0] || '',

@@ -10,7 +10,7 @@ export function convertToDirectLink(driveUrls: string): string {
   
   if (matches.length > 0) {
     // นำ ID ทั้งหมดที่เจอมาแปลงเป็น Direct Link ที่รองรับ CORB/ORB
-    return matches.map(m => `https://lh3.googleusercontent.com/d/${m[1]}=w1000`).join('\n');
+    return matches.map(m => `https://lh3.googleusercontent.com/d/${m[1]}=w1000`).join(',');
   }
 
   // หากไม่มี ID ปรากฏ ส่งสตริงเดิมกลับไป
