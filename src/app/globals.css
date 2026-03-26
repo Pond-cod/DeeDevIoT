@@ -52,7 +52,41 @@
 }
 
 @layer base {
-  body {
-    @apply antialiased;
+  html {
+    scroll-behavior: smooth;
   }
+  body {
+    @apply antialiased bg-slate-950 text-slate-200;
+  }
+}
+
+/* Premium Mesh Gradient Animation */
+@keyframes mesh-gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-mesh {
+  background: linear-gradient(-45deg, #0f172a, #1eccd8, #1e40af, #030712);
+  background-size: 400% 400%;
+  animation: mesh-gradient 15s ease infinite;
+}
+
+/* Glassmorphism Utilities */
+.glass-card {
+  @apply bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl;
+}
+
+.glass-nav {
+  @apply bg-slate-950/60 backdrop-blur-md border-b border-white/5;
+}
+
+@keyframes slow-zoom {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.animate-slow-zoom {
+  animation: slow-zoom 20s ease-in-out infinite;
 }

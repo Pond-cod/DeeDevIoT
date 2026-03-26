@@ -152,9 +152,9 @@ export default function LandingPage() {
               </span>
             </div>
             
-            <div className="hidden lg:flex items-center space-x-10 font-bold text-slate-600">
+            <div className={`hidden lg:flex items-center space-x-10 font-bold transition-colors ${scrolled ? 'text-slate-900' : 'text-white'}`}>
               {navItems.map(item => (
-                <a key={item.id} href={item.href} className="hover:text-brand-500 transition-colors uppercase tracking-wider text-sm">
+                <a key={item.id} href={item.href} className={`hover:text-brand-500 transition-colors uppercase tracking-wider text-sm ${scrolled ? 'text-slate-900' : 'text-white'}`}>
                   {lang === 'th' ? item.label_th : item.label_en}
                 </a>
               ))}
@@ -185,7 +185,7 @@ export default function LandingPage() {
               >
                 {lang.toUpperCase()}
               </button>
-              <button className="p-2 text-slate-900" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+              <button className={`lg:hidden transition-colors ${scrolled ? 'text-slate-900' : 'text-white'}`} onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
                 <Menu className="w-8 h-8" />
               </button>
             </div>
@@ -205,14 +205,12 @@ export default function LandingPage() {
         {view === 'main' ? (
           <main>
             {/* Hero Section */}
-            <section className="pt-56 pb-40 px-6 bg-[#030712] relative overflow-hidden">
-              {/* Subtle Tech Grid Background */}
-              <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: 'radial-gradient(#1d4ed8 0.5px, transparent 0.5px)', backgroundSize: '40px 40px' }}></div>
-              
-              {/* Lighting & Depth */}
-              <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-72 h-72 bg-blue-600/10 rounded-full blur-[100px] pointer-events-none"></div>
-              <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-yellow-500/10 rounded-full blur-[120px] pointer-events-none"></div>
-
+            <section className="relative min-h-[90vh] flex items-center pt-28 pb-20 overflow-hidden animate-mesh">
+             <div className="absolute inset-0 bg-slate-950/40"></div>
+             <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute top-1/4 -left-20 w-96 h-96 bg-brand-500/20 rounded-full blur-[120px] animate-glow-pulse"></div>
+                <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-accent-500/10 rounded-full blur-[120px] animate-glow-pulse delay-700"></div>
+             </div>
               <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16 relative z-10">
                 <div className="lg:w-3/5 text-white text-center lg:text-left">
                   {/* Tag: Dark Glassmorphism */}
@@ -302,27 +300,28 @@ export default function LandingPage() {
             </section>
 
             {/* Concept Section */}
-            <section id="concept" className="py-32 px-6 bg-white overflow-hidden">
+            <section id="concept" className="py-32 px-6 bg-slate-950 overflow-hidden relative">
+               <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
                <div className="max-w-7xl mx-auto">
                   <div className="flex flex-col lg:flex-row items-center gap-16">
                      <div className="lg:w-1/3 reveal text-center lg:text-left">
-                        <h2 className="font-montserrat text-4xl font-black text-slate-900 mb-6 uppercase leading-tight">
+                        <h2 className="font-montserrat text-4xl font-black text-white mb-6 uppercase leading-tight">
                            {t('concept_title1', 'SMART')}<br />
                            <span className="text-brand-500">{t('concept_title2', 'GEARING')}</span>
                         </h2>
-                        <p className="text-slate-500 mb-8 leading-relaxed text-lg">{t('concept_description', 'Our systems work in harmony like precision-engineered gears.')}</p>
-                        <div className="inline-block w-20 h-2 bg-accent-500 rounded-full"></div>
+                        <p className="text-slate-300 mb-8 leading-relaxed text-lg">{t('concept_description', 'Our systems work in harmony like precision-engineered gears.')}</p>
+                        <div className="inline-block w-20 h-2 bg-brand-500 rounded-full"></div>
                      </div>
                       <div className="lg:w-2/3 grid grid-cols-1 md:grid-cols-3 gap-8">
                         {concepts.map((c, i) => {
                           const IconComp = (require('lucide-react') as any)[c.icon] || Settings2;
                           return (
-                            <div key={c.id || i} className={`reveal delay-${(i + 1) * 100} p-8 rounded-3xl bg-white border border-slate-100 shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all group`}>
+                            <div key={c.id || i} className={`reveal delay-${(i + 1) * 100} p-8 rounded-[2.5rem] glass-card hover:bg-white/10 transition-all group hover:-translate-y-2`}>
                                <div className="w-14 h-14 bg-brand-500 text-white rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-brand-500/30 group-hover:rotate-12 transition-transform">
                                   <IconComp size={28} />
                                </div>
-                               <h4 className="text-xl font-bold mb-4">{lang === 'th' ? c.title_th : c.title_en}</h4>
-                               <p className="text-slate-500 text-sm leading-relaxed">{lang === 'th' ? c.desc_th : c.desc_en}</p>
+                               <h4 className="text-xl font-bold mb-4 text-white">{lang === 'th' ? c.title_th : c.title_en}</h4>
+                               <p className="text-slate-300 text-sm leading-relaxed">{lang === 'th' ? c.desc_th : c.desc_en}</p>
                             </div>
                           );
                         })}
@@ -332,15 +331,16 @@ export default function LandingPage() {
             </section>
 
             {/* Solutions Section (Services) */}
-            <section id="services" className="py-32 px-6 bg-slate-50">
+            <section id="services" className="py-32 px-6 bg-slate-900/50 relative">
+               <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
                <div className="max-w-7xl mx-auto">
                   <div className="text-center mb-20 reveal">
-                     <h2 className="font-montserrat text-4xl lg:text-5xl font-black text-slate-900 mb-6 uppercase">{t('solutions_title', 'Featured Works')}</h2>
-                     <p className="text-slate-500 max-w-2xl mx-auto leading-relaxed text-lg">{t('solutions_description', 'Projects powered by our technology gears.')}</p>
+                     <h2 className="font-montserrat text-4xl lg:text-5xl font-black text-white mb-6 uppercase">{t('solutions_title', 'Featured Works')}</h2>
+                     <p className="text-slate-300 max-w-2xl mx-auto leading-relaxed text-lg">{t('solutions_description', 'Projects powered by our technology gears.')}</p>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                      {projects.length > 0 ? projects.map((p, i) => (
-                        <div key={p.id || i} className={`reveal delay-${(i % 3) * 100 + 100} group bg-white rounded-[2rem] shadow-lg hover:shadow-2xl transition-all cursor-pointer overflow-hidden transform hover:-translate-y-2`} onClick={() => { setSelectedProjectId(p.id || String(i)); setView('detail'); window.scrollTo(0,0); }}>
+                        <div key={p.id || i} className={`reveal delay-${(i % 3) * 100 + 100} group glass-card rounded-[2.5rem] hover:bg-white/10 transition-all cursor-pointer overflow-hidden transform hover:-translate-y-2`} onClick={() => { setSelectedProjectId(p.id || String(i)); setView('detail'); window.scrollTo(0,0); }}>
                            <div className="h-64 overflow-hidden relative">
                               <img src={p.imageUrl.split(',')[0]} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={p.title} />
                               <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -349,12 +349,12 @@ export default function LandingPage() {
                            </div>
                             <div className="p-8">
                                <div className="text-brand-500 font-bold text-xs uppercase mb-2 tracking-widest">{p.icon}</div>
-                               <h3 className="text-2xl font-black text-slate-900 mb-3">{p[`title_${lang}`] || p.title}</h3>
-                               <p className="text-slate-500 text-sm line-clamp-2">{p[`description_${lang}`] || p.description}</p>
+                               <h3 className="text-2xl font-black text-white mb-3">{p[`title_${lang}`] || p.title}</h3>
+                               <p className="text-slate-300 text-sm line-clamp-2">{p[`description_${lang}`] || p.description}</p>
                             </div>
                         </div>
                      )) : (
-                        <div className="col-span-full text-center py-20 bg-white rounded-3xl border-2 border-dashed border-slate-200 text-slate-400">
+                        <div className="col-span-full text-center py-20 bg-slate-800 rounded-3xl border-2 border-dashed border-slate-700 text-slate-500">
                            <Monitor size={48} className="mx-auto mb-4 opacity-20" />
                            <p>No projects fetched yet. Connect Google Sheets to see your work.</p>
                         </div>
@@ -364,37 +364,38 @@ export default function LandingPage() {
             </section>
 
             {/* Integrations Section (Section 4 in Admin) */}
-            <section id="integrations" className="py-32 px-6 bg-white overflow-hidden">
+            <section id="integrations" className="py-32 px-6 bg-slate-950 overflow-hidden relative">
+               <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
                <div className="max-w-7xl mx-auto">
                   <div className="text-center mb-20 reveal">
                      <div className="inline-flex items-center bg-brand-50 px-4 py-1.5 rounded-full mb-6 border border-brand-100">
                         <span className="text-xs font-bold uppercase tracking-widest text-brand-500">{t('port_badge', 'INTEGRATIONS')}</span>
                      </div>
-                     <h2 className="font-montserrat text-4xl lg:text-5xl font-black text-slate-900 mb-6 uppercase leading-tight">
+                     <h2 className="font-montserrat text-4xl lg:text-5xl font-black text-white mb-6 uppercase leading-tight">
                         {t('integrations_title', 'Seamless Ecosystem Connectivity')}
                      </h2>
-                     <p className="text-slate-500 max-w-2xl mx-auto leading-relaxed text-lg">{t('port_desc', 'Connect our platforms with your daily tools.')}</p>
+                     <p className="text-slate-300 max-w-2xl mx-auto leading-relaxed text-lg">{t('port_desc', 'Connect our platforms with your daily tools.')}</p>
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                     {integrations.length > 0 ? integrations.map((int, i) => (
-                       <div key={int.id || i} className="reveal flex flex-col md:flex-row gap-8 p-8 rounded-[2.5rem] bg-slate-50 border border-slate-200/50 hover:bg-white hover:shadow-2xl hover:border-transparent transition-all group">
+                       <div key={int.id || i} className="reveal flex flex-col md:flex-row gap-8 p-8 rounded-[2.5rem] glass-card hover:bg-white/10 transition-all group">
                           <div className="md:w-1/3 aspect-square rounded-3xl overflow-hidden bg-white">
                              <img src={int.imageUrl} alt={int.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                           </div>
                           <div className="md:w-2/3 flex flex-col justify-center">
                              <span className="text-brand-500 font-bold text-[10px] uppercase tracking-[0.2em] mb-3 block">{int.tag}</span>
-                             <h3 className="text-2xl font-black text-slate-900 mb-4 uppercase">{int[`title_${lang}`] || int.title}</h3>
-                             <p className="text-slate-500 text-sm leading-relaxed mb-6 line-clamp-3">{int[`description_${lang}`] || int.description}</p>
+                             <h3 className="text-2xl font-black text-white mb-4 uppercase">{int[`title_${lang}`] || int.title}</h3>
+                             <p className="text-slate-300 text-sm leading-relaxed mb-6 line-clamp-3">{int[`description_${lang}`] || int.description}</p>
                              {int.referenceUrl && (
-                                <a href={int.referenceUrl} target="_blank" className="flex items-center gap-2 text-slate-900 font-bold text-sm hover:text-brand-500 transition-colors uppercase tracking-wider">
+                                <a href={int.referenceUrl} target="_blank" className="flex items-center gap-2 text-white font-bold text-sm hover:text-brand-500 transition-colors uppercase tracking-wider">
                                    View Reference <ChevronRight size={16} />
                                 </a>
                              )}
                           </div>
                        </div>
                     )) : (
-                        <div className="col-span-full text-center py-20 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200 text-slate-400">
+                        <div className="col-span-full text-center py-20 bg-slate-800 rounded-3xl border-2 border-dashed border-slate-700 text-slate-500">
                            <RefreshCw size={48} className="mx-auto mb-4 opacity-20" />
                            <p>Integrating your favorite tools soon...</p>
                         </div>
@@ -405,14 +406,15 @@ export default function LandingPage() {
 
             {/* Dynamic Site Sections */}
             {sections.filter(s => s.is_active === 'TRUE').map((sec, idx) => (
-               <section key={sec.id} id={sec.id} className={`py-32 px-6 ${idx % 2 === 0 ? 'bg-slate-50' : 'bg-white'} overflow-hidden`}>
+               <section key={sec.id} id={sec.id} className={`py-32 px-6 ${idx % 2 === 0 ? 'bg-slate-900/50' : 'bg-slate-950'} overflow-hidden relative`}>
+                  <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
                   <div className="max-w-7xl mx-auto">
                      <div className="text-center mb-20 reveal">
-                        <h2 className="font-montserrat text-4xl lg:text-5xl font-black text-slate-900 mb-6 uppercase tracking-tight">
+                        <h2 className="font-montserrat text-4xl lg:text-5xl font-black text-white mb-6 uppercase tracking-tight">
                            {lang === 'th' ? sec.title_th : sec.title_en}
                         </h2>
                         { (sec.subtitle_en || sec.subtitle_th) && (
-                           <p className="text-slate-500 max-w-2xl mx-auto leading-relaxed text-lg">
+                           <p className="text-slate-300 max-w-2xl mx-auto leading-relaxed text-lg">
                               {lang === 'th' ? sec.subtitle_th : sec.subtitle_en}
                            </p>
                         )}
@@ -422,20 +424,20 @@ export default function LandingPage() {
                         {sectionItems.filter(item => item.section_id === sec.id).map((item, i) => {
                            const ItemIcon = (require('lucide-react') as any)[item.icon] || Star;
                            return (
-                              <div key={item.id || i} className="reveal p-10 rounded-[2.5rem] bg-white border border-slate-100 shadow-xl hover:shadow-2xl transition-all group hover:-translate-y-2">
+                              <div key={item.id || i} className="reveal p-10 rounded-[2.5rem] glass-card hover:bg-white/10 transition-all group hover:-translate-y-2">
                                  {item.imageUrl ? (
                                     <div className="h-48 mb-8 rounded-3xl overflow-hidden">
                                        <img src={item.imageUrl} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={item.title_en} />
                                     </div>
                                  ) : (
-                                    <div className="w-16 h-16 bg-slate-100 text-brand-500 rounded-2xl flex items-center justify-center mb-8 shadow-sm group-hover:rotate-12 transition-transform">
+                                    <div className="w-16 h-16 bg-slate-800 text-brand-500 rounded-2xl flex items-center justify-center mb-8 shadow-sm group-hover:rotate-12 transition-transform">
                                        <ItemIcon size={32} />
                                     </div>
                                  )}
-                                 <h3 className="text-2xl font-black text-slate-900 mb-4 uppercase leading-tight font-montserrat">
+                                 <h3 className="text-2xl font-black text-white mb-4 uppercase leading-tight font-montserrat">
                                     {lang === 'th' ? item.title_th : item.title_en}
                                  </h3>
-                                 <p className="text-slate-500 leading-relaxed text-sm">
+                                 <p className="text-slate-300 leading-relaxed text-sm">
                                     {lang === 'th' ? item.desc_th : item.desc_en}
                                  </p>
                               </div>
@@ -447,7 +449,8 @@ export default function LandingPage() {
             ))}
 
             {/* Contact Section */}
-            <section id="contact" className="py-24 px-6 bg-white">
+            <section id="contact" className="py-24 px-6 bg-slate-950">
+               <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
                <div className="reveal max-w-6xl mx-auto bg-gradient-to-br from-brand-500 to-indigo-700 rounded-[3rem] p-10 md:p-20 text-center relative overflow-hidden shadow-2xl">
                   <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
                   <div className="relative z-10">
@@ -480,9 +483,9 @@ export default function LandingPage() {
                </div>
             </section>
 
-            <footer className="py-20 bg-slate-50 border-t border-slate-100 px-6">
+            <footer className="py-20 bg-slate-950 border-t border-white/5 px-6">
                <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
-                  <div className="font-montserrat text-2xl font-black text-slate-900 uppercase">DEEDEVIOT</div>
+                  <div className="font-montserrat text-2xl font-black text-white uppercase">DEEDEVIOT</div>
                   <div className="flex items-center gap-4 text-slate-300 text-[10px] font-bold tracking-widest uppercase">
                      <span>{t('footer_bio', '© 2026 DEEDEVIOT ACCELERATOR. ALL RIGHTS RESERVED.')}</span>
                      <a href="/login" className="hover:text-accent-500 transition-colors"><Settings size={16} /></a>
@@ -526,8 +529,8 @@ export default function LandingPage() {
                    </div>
                    <div className="space-y-6">
                       <span className="bg-accent-500 text-slate-900 px-4 py-1 rounded-full font-bold text-xs uppercase">{selectedProject.icon || selectedProject.tag}</span>
-                      <h1 className="font-montserrat text-4xl md:text-6xl font-black text-slate-900 uppercase">{selectedProject[`title_${lang}`] || selectedProject.title}</h1>
-                      <p className="text-xl text-slate-500 leading-relaxed font-kanit">{selectedProject[`description_${lang}`] || selectedProject.description}</p>
+                      <h1 className="font-montserrat text-4xl md:text-6xl font-black text-white uppercase">{selectedProject[`title_${lang}`] || selectedProject.title}</h1>
+                      <p className="text-xl text-slate-300 leading-relaxed font-kanit">{selectedProject[`description_${lang}`] || selectedProject.description}</p>
                       
                      {selectedProject.demoUrl || selectedProject.referenceUrl ? (
                         <div className="pt-8 flex flex-wrap gap-4">
