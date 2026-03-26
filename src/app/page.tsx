@@ -497,15 +497,32 @@ export default function LandingPage() {
              </button>
              {selectedProject ? (
                <div className="animate-fade-in-up">
-                   <div className="flex flex-col gap-4 mb-12">
-                      {selectedProject.imageUrl.split(',').filter((u: string) => u.trim()).map((url: string, index: number) => (
-                        <img 
-                          key={index} 
-                          src={url.trim()} 
-                          className="w-full h-auto object-cover rounded-[2rem] md:rounded-[3rem] shadow-2xl" 
-                          alt={`${selectedProject.title} ${index + 1}`} 
-                        />
-                      ))}
+                   <div className="mb-12">
+                      {selectedProject.videoUrls && selectedProject.videoUrls.split(',').filter((u: string) => u.trim()).length > 0 ? (
+                        <div className="flex flex-col gap-6">
+                           {selectedProject.videoUrls.split(',').filter((u: string) => u.trim()).map((url: string, index: number) => (
+                             <div key={index} className="aspect-video w-full rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl bg-black">
+                                <iframe 
+                                  src={url.trim()} 
+                                  className="w-full h-full border-none" 
+                                  allow="autoplay; encrypted-media" 
+                                  allowFullScreen
+                                ></iframe>
+                             </div>
+                           ))}
+                        </div>
+                      ) : (
+                        <div className="flex flex-col gap-4">
+                           {selectedProject.imageUrl && selectedProject.imageUrl.split(',').filter((u: string) => u.trim()).map((url: string, index: number) => (
+                             <img 
+                               key={index} 
+                               src={url.trim()} 
+                               className="w-full h-auto object-cover rounded-[2rem] md:rounded-[3rem] shadow-2xl" 
+                               alt={`${selectedProject.title} ${index + 1}`} 
+                             />
+                           ))}
+                        </div>
+                      )}
                    </div>
                    <div className="space-y-6">
                       <span className="bg-accent-500 text-slate-900 px-4 py-1 rounded-full font-bold text-xs uppercase">{selectedProject.icon || selectedProject.tag}</span>

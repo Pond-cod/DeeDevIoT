@@ -23,8 +23,9 @@ export async function GET() {
     // จัดระเบียบข้อมูล (Map) ให้ตรงกับ Interface ที่กำหนดไว้
     const services: ServiceData[] = rows.map((row) => {
       let imageUrlsStr = row[4] || '';
+      let videoUrlsStr = row[8] || '';
       
-      // Transform Google Drive links to bypass CORB/ORB for multiple URLs
+      // Transform Google Drive links for multiple images
       const imageUrl = imageUrlsStr.split(',').map(url => {
         let cleanUrl = url.trim();
         if (cleanUrl.includes('drive.google.com')) {
@@ -32,6 +33,19 @@ export async function GET() {
           const match = cleanUrl.match(regex);
           if (match && match[1]) {
             return `https://lh3.googleusercontent.com/d/${match[1]}=w1000`;
+          }
+        }
+        return cleanUrl;
+      }).filter(u => u).join(',');
+
+      // Transform Google Drive video links to Preview/Embed links
+      const videoUrls = videoUrlsStr.split(',').map(url => {
+        let cleanUrl = url.trim();
+        if (cleanUrl.includes('drive.google.com')) {
+          const regex = /(?:\/d\/|id=|\/open\?id=)([a-zA-Z0-9_-]{20,})/;
+          const match = cleanUrl.match(regex);
+          if (match && match[1]) {
+            return `https://drive.google.com/file/d/${match[1]}/preview`;
           }
         }
         return cleanUrl;
@@ -46,7 +60,7 @@ export async function GET() {
         demoUrl: row[5] || '',
         title_th: row[6] || '',
         description_th: row[7] || '',
-        videoUrls: row[8] || '',
+        videoUrls: videoUrls,
       };
     });
 
