@@ -121,7 +121,7 @@ export async function POST(request: Request) {
           { status: 400 }
         );
       }
-      const result = await updateSheetRow(id, rowData);
+      const result = await updateSheetRow('Services', id, rowData, 'A:I');
       return NextResponse.json({
         success: true,
         message: 'Service updated successfully in Google Sheets',

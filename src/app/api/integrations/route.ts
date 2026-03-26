@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getSheetValues, appendSheetValues, updateIntegrationRow, deleteSheetRow } from '../../../lib/google';
+import { getSheetValues, appendSheetValues, updateSheetRow, deleteSheetRow } from '../../../lib/google';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -71,7 +71,7 @@ export async function POST(request: Request) {
 
     if (isEdit) {
       if (!id) return NextResponse.json({ success: false, error: 'ID required' }, { status: 400 });
-      const result = await updateIntegrationRow(id, rowData);
+      const result = await updateSheetRow('Integrations', id, rowData, 'A:H');
       return NextResponse.json({ success: true, message: 'Integration updated', data: result });
     } else {
       const result = await appendSheetValues('Integrations!A:H', [rowData]);

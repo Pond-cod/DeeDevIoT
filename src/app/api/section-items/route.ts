@@ -66,7 +66,7 @@ export async function POST(request: Request) {
     ];
 
     if (isEdit) {
-      await updateSheetRow(id, rowData);
+      await updateSheetRow('section_items', id, rowData, 'A:H');
     } else {
       await appendSheetValues('section_items!A:H', [rowData]);
     }

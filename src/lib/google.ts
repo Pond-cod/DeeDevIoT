@@ -77,16 +77,17 @@ export async function appendSheetValues(range: string, values: any[][]) {
   }
 }
 
-export async function updateSheetRow(id: string, values: any[]) {
+export async function updateSheetRow(tabName: string, id: string, values: any[], columnRange: string = 'A:Z') {
   try {
     const { sheets, GOOGLE_SHEET_ID } = getGoogleAuth();
 
-    const currentData = await getSheetValues('Services!A2:I');
+    const rangeFetch = `${tabName}!${columnRange}`;
+    const currentData = await getSheetValues(rangeFetch);
     const rowIndex = currentData.findIndex((row) => row[0] === id);
 
     if (rowIndex !== -1) {
       const rowNumber = rowIndex + 2;
-      const range = `Services!A${rowNumber}:I${rowNumber}`;
+      const range = `${tabName}!${columnRange.split(':')[0]}${rowNumber}:${columnRange.split(':')[1]}${rowNumber}`;
 
       const response = await sheets.spreadsheets.values.update({
         spreadsheetId: GOOGLE_SHEET_ID,
@@ -97,10 +98,10 @@ export async function updateSheetRow(id: string, values: any[]) {
 
       return response.data;
     } else {
-      throw new Error(`Row with ID ${id} not found in Services.`);
+      throw new Error(`Row with ID ${id} not found in ${tabName}.`);
     }
   } catch (error) {
-    console.error('Error updating Google Sheets data:', error);
+    console.error(`Error updating Google Sheets data in ${tabName}:`, error);
     throw error;
   }
 }
@@ -254,33 +255,6 @@ export async function updateConfig(configObj: Record<string, string>) {
 // INTEGRATIONS
 // ----------------------
 
-export async function updateIntegrationRow(id: string, values: any[]) {
-  try {
-    const { sheets, GOOGLE_SHEET_ID } = getGoogleAuth();
-
-    const currentData = await getSheetValues('Integrations!A2:H');
-    const rowIndex = currentData.findIndex((row) => row[0] === id);
-
-    if (rowIndex !== -1) {
-      const rowNumber = rowIndex + 2;
-      const range = `Integrations!A${rowNumber}:H${rowNumber}`;
-
-      const response = await sheets.spreadsheets.values.update({
-        spreadsheetId: GOOGLE_SHEET_ID,
-        range,
-        valueInputOption: 'USER_ENTERED',
-        requestBody: { values: [values] },
-      });
-
-      return response.data;
-    } else {
-      throw new Error(`Row with ID ${id} not found in Integrations.`);
-    }
-  } catch (error) {
-    console.error('Error updating Integration row:', error);
-    throw error;
-  }
-}
 
 export async function deleteSheetRow(tabName: string, id: string) {
   try {

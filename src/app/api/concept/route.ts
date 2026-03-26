@@ -49,7 +49,7 @@ export async function POST(request: Request) {
     ];
 
     if (isEdit) {
-      await updateSheetRow(id, rowData);
+      await updateSheetRow('concept', id, rowData, 'A:F');
     } else {
       await appendSheetValues('concept!A:F', [rowData]);
     }

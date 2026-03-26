@@ -568,6 +568,14 @@ export default function AdminDashboard() {
                      <div className="w-10 h-10 bg-brand-50 text-brand-500 rounded-lg flex items-center justify-center font-bold">2</div>
                      <div><p className="font-bold text-sm text-gray-900">แก้ไขหน้าแรก (Hero Section)</p><p className="text-xs text-gray-400">เปลี่ยนพาดหัวและคำโปรยหน้าหลัก</p></div>
                   </button>
+                  <button onClick={()=>setActiveMenu('concept')} className="flex items-center gap-4 p-4 border border-gray-100 rounded-xl hover:bg-gray-50 transition-all text-left">
+                     <div className="w-10 h-10 bg-brand-50 text-brand-500 rounded-lg flex items-center justify-center font-bold">3</div>
+                     <div><p className="font-bold text-sm text-gray-900">จัดการคอนเซปต์ (Concept)</p><p className="text-xs text-gray-400">แก้ไขจุดเด่นของบริการ</p></div>
+                  </button>
+                  <button onClick={()=>setActiveMenu('integrations')} className="flex items-center gap-4 p-4 border border-gray-100 rounded-xl hover:bg-gray-50 transition-all text-left">
+                     <div className="w-10 h-10 bg-brand-50 text-brand-500 rounded-lg flex items-center justify-center font-bold">4</div>
+                     <div><p className="font-bold text-sm text-gray-900">จัดการพอร์ตโฟลิโอ (Integrations)</p><p className="text-xs text-gray-400">แก้ไขระบบที่เชื่อมต่อ</p></div>
+                  </button>
                </div>
             </div>
           </div>

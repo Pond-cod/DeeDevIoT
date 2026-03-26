@@ -43,7 +43,7 @@ export async function POST(request: Request) {
     ];
 
     if (isEdit) {
-      await updateSheetRow(id, rowData);
+      await updateSheetRow('nav', id, rowData, 'A:D');
       return NextResponse.json({ success: true, message: 'Nav item updated' });
     } else {
       await appendSheetValues('nav!A:D', [rowData]);
