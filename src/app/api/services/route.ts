@@ -9,14 +9,15 @@ export interface ServiceData {
   title_th?: string;
   description_th?: string;
   icon: string;
-  imageUrl: string;
-  demoUrl?: string; // เพิ่มฟิลด์ใหม่
+  imageUrl: string;   // comma-separated image URLs (col E)
+  demoUrl?: string;   // reference URL (col F)
+  videoUrls?: string; // comma-separated video URLs (col I)
 }
 
 export async function GET() {
   try {
-    // ดึงข้อมูลจากแท็บ 'Services' ช่วงเซลล์ 'A2:H'
-    const range = 'Services!A2:H';
+    // ดึงข้อมูลจากแท็บ 'Services' ช่วงเซลล์ 'A2:I'
+    const range = 'Services!A2:I';
     const rows = await getSheetValues(range);
 
     // จัดระเบียบข้อมูล (Map) ให้ตรงกับ Interface ที่กำหนดไว้
@@ -41,6 +42,7 @@ export async function GET() {
         demoUrl: row[5] || '',
         title_th: row[6] || '',
         description_th: row[7] || '',
+        videoUrls: row[8] || '',
       };
     });
 
@@ -70,7 +72,7 @@ export async function POST(request: Request) {
   try {
     // รับข้อมูล JSON จาก Body ของ Request
     const body = await request.json();
-    const { id, title, description, icon, imageUrl, demoUrl, isEdit } = body;
+    const { id, title, description, icon, imageUrl, demoUrl, videoUrls, isEdit } = body;
 
     // ตรวจสอบว่ามีข้อมูลอย่างน้อย title และ description ก่อนบันทึก
     if (!title || !description) {
@@ -80,7 +82,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // แปลง Object เป็น Array แถวเดียว ให้ตรงกับลำดับคอลัมน์ [id, title, description, icon, imageUrl, demoUrl, title_th, description_th] 
+    // แปลง Object เป็น Array แถวเดียว ให้ตรงกับลำดับคอลัมน์ [id, title, description, icon, imageUrl, demoUrl, title_th, description_th, videoUrls] 
     // หากค่าไหนไม่มีให้เป็น string ว่าง ""
     const rowData = [
       id || Date.now().toString(),
@@ -90,7 +92,8 @@ export async function POST(request: Request) {
       imageUrl || "",
       demoUrl || "",
       body.title_th || "",
-      body.description_th || ""
+      body.description_th || "",
+      videoUrls || ""
     ];
 
     if (isEdit) {
@@ -111,7 +114,7 @@ export async function POST(request: Request) {
       const newRow = [rowData];
 
       // กำหนด Range เป็นทั้งตาราง เพี่อให้ Google Sheets หาบรรทัดว่างต่อท้ายให้อัตโนมัติ
-      const range = 'Services!A:H';
+      const range = 'Services!A:I';
       const result = await appendSheetValues(range, newRow);
 
       return NextResponse.json({

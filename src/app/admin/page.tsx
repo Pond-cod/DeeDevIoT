@@ -4,14 +4,14 @@ import React, { useState, useEffect } from 'react';
 import { 
   Save, Loader2, CheckCircle2, AlertCircle, LayoutDashboard, Server, 
   RefreshCw, LogOut, Settings, Link as LinkIcon, Trash2, Search,
-  Menu as MenuIcon, X, Type, Zap, Lightbulb, Star, Phone, Globe, ChevronRight
+  Menu as MenuIcon, X, Type, Zap, Lightbulb, Star, Phone, Globe, ChevronRight, Plus
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { convertToDirectLink } from '../../lib/utils/drive';
 
 // ================= TYPES =================
 interface ServiceData {
-  id: string; title: string; description: string; title_th?: string; description_th?: string; icon: string; imageUrl: string; demoUrl?: string;
+  id: string; title: string; description: string; title_th?: string; description_th?: string; icon: string; imageUrl: string; demoUrl?: string; videoUrls?: string;
 }
 interface IntegrationData {
   id: string; title: string; description: string; title_th?: string; description_th?: string; imageUrl: string; tag: string; referenceUrl: string;
@@ -48,7 +48,7 @@ interface ConceptData { id: string; title_en: string; title_th: string; desc_en:
 interface SectionData { id: string; title_en: string; title_th: string; subtitle_en: string; subtitle_th: string; is_active: string; }
 interface SectionItemData { id: string; section_id: string; title_en: string; title_th: string; desc_en: string; desc_th: string; icon: string; imageUrl: string; }
 
-const emptySvc: ServiceData = { id: '', title: '', description: '', title_th: '', description_th: '', icon: '', imageUrl: '', demoUrl: '' };
+const emptySvc: ServiceData = { id: '', title: '', description: '', title_th: '', description_th: '', icon: '', imageUrl: '', demoUrl: '', videoUrls: '' };
 const emptyInt: IntegrationData = { id: '', title: '', description: '', title_th: '', description_th: '', imageUrl: '', tag: '', referenceUrl: '' };
 const emptyConf: ConfigData = { 
   hero_badge_en: '', hero_badge_th: '',
@@ -109,6 +109,8 @@ export default function AdminDashboard() {
   const [isLoadingSvc, setIsLoadingSvc] = useState(false);
   const [svcForm, setSvcForm] = useState<ServiceData>(emptySvc);
   const [isSvcEdit, setIsSvcEdit] = useState(false);
+  const [svcImageUrls, setSvcImageUrls] = useState<string[]>(['']);
+  const [svcVideoUrls, setSvcVideoUrls] = useState<string[]>(['']);
 
   // Integrations State
   const [integrations, setIntegrations] = useState<IntegrationData[]>([]);
@@ -231,12 +233,16 @@ export default function AdminDashboard() {
     setIsSaving(true);
     setStatus({ type: null, message: '' });
     try {
-      const payload = { ...svcForm, imageUrl: convertToDirectLink(svcForm.imageUrl), isEdit: isSvcEdit };
+      const imageUrl = svcImageUrls.filter(u => u.trim()).map(u => convertToDirectLink(u.trim())).join(',');
+      const videoUrls = svcVideoUrls.filter(u => u.trim()).join(',');
+      const payload = { ...svcForm, imageUrl, videoUrls, isEdit: isSvcEdit };
       const res = await fetch('/api/services', { method: 'POST', body: JSON.stringify(payload) });
       const data = await res.json();
       if (data.success) {
         setStatus({ type: 'success', message: 'บันทึกบริการเรียบร้อย!' });
-        setSvcForm(emptySvc); setIsSvcEdit(false); fetchServices();
+        setSvcForm(emptySvc); setIsSvcEdit(false);
+        setSvcImageUrls(['']); setSvcVideoUrls(['']);
+        fetchServices();
       } else throw new Error(data.error);
     } catch (err: any) {
       setStatus({ type: 'error', message: err.message || 'บันทึกไม่สำเร็จ' });
@@ -573,7 +579,7 @@ export default function AdminDashboard() {
             <div className="xl:col-span-4 bg-white border border-gray-200 shadow-sm rounded-2xl p-6 h-fit sticky top-6">
               <h2 className="text-xl font-bold mb-6 pb-4 border-b border-gray-100 flex justify-between text-gray-900">
                 <span>{isSvcEdit ? 'แก้ไขบริการและผลงาน' : 'เพิ่มบริการและผลงานใหม่'}</span>
-                {isSvcEdit && <button type="button" onClick={() => { setSvcForm(emptySvc); setIsSvcEdit(false); }} className="text-xs px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg transition-colors">ยกเลิก</button>}
+                {isSvcEdit && <button type="button" onClick={() => { setSvcForm(emptySvc); setIsSvcEdit(false); setSvcImageUrls(['']); setSvcVideoUrls(['']); }} className="text-xs px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg transition-colors">ยกเลิก</button>}
               </h2>
               <form onSubmit={handleSvcSubmit} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
@@ -606,6 +612,53 @@ export default function AdminDashboard() {
                     <textarea required rows={3} value={svcForm.description_th} onChange={(e) => setSvcForm({...svcForm, description_th: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all font-thai" />
                   </div>
                 </div>
+
+                {/* IMAGE URLs - Multiple */}
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Image URL</label>
+                    <button type="button" onClick={() => setSvcImageUrls([...svcImageUrls, ''])} className="flex items-center gap-1 text-xs text-brand-600 hover:text-brand-700 font-bold px-2 py-1 bg-brand-50 hover:bg-brand-100 rounded-lg transition-colors">
+                      <Plus className="w-3 h-3" /> เพิ่มภาพ
+                    </button>
+                  </div>
+                  <div className="space-y-2">
+                    {svcImageUrls.map((url, i) => (
+                      <div key={i} className="flex gap-2">
+                        <textarea rows={2} value={url} onChange={(e) => { const arr = [...svcImageUrls]; arr[i] = e.target.value; setSvcImageUrls(arr); }} placeholder="https://drive.google.com/... หรือ URL รูปภาพ" className="flex-1 bg-white border border-gray-300 rounded-xl px-4 py-2 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all resize-none" />
+                        {svcImageUrls.length > 1 && (
+                          <button type="button" onClick={() => setSvcImageUrls(svcImageUrls.filter((_, j) => j !== i))} className="self-start mt-1 p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"><X className="w-4 h-4" /></button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* VIDEO URLs - Multiple */}
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Video URL</label>
+                    <button type="button" onClick={() => setSvcVideoUrls([...svcVideoUrls, ''])} className="flex items-center gap-1 text-xs text-purple-600 hover:text-purple-700 font-bold px-2 py-1 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors">
+                      <Plus className="w-3 h-3" /> เพิ่มวิดีโอ
+                    </button>
+                  </div>
+                  <div className="space-y-2">
+                    {svcVideoUrls.map((url, i) => (
+                      <div key={i} className="flex gap-2">
+                        <input type="text" value={url} onChange={(e) => { const arr = [...svcVideoUrls]; arr[i] = e.target.value; setSvcVideoUrls(arr); }} placeholder="https://drive.google.com/... หรือ YouTube URL" className="flex-1 bg-white border border-gray-300 rounded-xl px-4 py-2 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" />
+                        {svcVideoUrls.length > 1 && (
+                          <button type="button" onClick={() => setSvcVideoUrls(svcVideoUrls.filter((_, j) => j !== i))} className="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"><X className="w-4 h-4" /></button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* REFERENCE URL */}
+                <div>
+                  <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Reference URL</label>
+                  <input type="text" placeholder="e.g. https://github.com/..." value={svcForm.demoUrl || ''} onChange={(e) => setSvcForm({...svcForm, demoUrl: e.target.value})} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2 mt-1.5 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" />
+                </div>
+
                 <button disabled={isSaving} className="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3.5 mx-auto mt-6 rounded-xl flex items-center justify-center gap-2 shadow-md transition-all">
                   {isSaving ? <Loader2 className="animate-spin w-5 h-5" /> : <Save className="w-5 h-5" />} บันทึกข้อมูล
                 </button>
@@ -630,7 +683,7 @@ export default function AdminDashboard() {
                       <p className="text-sm text-gray-600 line-clamp-2 max-w-2xl leading-relaxed mt-2">{svc.description}</p>
                     </div>
                     <div className="flex gap-2 ml-4 shrink-0">
-                      <button onClick={() => { setSvcForm(svc); setIsSvcEdit(true); window.scrollTo(0,0); }} className="text-amber-600 bg-amber-50 hover:bg-amber-100 px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-colors border border-amber-200/50">แก้ไข</button>
+                      <button onClick={() => { setSvcForm(svc); setSvcImageUrls(svc.imageUrl ? svc.imageUrl.split(',').map(u=>u.trim()) : ['']); setSvcVideoUrls(svc.videoUrls ? svc.videoUrls.split(',').map(u=>u.trim()) : ['']); setIsSvcEdit(true); window.scrollTo(0,0); }} className="text-amber-600 bg-amber-50 hover:bg-amber-100 px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-colors border border-amber-200/50">แก้ไข</button>
                       <button onClick={() => handleDeleteSvc(svc.id)} className="text-red-600 bg-red-50 hover:bg-red-100 p-2 rounded-xl shadow-sm transition-colors border border-red-200/50"><Trash2 className="w-5 h-5" /></button>
                     </div>
                   </div>
