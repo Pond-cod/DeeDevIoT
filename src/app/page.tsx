@@ -14,7 +14,7 @@ export default function LandingPage() {
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [toast, setToast] = useState({ show: false, msg: '', isError: false });
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [lang, setLang] = useState<'en' | 'th'>('th');
+  const [lang, setLang] = useState<'en' | 'th'>('en');
   const [scrolled, setScrolled] = useState(false);
 
   // Scroll listener for Navbar Glassmorphism
