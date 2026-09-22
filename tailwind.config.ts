@@ -9,24 +9,27 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-prompt)', 'sans-serif'],
+        sans: ['var(--font-kanit)', 'sans-serif'],
+        kanit: ['var(--font-kanit)', 'sans-serif'],
+        montserrat: ['var(--font-montserrat)', 'sans-serif'],
       },
       colors: {
         brand: {
-          50: '#fff7ed',
-          100: '#ffedd5',
-          500: '#f97316', // Orange 500
-          600: '#ea580c',
+          50: '#eff6ff',
+          100: '#dbeafe',
+          500: '#2563eb',
+          600: '#1d4ed8',
+          700: '#1e40af',
         },
         accent: {
-          50: '#fefce8',
-          100: '#fef9c3',
-          500: '#eab308', // Yellow 500
-          600: '#ca8a04',
+          400: '#38bdf8',
+          500: '#0ea5e9',
+          600: '#0284c7',
         },
         palette: {
-          light: '#EAEAEA',
-          gray: '#8C8C8C',
+          light: '#f8fafc',
+          gray: '#94a3b8',
+          dark: '#090d1a',
         }
       },
       keyframes: {

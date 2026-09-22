@@ -103,6 +103,7 @@ export default function AdminDashboard() {
   const [status, setStatus] = useState<{ type: 'success' | 'error' | null; message: string }>({ type: null, message: '' });
   const [activeMenu, setActiveMenu] = useState('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
 
   // Services State
   const [services, setServices] = useState<ServiceData[]>([]);
@@ -435,17 +436,91 @@ export default function AdminDashboard() {
 
   return (
     <div className="flex h-screen bg-gray-100 overflow-hidden font-sans selection:bg-brand-500/20">
-      {/* --- Sidebar --- */}
-      <aside className={`bg-white border-r border-gray-200 transition-all duration-300 flex flex-col z-50 ${isSidebarOpen ? 'w-72' : 'w-20'}`}>
-        <div className="p-6 flex items-center justify-between border-b border-gray-50 h-24">
+      {/* --- Mobile Drawer Backdrop --- */}
+      {isMobileDrawerOpen && (
+        <div 
+          className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 lg:hidden transition-opacity"
+          onClick={() => setIsMobileDrawerOpen(false)}
+        />
+      )}
+
+      {/* --- Mobile Off-Canvas Drawer --- */}
+      <aside className={`fixed inset-y-0 left-0 w-72 bg-white z-50 flex flex-col shadow-2xl transition-transform duration-300 lg:hidden ${
+        isMobileDrawerOpen ? 'translate-x-0' : '-translate-x-full'
+      }`}>
+        <div className="p-5 flex items-center justify-between border-b border-gray-100">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 master-gear-spin flex items-center justify-center">
+              <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-sm">
+                <defs>
+                  <linearGradient id="adminDrawerGearGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#38bdf8" />
+                    <stop offset="100%" stopColor="#2563eb" />
+                  </linearGradient>
+                </defs>
+                <g fill="url(#adminDrawerGearGrad)">
+                  {[0,45,90,135,180,225,270,315].map(deg => (
+                    <path key={deg} d="M92 5 Q100 0 108 5 L112 35 Q100 35 88 35 Z" transform={`rotate(${deg} 100 100)`} />
+                  ))}
+                  <circle cx="100" cy="100" r="70" />
+                </g>
+                <circle cx="100" cy="100" r="30" fill="#090d1a" />
+                <circle cx="100" cy="100" r="12" fill="#38bdf8" />
+              </svg>
+            </div>
+            <div>
+              <h1 className="font-extrabold text-gray-900 leading-tight text-base">Admin CMS</h1>
+              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">DeeDevIoT Control</p>
+            </div>
+          </div>
+          <button 
+            onClick={() => setIsMobileDrawerOpen(false)} 
+            className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100"
+            aria-label="Close menu"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+          {MENU_ITEMS.map((item, idx) => {
+            if ('divider' in item) return <div key={idx} className="h-px bg-gray-100 my-3 mx-2" />;
+            const Icon = item.icon as any;
+            const isActive = activeMenu === item.id;
+            return (
+              <button 
+                key={item.id} 
+                onClick={() => { setActiveMenu(item.id!); setStatus({type:null,message:''}); setIsMobileDrawerOpen(false); }}
+                className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-xl transition-all ${
+                  isActive ? 'bg-brand-500 text-white shadow-md shadow-brand-500/25' : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                <Icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-white' : 'text-gray-400'}`} />
+                <span className="font-bold text-sm">{item.label}</span>
+              </button>
+            );
+          })}
+        </nav>
+
+        <div className="p-4 border-t border-gray-100">
+          <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 transition-all font-bold text-sm">
+            <LogOut className="w-5 h-5" />
+            <span>ออกจากระบบ</span>
+          </button>
+        </div>
+      </aside>
+
+      {/* --- Desktop Sidebar --- */}
+      <aside className={`bg-white border-r border-gray-200 transition-all duration-300 hidden lg:flex flex-col z-30 ${isSidebarOpen ? 'w-72' : 'w-20'}`}>
+        <div className="p-6 flex items-center justify-between border-b border-gray-50 h-20">
           {isSidebarOpen ? (
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 master-gear-spin flex items-center justify-center">
+              <div className="w-9 h-9 master-gear-spin flex items-center justify-center">
                 <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-sm">
                   <defs>
                     <linearGradient id="adminLogoGearGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#FFD200" />
-                      <stop offset="100%" stopColor="#F59E0B" />
+                      <stop offset="0%" stopColor="#38bdf8" />
+                      <stop offset="100%" stopColor="#2563eb" />
                     </linearGradient>
                   </defs>
                   <g fill="url(#adminLogoGearGrad)">
@@ -454,22 +529,22 @@ export default function AdminDashboard() {
                      ))}
                      <circle cx="100" cy="100" r="70" />
                   </g>
-                  <circle cx="100" cy="100" r="30" fill="#1D4ED8" />
-                  <circle cx="100" cy="100" r="10" fill="white" />
+                  <circle cx="100" cy="100" r="30" fill="#090d1a" />
+                  <circle cx="100" cy="100" r="10" fill="#38bdf8" />
                 </svg>
               </div>
               <div>
-                <h1 className="font-extrabold text-gray-900 leading-tight text-lg">Admin CMS</h1>
+                <h1 className="font-extrabold text-gray-900 leading-tight text-base">Admin CMS</h1>
                 <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Control Panel</p>
               </div>
             </div>
           ) : (
-            <div className="w-10 h-10 master-gear-spin flex items-center justify-center mx-auto">
+            <div className="w-9 h-9 master-gear-spin flex items-center justify-center mx-auto">
                 <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-sm">
                   <defs>
                     <linearGradient id="adminLogoGearGradSmall" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#FFD200" />
-                      <stop offset="100%" stopColor="#F59E0B" />
+                      <stop offset="0%" stopColor="#38bdf8" />
+                      <stop offset="100%" stopColor="#2563eb" />
                     </linearGradient>
                   </defs>
                   <g fill="url(#adminLogoGearGradSmall)">
@@ -478,8 +553,8 @@ export default function AdminDashboard() {
                      ))}
                      <circle cx="100" cy="100" r="70" />
                   </g>
-                  <circle cx="100" cy="100" r="30" fill="#1D4ED8" />
-                  <circle cx="100" cy="100" r="10" fill="white" />
+                  <circle cx="100" cy="100" r="30" fill="#090d1a" />
+                  <circle cx="100" cy="100" r="10" fill="#38bdf8" />
                 </svg>
             </div>
           )}
@@ -492,7 +567,7 @@ export default function AdminDashboard() {
             const isActive = activeMenu === item.id;
             return (
               <button key={item.id} onClick={() => { setActiveMenu(item.id!); setStatus({type:null,message:''}); }}
-                className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all group ${isActive ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/25' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'}`}>
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all group ${isActive ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/25' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'}`}>
                 <Icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-white' : 'group-hover:text-brand-500'}`} />
                 {isSidebarOpen && <span className="font-bold text-sm tracking-tight">{item.label}</span>}
                 {isActive && isSidebarOpen && <ChevronRight className="w-4 h-4 ml-auto opacity-50" />}
@@ -514,52 +589,68 @@ export default function AdminDashboard() {
 
       {/* --- Main Content Area --- */}
       <main className="flex-1 overflow-y-auto relative bg-gray-50/50">
-        {/* Sticky Sub-Header */}
-        <header className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-gray-100 z-40 px-8 py-5 flex justify-between items-center h-24">
-          <div>
-            <h2 className="text-2xl font-black text-gray-900 tracking-tight uppercase">{activeMenu.replace('_', ' ')}</h2>
-            <p className="text-xs text-gray-400 font-bold tracking-widest mt-1">DEEDEV IOT MANAGEMENT SYSTEM</p>
+        {/* Sticky Sub-Header with Mobile Hamburger Toggle */}
+        <header className="sticky top-0 bg-white/90 backdrop-blur-md border-b border-gray-200 z-40 px-4 sm:px-8 py-3.5 sm:py-4 flex justify-between items-center min-h-[64px] sm:min-h-[72px]">
+          <div className="flex items-center gap-3">
+            {/* Mobile Hamburger Button */}
+            <button 
+              onClick={() => setIsMobileDrawerOpen(true)}
+              className="lg:hidden p-2 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-gray-100 border border-gray-200 active:scale-95"
+              aria-label="Open menu drawer"
+            >
+              <MenuIcon className="w-5 h-5" />
+            </button>
+
+            <div>
+              <h2 className="text-lg sm:text-2xl font-black text-gray-900 tracking-tight uppercase line-clamp-1">
+                {activeMenu.replace('_', ' ')}
+              </h2>
+              <p className="text-[10px] sm:text-xs text-gray-400 font-bold tracking-widest hidden sm:block">
+                DEEDEV IOT MANAGEMENT SYSTEM
+              </p>
+            </div>
           </div>
-          <div className="flex items-center gap-4">
+
+          <div className="flex items-center gap-3 sm:gap-4">
              {renderStatus()}
           </div>
         </header>
 
-        <div className="p-8 max-w-7xl mx-auto">
+        <div className="p-4 sm:p-8 max-w-7xl mx-auto">
 
         {/* ================= DASHBOARD ================= */}
         {activeMenu === 'dashboard' && (
           <div className="space-y-6 animate-fade-in">
-            <div className="grid md:grid-cols-3 gap-6">
-              <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="bg-white p-5 sm:p-6 rounded-2xl border border-gray-200 shadow-sm">
                  <div className="flex justify-between items-start mb-4">
                     <div className="p-3 bg-blue-50 text-blue-500 rounded-xl"><Server className="w-6 h-6" /></div>
                     <span className="text-2xl font-black text-gray-900">{services.length}</span>
                  </div>
-                 <h3 className="font-bold text-gray-500 text-sm uppercase tracking-wider">บริการและผลงานทั้งหมด</h3>
+                 <h3 className="font-bold text-gray-700 text-sm uppercase tracking-wider">บริการและผลงานทั้งหมด</h3>
                  <p className="text-xs text-gray-400 mt-1">Total Services & Works</p>
               </div>
-              <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
+              <div className="bg-white p-5 sm:p-6 rounded-2xl border border-gray-200 shadow-sm">
                  <div className="flex justify-between items-start mb-4">
                     <div className="p-3 bg-purple-50 text-purple-500 rounded-xl"><LinkIcon className="w-6 h-6" /></div>
                     <span className="text-2xl font-black text-gray-900">{integrations.length}</span>
                  </div>
-                 <h3 className="font-bold text-gray-500 text-sm uppercase tracking-wider">ระบบที่เชื่อมต่อทั้งหมด</h3>
+                 <h3 className="font-bold text-gray-700 text-sm uppercase tracking-wider">ระบบที่เชื่อมต่อทั้งหมด</h3>
                  <p className="text-xs text-gray-400 mt-1">Total Portfolio Integrations</p>
               </div>
-              <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm bg-gradient-to-br from-brand-500 to-indigo-600 text-white border-none">
+              <div className="bg-white p-5 sm:p-6 rounded-2xl border border-gray-200 shadow-sm bg-gradient-to-br from-brand-500 to-indigo-600 text-white border-none sm:col-span-2 lg:col-span-1">
                  <div className="flex justify-between items-start mb-4">
                     <div className="p-3 bg-white/20 text-white rounded-xl"><Globe className="w-6 h-6" /></div>
-                    <span className="text-xs font-bold uppercase tracking-widest bg-white/20 px-2 py-1 rounded">Live Site</span>
+                    <span className="text-xs font-bold uppercase tracking-widest bg-white/20 px-2.5 py-1 rounded-full">Live Site</span>
                  </div>
                  <h3 className="font-bold text-sm uppercase tracking-wider">สถานะการแสดงผลหน้าบ้าน</h3>
-                 <p className="text-xs text-white/70 mt-1">เชื่อมต่อกับ Google Sheets เรียบร้อย</p>
+                 <p className="text-xs text-white/80 mt-1">เชื่อมต่อกับ Google Sheets เรียบร้อย</p>
               </div>
             </div>
 
-            <div className="bg-white p-8 rounded-2xl border border-gray-200 shadow-sm">
-               <h3 className="text-lg font-bold text-gray-900 mb-4 border-b border-gray-50 pb-4 uppercase tracking-tight">Recent Activity & Quick Links</h3>
-               <div className="grid md:grid-cols-2 gap-4">
+            <div className="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-sm">
+               <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-4 border-b border-gray-100 pb-4 uppercase tracking-tight">Recent Activity & Quick Links</h3>
+               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <button onClick={()=>setActiveMenu('services')} className="flex items-center gap-4 p-4 border border-gray-100 rounded-xl hover:bg-gray-50 transition-all text-left">
                      <div className="w-10 h-10 bg-brand-50 text-brand-500 rounded-lg flex items-center justify-center font-bold">1</div>
                      <div><p className="font-bold text-sm text-gray-900">จัดการบริการและผลงาน</p><p className="text-xs text-gray-400">เพิ่ม/ลบ/แก้ไข รายละเอียดบริการ</p></div>
