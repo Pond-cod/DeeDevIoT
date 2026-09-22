@@ -294,8 +294,8 @@ export default function DeeDevIOTWebsite() {
       {/* ================= 04.A NAVIGATION (Bright, Clean, Crisp Glass) ================= */}
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled 
-          ? 'bg-white/90 backdrop-blur-md border-b border-slate-200/80 py-3.5 shadow-xs' 
-          : 'bg-transparent border-b border-transparent py-5'
+          ? 'bg-white/95 backdrop-blur-md border-b border-slate-300 py-3.5 shadow-sm' 
+          : 'bg-white/80 backdrop-blur-xs border-b border-slate-200/80 py-4'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           <Link href="#hero" className="flex items-center gap-3 group focus:outline-none">
@@ -304,36 +304,36 @@ export default function DeeDevIOTWebsite() {
               <span className="relative inline-flex rounded-full h-3 w-3 bg-[#E11D48]" />
             </span>
             <div className="font-mono text-base tracking-wider font-bold">
-              <span className="text-slate-900 group-hover:text-[#E11D48] transition-colors">DEEDEV</span>
+              <span className="text-slate-950 group-hover:text-[#E11D48] transition-colors">DEEDEV</span>
               <span className="text-[#EA580C] mx-1">/</span>
               <span className="bg-gradient-to-r from-[#E11D48] to-[#EA580C] bg-clip-text text-transparent font-extrabold">IOT</span>
             </div>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-8 text-xs font-mono tracking-wider font-semibold text-slate-600">
-            <a href="#hero" className="hover:text-slate-900 transition-colors">Home</a>
-            <a href="#services" className="hover:text-[#0284C7] transition-colors">Services</a>
-            <a href="#works" className="hover:text-[#059669] transition-colors">Works</a>
-            <a href="#iot-dashboard" className="hover:text-[#EA580C] transition-colors flex items-center gap-1.5">
+          <nav className="hidden md:flex items-center gap-8 text-xs font-mono tracking-wider font-bold text-slate-700">
+            <a href="#hero" className="hover:text-slate-950 transition-colors py-1">Home</a>
+            <a href="#services" className="hover:text-[#0284C7] transition-colors py-1">Services</a>
+            <a href="#works" className="hover:text-[#059669] transition-colors py-1">Works</a>
+            <a href="#iot-dashboard" className="hover:text-[#EA580C] transition-colors flex items-center gap-1.5 py-1">
               <span>Solutions</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-[#E11D48] animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-[#E11D48] animate-pulse" />
             </a>
-            <a href="#about" className="hover:text-slate-900 transition-colors">About</a>
-            <a href="#contact" className="hover:text-[#E11D48] transition-colors">Contact</a>
+            <a href="#about" className="hover:text-slate-950 transition-colors py-1">About</a>
+            <a href="#contact" className="hover:text-[#E11D48] transition-colors py-1">Contact</a>
           </nav>
 
           <div className="flex items-center gap-3">
             <a
               href="#contact"
-              className="inline-flex items-center gap-2 px-4 py-2 text-xs font-mono font-bold tracking-wider border border-rose-200 bg-rose-50 text-[#E11D48] hover:bg-[#E11D48] hover:text-white rounded-lg transition-all shadow-xs"
+              className="inline-flex items-center gap-2 px-4 py-2 text-xs font-mono font-bold tracking-wider bg-gradient-to-r from-[#E11D48] to-[#EA580C] hover:brightness-105 text-white rounded-xl transition-all shadow-xs"
             >
               <span>ปรึกษาโปรเจกต์</span>
-              <ArrowRight size={13} className="text-[#E11D48] group-hover:text-white" />
+              <ArrowRight size={13} className="text-white" />
             </a>
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg border border-slate-200 bg-white text-slate-700 hover:text-slate-900 shadow-xs"
+              className="md:hidden p-2 rounded-xl border border-slate-300 bg-white text-slate-800 hover:text-slate-950 shadow-xs"
               aria-label="เมนูหลัก"
             >
               {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
@@ -345,22 +345,64 @@ export default function DeeDevIOTWebsite() {
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-40 md:hidden bg-white/98 backdrop-blur-xl pt-20 px-6 pb-8 flex flex-col justify-between">
-          <nav className="flex flex-col space-y-4 font-mono text-sm tracking-wider text-slate-700">
-            <a href="#hero" onClick={() => setMobileMenuOpen(false)} className="py-2.5 border-b border-slate-100 hover:text-slate-900">หน้าแรก (Home)</a>
-            <a href="#services" onClick={() => setMobileMenuOpen(false)} className="py-2.5 border-b border-slate-100 hover:text-[#0284C7]">บริการที่รับทำ (Services)</a>
-            <a href="#works" onClick={() => setMobileMenuOpen(false)} className="py-2.5 border-b border-slate-100 hover:text-[#059669]">ผลงานจริง (Works)</a>
-            <a href="#iot-dashboard" onClick={() => setMobileMenuOpen(false)} className="py-2.5 border-b border-slate-100 hover:text-slate-900 flex items-center justify-between">
-              <span className="text-[#EA580C] font-bold">ระบบ IoT Dashboard</span>
-              <span className="text-xs bg-rose-100 text-[#E11D48] px-2 py-0.5 rounded border border-rose-200 font-bold">LIVE</span>
+          <nav className="flex flex-col space-y-3 font-mono text-sm tracking-wider text-slate-800">
+            <a 
+              href="#hero" 
+              onClick={() => setMobileMenuOpen(false)} 
+              className="py-3 px-3.5 rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-slate-100 flex items-center justify-between font-bold"
+            >
+              <span>หน้าแรก (Home)</span>
+              <ChevronRight size={16} className="text-slate-400" />
             </a>
-            <a href="#about" onClick={() => setMobileMenuOpen(false)} className="py-2.5 border-b border-slate-100 hover:text-slate-900">เกี่ยวกับเรา (About)</a>
-            <a href="#contact" onClick={() => setMobileMenuOpen(false)} className="py-2.5 border-b border-slate-100 hover:text-slate-900">ช่องทางติดต่อ (Contact)</a>
+            <a 
+              href="#services" 
+              onClick={() => setMobileMenuOpen(false)} 
+              className="py-3 px-3.5 rounded-xl border border-sky-200 bg-sky-50/50 hover:bg-sky-100/60 flex items-center justify-between font-bold text-sky-900"
+            >
+              <span>บริการที่รับทำ (Services)</span>
+              <ChevronRight size={16} className="text-sky-600" />
+            </a>
+            <a 
+              href="#works" 
+              onClick={() => setMobileMenuOpen(false)} 
+              className="py-3 px-3.5 rounded-xl border border-emerald-200 bg-emerald-50/50 hover:bg-emerald-100/60 flex items-center justify-between font-bold text-emerald-900"
+            >
+              <span>ผลงานจริง (Works)</span>
+              <ChevronRight size={16} className="text-emerald-600" />
+            </a>
+            <a 
+              href="#iot-dashboard" 
+              onClick={() => setMobileMenuOpen(false)} 
+              className="py-3 px-3.5 rounded-xl border border-amber-200 bg-amber-50/50 hover:bg-amber-100/60 flex items-center justify-between font-bold text-amber-900"
+            >
+              <div className="flex items-center gap-2">
+                <span>ระบบ IoT Dashboard</span>
+                <span className="text-[10px] bg-[#E11D48] text-white px-2 py-0.5 rounded-full font-bold">LIVE</span>
+              </div>
+              <ChevronRight size={16} className="text-amber-600" />
+            </a>
+            <a 
+              href="#about" 
+              onClick={() => setMobileMenuOpen(false)} 
+              className="py-3 px-3.5 rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-slate-100 flex items-center justify-between font-bold text-slate-800"
+            >
+              <span>เกี่ยวกับเรา (About)</span>
+              <ChevronRight size={16} className="text-slate-400" />
+            </a>
+            <a 
+              href="#contact" 
+              onClick={() => setMobileMenuOpen(false)} 
+              className="py-3 px-3.5 rounded-xl border border-rose-200 bg-rose-50/50 hover:bg-rose-100/60 flex items-center justify-between font-bold text-rose-900"
+            >
+              <span>ช่องทางติดต่อ (Contact)</span>
+              <ChevronRight size={16} className="text-rose-600" />
+            </a>
           </nav>
-          <div>
+          <div className="pt-4">
             <a
               href="#contact"
               onClick={() => setMobileMenuOpen(false)}
-              className="w-full py-3.5 bg-gradient-to-r from-[#E11D48] via-[#F43F5E] to-[#EA580C] text-white font-mono text-xs uppercase tracking-wider font-bold rounded-xl flex items-center justify-center gap-2 shadow-md"
+              className="w-full py-4 bg-gradient-to-r from-[#E11D48] via-[#F43F5E] to-[#EA580C] text-white font-mono text-xs uppercase tracking-wider font-bold rounded-xl flex items-center justify-center gap-2 shadow-md"
             >
               <span>ปรึกษาโปรเจกต์ฟรี</span>
               <ArrowRight size={14} />
@@ -370,22 +412,22 @@ export default function DeeDevIOTWebsite() {
       )}
 
       {/* ================= 04.B HERO SECTION (Bright, Fresh, Luminous) ================= */}
-      <section id="hero" className="relative pt-32 sm:pt-40 pb-20 border-b border-slate-200/80 overflow-hidden">
+      <section id="hero" className="relative pt-32 sm:pt-40 pb-20 border-b border-slate-300/80 overflow-hidden">
         
         {/* Soft Ambient Pastel Halos */}
-        <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[850px] h-[450px] bg-gradient-to-b from-rose-100/70 via-orange-50/40 to-transparent blur-[110px] pointer-events-none -z-10" />
-        <div className="absolute top-1/4 -right-32 w-[400px] h-[400px] bg-sky-100/50 blur-[100px] pointer-events-none -z-10" />
-        <div className="absolute top-2/3 -left-32 w-[400px] h-[400px] bg-emerald-100/50 blur-[100px] pointer-events-none -z-10" />
+        <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[850px] h-[450px] bg-gradient-to-b from-rose-100/80 via-orange-50/50 to-transparent blur-[110px] pointer-events-none -z-10" />
+        <div className="absolute top-1/4 -right-32 w-[400px] h-[400px] bg-sky-100/60 blur-[100px] pointer-events-none -z-10" />
+        <div className="absolute top-2/3 -left-32 w-[400px] h-[400px] bg-emerald-100/60 blur-[100px] pointer-events-none -z-10" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           
           {/* Badge */}
           <div className="flex items-center gap-2 mb-6">
-            <span className="px-3.5 py-1.5 rounded-full bg-white border border-slate-200/90 text-xs font-mono text-slate-700 flex items-center gap-2.5 shadow-xs">
+            <span className="px-4 py-1.5 rounded-full bg-white border-2 border-slate-200 text-xs font-mono text-slate-800 flex items-center gap-2.5 shadow-xs">
               <span className="w-2 h-2 rounded-full bg-[#E11D48] animate-pulse" />
-              <span className="text-slate-900 font-bold tracking-wider">DEEDEV IOT</span>
+              <span className="text-slate-950 font-extrabold tracking-wider">DEEDEV IOT</span>
               <span className="text-slate-300">|</span>
-              <span className="text-slate-600 font-medium">Thailand Technology Studio</span>
+              <span className="text-slate-700 font-semibold">Thailand Technology Studio</span>
             </span>
           </div>
 
@@ -393,29 +435,29 @@ export default function DeeDevIOTWebsite() {
             
             {/* Left Content */}
             <div className="lg:col-span-7">
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.18] mb-6">
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-950 leading-[1.18] mb-6">
                 มีไอเดีย แต่ยังไม่รู้จะทำ
                 <span className="block mt-1 bg-gradient-to-r from-[#E11D48] via-[#EA580C] to-[#D97706] bg-clip-text text-transparent">
                   ระบบอย่างไร?
                 </span>
               </h1>
 
-              <h2 className="text-lg sm:text-2xl font-semibold text-slate-800 mb-4 leading-snug">
+              <h2 className="text-lg sm:text-2xl font-bold text-slate-900 mb-4 leading-snug">
                 DeeDevIOT ช่วยเปลี่ยนไอเดียของคุณให้กลายเป็น{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0284C7] via-[#059669] to-[#D97706] font-bold">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0284C7] via-[#059669] to-[#EA580C] font-extrabold">
                   Web Application, IoT และระบบ IT
                 </span>{' '}
                 ที่ใช้งานได้จริงโดยทีมงานคนไทย
               </h2>
 
-              <p className="text-sm sm:text-base text-slate-600 max-w-2xl leading-relaxed mb-8 font-normal">
+              <p className="text-sm sm:text-base text-slate-700 max-w-2xl leading-relaxed mb-8 font-normal">
                 ตั้งแต่การออกแบบระบบ พัฒนาโปรแกรม เชื่อมต่ออุปกรณ์ ไปจนถึงนำระบบไปใช้งานจริง สำหรับเจ้าของธุรกิจ SME โรงงาน และผู้ที่ต้องการลดงาน Manual ด้วยระบบดิจิทัล
               </p>
 
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-8">
                 <a
                   href="#contact"
-                  className="px-8 py-4 bg-gradient-to-r from-[#E11D48] via-[#F43F5E] to-[#EA580C] hover:brightness-105 text-white font-mono text-xs uppercase tracking-wider font-bold rounded-xl transition-all flex items-center justify-center gap-2.5 shadow-[0_4px_20px_rgba(225,29,72,0.3)] hover:shadow-[0_6px_25px_rgba(225,29,72,0.4)] transform hover:-translate-y-0.5"
+                  className="px-8 py-4 bg-gradient-to-r from-[#E11D48] via-[#F43F5E] to-[#EA580C] hover:brightness-105 text-white font-mono text-xs uppercase tracking-wider font-bold rounded-xl transition-all flex items-center justify-center gap-2.5 shadow-[0_4px_20px_rgba(225,29,72,0.35)] hover:shadow-[0_6px_25px_rgba(225,29,72,0.45)] transform hover:-translate-y-0.5"
                 >
                   <Sparkles size={16} />
                   <span>ปรึกษาโปรเจกต์</span>
@@ -424,40 +466,40 @@ export default function DeeDevIOTWebsite() {
 
                 <a
                   href="#works"
-                  className="px-8 py-4 bg-white text-slate-800 border border-slate-200 hover:border-slate-400 hover:text-slate-900 font-mono text-xs uppercase tracking-wider font-semibold rounded-xl transition-all flex items-center justify-center gap-2 shadow-xs transform hover:-translate-y-0.5"
+                  className="px-8 py-4 bg-white text-slate-900 border-2 border-slate-300 hover:border-slate-500 hover:text-slate-950 font-mono text-xs uppercase tracking-wider font-bold rounded-xl transition-all flex items-center justify-center gap-2 shadow-xs transform hover:-translate-y-0.5"
                 >
                   <span>ดูผลงานจริง</span>
                   <ArrowDown size={14} className="text-[#0284C7]" />
                 </a>
               </div>
 
-              <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-slate-600 font-medium">
-                <span className="flex items-center gap-1.5 text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">
-                  <CheckCircle2 size={14} className="text-emerald-600" />
+              <div className="flex flex-wrap items-center gap-3 text-xs font-mono font-bold">
+                <span className="flex items-center gap-1.5 text-emerald-900 bg-emerald-100/90 px-3 py-1.5 rounded-lg border border-emerald-300 shadow-2xs">
+                  <CheckCircle2 size={14} className="text-emerald-700" />
                   <span>รับพัฒนาตามโจทย์จริง</span>
                 </span>
-                <span className="flex items-center gap-1.5 text-sky-700 bg-sky-50 px-2.5 py-1 rounded-md border border-sky-200">
-                  <CheckCircle2 size={14} className="text-sky-600" />
+                <span className="flex items-center gap-1.5 text-sky-900 bg-sky-100/90 px-3 py-1.5 rounded-lg border border-sky-300 shadow-2xs">
+                  <CheckCircle2 size={14} className="text-sky-700" />
                   <span>ส่งมอบ Source Code 100%</span>
                 </span>
-                <span className="flex items-center gap-1.5 text-amber-800 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200">
-                  <CheckCircle2 size={14} className="text-amber-600" />
+                <span className="flex items-center gap-1.5 text-amber-950 bg-amber-100/90 px-3 py-1.5 rounded-lg border border-amber-300 shadow-2xs">
+                  <CheckCircle2 size={14} className="text-amber-700" />
                   <span>ปรึกษาแนวทางเทคนิคฟรี</span>
                 </span>
               </div>
             </div>
 
             {/* Right: Crisp Bright System Pipeline Card */}
-            <div className="lg:col-span-5 bg-white border border-slate-200/90 rounded-2xl p-6 shadow-[0_12px_40px_rgba(15,23,42,0.06)] relative overflow-hidden">
+            <div className="lg:col-span-5 bg-white border-2 border-slate-200/90 rounded-2xl p-6 shadow-md relative overflow-hidden">
               
-              <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#059669] via-[#0284C7] to-[#E11D48]" />
+              <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#059669] via-[#0284C7] to-[#E11D48]" />
 
-              <div className="flex items-center justify-between pb-3 mb-5 border-b border-slate-100 font-mono text-[11px]">
+              <div className="flex items-center justify-between pb-3 mb-5 border-b border-slate-200 font-mono text-[11px]">
                 <div className="flex items-center gap-2">
                   <Activity size={15} className="text-[#E11D48] animate-pulse" />
-                  <span className="text-slate-900 font-bold tracking-wider">REAL SYSTEM PIPELINE</span>
+                  <span className="text-slate-950 font-extrabold tracking-wider">REAL SYSTEM PIPELINE</span>
                 </div>
-                <span className="text-sky-700 font-bold bg-sky-50 px-2.5 py-0.5 rounded border border-sky-200">
+                <span className="text-sky-900 font-extrabold bg-sky-100 px-2.5 py-0.5 rounded border border-sky-300">
                   DATA FLOW
                 </span>
               </div>
@@ -465,65 +507,65 @@ export default function DeeDevIOTWebsite() {
               <div className="space-y-3 font-mono text-xs">
                 
                 {/* 01 Hardware */}
-                <div className="p-3 bg-emerald-50/50 border border-emerald-200 hover:border-emerald-300 rounded-xl flex items-center justify-between transition-all group shadow-2xs">
+                <div className="p-3 bg-emerald-50/70 border-2 border-emerald-200 hover:border-emerald-400 rounded-xl flex items-center justify-between transition-all group shadow-2xs">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-white border border-emerald-200 flex items-center justify-center text-emerald-600 shadow-2xs group-hover:scale-110 transition-transform">
+                    <div className="w-8 h-8 rounded-lg bg-white border-2 border-emerald-300 flex items-center justify-center text-emerald-700 shadow-2xs group-hover:scale-110 transition-transform">
                       <Cpu size={16} />
                     </div>
                     <div>
-                      <div className="text-emerald-900 font-bold text-xs">01 // ESP32 / IoT Device</div>
-                      <div className="text-[10px] text-slate-600">เซนเซอร์ตรวจวัด, สวิตช์รีเลย์, ไมโครคอนโทรลเลอร์</div>
+                      <div className="text-emerald-950 font-extrabold text-xs">01 // ESP32 / IoT Device</div>
+                      <div className="text-[10px] text-slate-700 font-medium">เซนเซอร์ตรวจวัด, สวิตช์รีเลย์, ไมโครคอนโทรลเลอร์</div>
                     </div>
                   </div>
-                  <span className="text-[10px] text-emerald-800 font-bold bg-emerald-100 px-2 py-0.5 rounded border border-emerald-200">
+                  <span className="text-[10px] text-emerald-900 font-extrabold bg-emerald-100 px-2 py-0.5 rounded border border-emerald-300">
                     GPIO / I2C
                   </span>
                 </div>
 
-                <div className="flex justify-center my-0.5 text-emerald-600 font-bold">↓</div>
+                <div className="flex justify-center my-0.5 text-emerald-700 font-extrabold">↓</div>
 
                 {/* 02 Protocol */}
-                <div className="p-3 bg-sky-50/50 border border-sky-200 hover:border-sky-300 rounded-xl flex items-center justify-between transition-all group shadow-2xs">
+                <div className="p-3 bg-sky-50/70 border-2 border-sky-200 hover:border-sky-400 rounded-xl flex items-center justify-between transition-all group shadow-2xs">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-white border border-sky-200 flex items-center justify-center text-sky-600 shadow-2xs group-hover:scale-110 transition-transform">
+                    <div className="w-8 h-8 rounded-lg bg-white border-2 border-sky-300 flex items-center justify-center text-sky-700 shadow-2xs group-hover:scale-110 transition-transform">
                       <Wifi size={16} />
                     </div>
                     <div>
-                      <div className="text-sky-900 font-bold text-xs">02 // MQTT / REST API</div>
-                      <div className="text-[10px] text-slate-600">โปรโตคอลรับส่งข้อมูลความเร็วสูง ไร้ความหน่วง</div>
+                      <div className="text-sky-950 font-extrabold text-xs">02 // MQTT / REST API</div>
+                      <div className="text-[10px] text-slate-700 font-medium">โปรโตคอลรับส่งข้อมูลความเร็วสูง ไร้ความหน่วง</div>
                     </div>
                   </div>
-                  <span className="text-[10px] text-sky-800 font-bold bg-sky-100 px-2 py-0.5 rounded border border-sky-200">
+                  <span className="text-[10px] text-sky-900 font-extrabold bg-sky-100 px-2 py-0.5 rounded border border-sky-300">
                     TLS / JSON
                   </span>
                 </div>
 
-                <div className="flex justify-center my-0.5 text-sky-600 font-bold">↓</div>
+                <div className="flex justify-center my-0.5 text-sky-700 font-extrabold">↓</div>
 
                 {/* 03 Web Dashboard */}
-                <div className="p-3 bg-amber-50/50 border border-amber-200 hover:border-amber-300 rounded-xl flex items-center justify-between transition-all group shadow-2xs">
+                <div className="p-3 bg-amber-50/70 border-2 border-amber-200 hover:border-amber-400 rounded-xl flex items-center justify-between transition-all group shadow-2xs">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-white border border-amber-200 flex items-center justify-center text-amber-600 shadow-2xs group-hover:scale-110 transition-transform">
+                    <div className="w-8 h-8 rounded-lg bg-white border-2 border-amber-300 flex items-center justify-center text-amber-700 shadow-2xs group-hover:scale-110 transition-transform">
                       <Globe size={16} />
                     </div>
                     <div>
-                      <div className="text-amber-900 font-bold text-xs">03 // Web Dashboard</div>
-                      <div className="text-[10px] text-slate-600">หน้าจอควบคุม สั่งการ และติดตามข้อมูลจากทุกอุปกรณ์</div>
+                      <div className="text-amber-950 font-extrabold text-xs">03 // Web Dashboard</div>
+                      <div className="text-[10px] text-slate-700 font-medium">หน้าจอควบคุม สั่งการ และติดตามข้อมูลจากทุกอุปกรณ์</div>
                     </div>
                   </div>
-                  <span className="text-[10px] text-amber-800 font-bold bg-amber-100 px-2 py-0.5 rounded border border-amber-200">
+                  <span className="text-[10px] text-amber-950 font-extrabold bg-amber-100 px-2 py-0.5 rounded border border-amber-300">
                     Responsive
                   </span>
                 </div>
 
-                <div className="flex justify-center my-0.5 text-rose-500 font-bold">↓</div>
+                <div className="flex justify-center my-0.5 text-[#E11D48] font-extrabold">↓</div>
 
                 {/* 04 Business Value */}
-                <div className="p-3.5 bg-gradient-to-r from-rose-50 via-orange-50 to-amber-50 border border-rose-200 rounded-xl text-center shadow-xs">
-                  <span className="text-slate-900 font-bold text-xs block mb-0.5">
+                <div className="p-3.5 bg-gradient-to-r from-rose-100 via-orange-100 to-amber-100 border-2 border-rose-300 rounded-xl text-center shadow-xs">
+                  <span className="text-slate-950 font-extrabold text-xs block mb-0.5">
                     04 // Business Value ที่วัดผลได้จริง
                   </span>
-                  <span className="text-[11px] text-[#E11D48] font-medium">
+                  <span className="text-[11px] text-rose-900 font-bold">
                     ลดงาน Manual • ลดความผิดพลาด • ข้อมูลพร้อมตัดสินใจทันที
                   </span>
                 </div>
@@ -536,38 +578,38 @@ export default function DeeDevIOTWebsite() {
       </section>
 
       {/* ================= 04.C QUICK VALUE / TRUST SECTION ================= */}
-      <section className="py-16 border-b border-slate-200/80 bg-white relative">
+      <section className="py-16 border-b border-slate-300/80 bg-white relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-3xl mx-auto mb-10">
-            <h2 className="text-xl sm:text-3xl font-extrabold text-slate-900 mb-2">
+            <h2 className="text-xl sm:text-3xl font-extrabold text-slate-950 mb-2">
               ทำระบบให้เหมาะกับงาน{' '}
               <span className="bg-gradient-to-r from-[#E11D48] to-[#EA580C] bg-clip-text text-transparent">
                 ไม่ใช่เอางานไปยัดใส่ Template
               </span>
             </h2>
-            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-normal">
               เราออกแบบโครงสร้างซอฟต์แวร์และฮาร์ดแวร์ตามขั้นตอนการทำงานจริงของคุณ เพื่อให้ระบบตอบสนองได้ตรงจุดที่สุดและสามารถต่อยอดในอนาคตได้
             </p>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3.5 font-mono text-center text-xs">
             {[
-              { title: 'Web Application', desc: 'ระบบเว็บองค์กร', color: 'from-sky-500 to-blue-600', textCol: 'text-sky-700', borderHover: 'hover:border-sky-300' },
-              { title: 'IoT System', desc: 'เชื่อมต่อฮาร์ดแวร์', color: 'from-emerald-500 to-teal-500', textCol: 'text-emerald-700', borderHover: 'hover:border-emerald-300' },
-              { title: 'Dashboard', desc: 'สรุปข้อมูลสด', color: 'from-amber-500 to-orange-500', textCol: 'text-amber-800', borderHover: 'hover:border-amber-300' },
-              { title: 'Automation', desc: 'ลดงานซ้ำซ้อน', color: 'from-purple-500 to-indigo-600', textCol: 'text-purple-700', borderHover: 'hover:border-purple-300' },
-              { title: 'API Integration', desc: 'เชื่อมต่อภายนอก', color: 'from-rose-500 to-red-600', textCol: 'text-rose-700', borderHover: 'hover:border-rose-300' },
-              { title: 'Database', desc: 'จัดเก็บข้อมูลปลอดภัย', color: 'from-blue-500 to-cyan-600', textCol: 'text-blue-700', borderHover: 'hover:border-blue-300' },
-              { title: 'IT Solutions', desc: 'วางระบบโครงสร้าง', color: 'from-orange-500 to-amber-600', textCol: 'text-orange-700', borderHover: 'hover:border-orange-300' }
+              { title: 'Web Application', desc: 'ระบบเว็บองค์กร', color: 'from-sky-500 to-blue-600', textCol: 'text-sky-900', borderHover: 'hover:border-sky-400' },
+              { title: 'IoT System', desc: 'เชื่อมต่อฮาร์ดแวร์', color: 'from-emerald-500 to-teal-500', textCol: 'text-emerald-900', borderHover: 'hover:border-emerald-400' },
+              { title: 'Dashboard', desc: 'สรุปข้อมูลสด', color: 'from-amber-500 to-orange-500', textCol: 'text-amber-950', borderHover: 'hover:border-amber-400' },
+              { title: 'Automation', desc: 'ลดงานซ้ำซ้อน', color: 'from-purple-500 to-indigo-600', textCol: 'text-purple-900', borderHover: 'hover:border-purple-400' },
+              { title: 'API Integration', desc: 'เชื่อมต่อภายนอก', color: 'from-rose-500 to-red-600', textCol: 'text-rose-900', borderHover: 'hover:border-rose-400' },
+              { title: 'Database', desc: 'จัดเก็บข้อมูลปลอดภัย', color: 'from-blue-500 to-cyan-600', textCol: 'text-blue-900', borderHover: 'hover:border-blue-400' },
+              { title: 'IT Solutions', desc: 'วางระบบโครงสร้าง', color: 'from-orange-500 to-amber-600', textCol: 'text-orange-950', borderHover: 'hover:border-orange-400' }
             ].map((cap) => (
               <div 
                 key={cap.title} 
-                className={`p-4 rounded-xl bg-[#F8FAFC] border border-slate-200/90 ${cap.borderHover} transition-all transform hover:-translate-y-1 shadow-xs hover:shadow-md group`}
+                className={`p-4 rounded-xl bg-white border-2 border-slate-200/90 ${cap.borderHover} transition-all transform hover:-translate-y-1 shadow-xs hover:shadow-md group`}
               >
                 <div className={`w-8 h-1 rounded-full bg-gradient-to-r ${cap.color} mx-auto mb-3 group-hover:w-12 transition-all`} />
-                <div className={`font-bold text-xs mb-1 ${cap.textCol}`}>{cap.title}</div>
-                <div className="text-slate-500 text-[10px]">{cap.desc}</div>
+                <div className={`font-extrabold text-xs mb-1 ${cap.textCol}`}>{cap.title}</div>
+                <div className="text-slate-600 font-medium text-[10px]">{cap.desc}</div>
               </div>
             ))}
           </div>
@@ -575,44 +617,44 @@ export default function DeeDevIOTWebsite() {
         </div>
       </section>
 
-      {/* ================= 04.D SERVICES (3 Main Pillars) ================= */}
-      <section id="services" className="py-20 sm:py-28 border-b border-slate-200/80 bg-[#FAFAFC] relative">
+      {/* ================= 04.D SERVICES (3 Main Pillars with Distinct Themes) ================= */}
+      <section id="services" className="py-20 sm:py-28 border-b border-slate-300/80 bg-[#FAFAFC] relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-16 pb-6 border-b border-slate-200/80">
             <div>
-              <span className="font-mono text-xs text-[#E11D48] uppercase tracking-wider block mb-2 font-bold flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-[#E11D48]" />
-                <span>[ OUR SERVICES ]</span>
+              <span className="font-mono text-xs text-[#E11D48] uppercase tracking-wider block mb-2 font-extrabold flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#E11D48]" />
+                <span>[ OUR SERVICES // 3 เสาหลักความเชี่ยวชาญ ]</span>
               </span>
-              <h2 className="text-2xl sm:text-4xl font-extrabold uppercase tracking-tight text-slate-900">
+              <h2 className="text-2xl sm:text-4xl font-extrabold uppercase tracking-tight text-slate-950">
                 บริการพัฒนาและวางระบบ
               </h2>
             </div>
-            <p className="text-xs font-mono text-slate-500 mt-3 sm:mt-0">
+            <p className="text-xs font-mono text-slate-600 mt-3 sm:mt-0 font-medium">
               3 ด้านความเชี่ยวชาญหลักเพื่อธุรกิจไทย
             </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-7">
             
-            {/* 01 IoT Solutions (Emerald) */}
-            <div className="bg-white border border-slate-200/90 hover:border-emerald-300 transition-all p-8 rounded-2xl flex flex-col justify-between relative overflow-hidden group shadow-xs hover:shadow-xl">
-              <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500" />
+            {/* 01 IoT Solutions (Distinct Emerald Theme) */}
+            <div className="bg-white border-2 border-emerald-200/90 hover:border-emerald-500 transition-all p-8 rounded-2xl flex flex-col justify-between relative overflow-hidden group shadow-xs hover:shadow-xl">
+              <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500" />
               
               <div>
                 <div className="flex items-center justify-between mb-6 font-mono text-xs">
-                  <span className="text-emerald-700 font-extrabold text-base bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">
+                  <span className="text-emerald-900 font-extrabold text-base bg-emerald-100 px-3 py-1 rounded-lg border border-emerald-300 shadow-2xs">
                     01
                   </span>
-                  <span className="text-emerald-800 font-bold tracking-wider">HARDWARE & SENSORS</span>
+                  <span className="text-emerald-800 font-extrabold tracking-wider">HARDWARE & SENSORS</span>
                 </div>
                 
-                <h3 className="text-2xl font-bold text-slate-900 mb-3 group-hover:text-emerald-700 transition-colors">
+                <h3 className="text-2xl font-extrabold text-slate-950 mb-3 group-hover:text-emerald-700 transition-colors">
                   IoT Solutions
                 </h3>
                 
-                <p className="text-xs text-slate-600 leading-relaxed mb-6">
+                <p className="text-xs text-slate-700 leading-relaxed mb-6 font-normal">
                   ออกแบบระบบเชื่อมต่ออุปกรณ์ Sensor และ Microcontroller พร้อม Dashboard และระบบจัดเก็บข้อมูลแบบครบวงจร
                 </p>
 
@@ -624,8 +666,8 @@ export default function DeeDevIOTWebsite() {
                     'ระบบควบคุมเปิด-ปิดรีเลย์ และสวิตช์ระยะไกล',
                     'แจ้งเตือนฉุกเฉินผ่าน LINE Notify / LINE Bot'
                   ].map((item) => (
-                    <div key={item} className="flex items-start gap-2.5 text-slate-600">
-                      <span className="text-emerald-600 font-bold">✓</span>
+                    <div key={item} className="flex items-start gap-2.5 text-slate-800 font-medium">
+                      <span className="text-emerald-600 font-extrabold">✓</span>
                       <span>{item}</span>
                     </div>
                   ))}
@@ -633,31 +675,31 @@ export default function DeeDevIOTWebsite() {
               </div>
 
               <div className="mt-8 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-mono">
-                <span className="text-slate-500">ปรึกษางาน IoT</span>
-                <a href="#contact" className="text-emerald-600 font-bold hover:text-emerald-800 flex items-center gap-1.5 transition-colors">
+                <span className="text-slate-600 font-medium">ปรึกษางาน IoT</span>
+                <a href="#contact" className="text-emerald-700 font-bold hover:text-emerald-900 flex items-center gap-1.5 transition-colors">
                   <span>ติดต่อเรา</span>
                   <ArrowRight size={14} />
                 </a>
               </div>
             </div>
 
-            {/* 02 Web Applications (Sky/Blue) */}
-            <div className="bg-white border border-slate-200/90 hover:border-sky-300 transition-all p-8 rounded-2xl flex flex-col justify-between relative overflow-hidden group shadow-xs hover:shadow-xl">
-              <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-sky-500 via-blue-500 to-indigo-500" />
+            {/* 02 Web Applications (Distinct Sky/Blue Theme) */}
+            <div className="bg-white border-2 border-sky-200/90 hover:border-sky-500 transition-all p-8 rounded-2xl flex flex-col justify-between relative overflow-hidden group shadow-xs hover:shadow-xl">
+              <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-sky-500 via-blue-500 to-indigo-500" />
               
               <div>
                 <div className="flex items-center justify-between mb-6 font-mono text-xs">
-                  <span className="text-sky-700 font-extrabold text-base bg-sky-50 px-2.5 py-1 rounded-md border border-sky-200">
+                  <span className="text-sky-900 font-extrabold text-base bg-sky-100 px-3 py-1 rounded-lg border border-sky-300 shadow-2xs">
                     02
                   </span>
-                  <span className="text-sky-800 font-bold tracking-wider">SOFTWARE & WORKFLOW</span>
+                  <span className="text-sky-800 font-extrabold tracking-wider">SOFTWARE & WORKFLOW</span>
                 </div>
                 
-                <h3 className="text-2xl font-bold text-slate-900 mb-3 group-hover:text-sky-700 transition-colors">
+                <h3 className="text-2xl font-extrabold text-slate-950 mb-3 group-hover:text-sky-700 transition-colors">
                   Web Applications
                 </h3>
                 
-                <p className="text-xs text-slate-600 leading-relaxed mb-6">
+                <p className="text-xs text-slate-700 leading-relaxed mb-6 font-normal">
                   พัฒนา Web Application และระบบหลังบ้านตาม Workflow ของธุรกิจ จัดการข้อมูลให้เป็นระบบและเข้าถึงได้ทุกที่
                 </p>
 
@@ -669,8 +711,8 @@ export default function DeeDevIOTWebsite() {
                     'ระบบจองคิวและการลงเวลา (Booking & Workflow)',
                     'ระบบยืนยันตัวตนและความปลอดภัย (Authentication)'
                   ].map((item) => (
-                    <div key={item} className="flex items-start gap-2.5 text-slate-600">
-                      <span className="text-sky-600 font-bold">✓</span>
+                    <div key={item} className="flex items-start gap-2.5 text-slate-800 font-medium">
+                      <span className="text-sky-600 font-extrabold">✓</span>
                       <span>{item}</span>
                     </div>
                   ))}
@@ -678,31 +720,31 @@ export default function DeeDevIOTWebsite() {
               </div>
 
               <div className="mt-8 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-mono">
-                <span className="text-slate-500">ปรึกษา Web App</span>
-                <a href="#contact" className="text-sky-600 font-bold hover:text-sky-800 flex items-center gap-1.5 transition-colors">
+                <span className="text-slate-600 font-medium">ปรึกษา Web App</span>
+                <a href="#contact" className="text-sky-700 font-bold hover:text-sky-900 flex items-center gap-1.5 transition-colors">
                   <span>ติดต่อเรา</span>
                   <ArrowRight size={14} />
                 </a>
               </div>
             </div>
 
-            {/* 03 IT Solutions (Orange/Rose) */}
-            <div className="bg-white border border-slate-200/90 hover:border-orange-300 transition-all p-8 rounded-2xl flex flex-col justify-between relative overflow-hidden group shadow-xs hover:shadow-xl">
-              <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-orange-500 via-rose-500 to-[#E11D48]" />
+            {/* 03 IT Solutions (Distinct Amber/Orange Theme) */}
+            <div className="bg-white border-2 border-amber-200/90 hover:border-amber-500 transition-all p-8 rounded-2xl flex flex-col justify-between relative overflow-hidden group shadow-xs hover:shadow-xl">
+              <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-amber-500 via-orange-500 to-[#E11D48]" />
               
               <div>
                 <div className="flex items-center justify-between mb-6 font-mono text-xs">
-                  <span className="text-orange-700 font-extrabold text-base bg-orange-50 px-2.5 py-1 rounded-md border border-orange-200">
+                  <span className="text-amber-950 font-extrabold text-base bg-amber-100 px-3 py-1 rounded-lg border border-amber-300 shadow-2xs">
                     03
                   </span>
-                  <span className="text-orange-800 font-bold tracking-wider">INFRASTRUCTURE & CLOUD</span>
+                  <span className="text-amber-800 font-extrabold tracking-wider">INFRASTRUCTURE & CLOUD</span>
                 </div>
                 
-                <h3 className="text-2xl font-bold text-slate-900 mb-3 group-hover:text-orange-700 transition-colors">
+                <h3 className="text-2xl font-extrabold text-slate-950 mb-3 group-hover:text-amber-700 transition-colors">
                   IT Solutions
                 </h3>
                 
-                <p className="text-xs text-slate-600 leading-relaxed mb-6">
+                <p className="text-xs text-slate-700 leading-relaxed mb-6 font-normal">
                   ช่วยวางระบบและพัฒนาโซลูชันด้าน IT ให้เหมาะกับการใช้งานจริง เสถียร ปลอดภัย และดูแลรักษาง่าย
                 </p>
 
@@ -735,26 +777,26 @@ export default function DeeDevIOTWebsite() {
         </div>
       </section>
 
-      {/* ================= 05. REALISTIC IOT DASHBOARD SHOWCASE (Bright, Clean, Crisp) ================= */}
-      <section id="iot-dashboard" className="py-20 sm:py-28 border-b border-slate-200/80 bg-white relative">
+      {/* ================= 05. REALISTIC IOT DASHBOARD SHOWCASE (High-Contrast Digital Lab) ================= */}
+      <section id="iot-dashboard" className="py-20 sm:py-28 border-b border-slate-300/80 bg-white relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 pb-6 border-b border-slate-200/80">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 pb-6 border-b border-slate-200 gap-4">
             <div>
-              <span className="font-mono text-xs text-[#E11D48] uppercase tracking-wider block mb-2 font-bold flex items-center gap-2">
+              <span className="font-mono text-xs text-[#E11D48] uppercase tracking-wider block mb-2 font-extrabold flex items-center gap-2">
                 <Radio size={14} className="animate-pulse text-[#E11D48]" />
                 <span>[ LIVE DEMONSTRATION // HARDWARE: ESP32-C3 SMART SWITCH ]</span>
               </span>
-              <h2 className="text-2xl sm:text-4xl font-extrabold uppercase tracking-tight text-slate-900">
+              <h2 className="text-2xl sm:text-4xl font-extrabold uppercase tracking-tight text-slate-950">
                 ตัวอย่างระบบ IoT Dashboard
               </h2>
-              <p className="text-xs sm:text-sm text-slate-600 mt-2">
+              <p className="text-xs sm:text-sm text-slate-700 mt-2 font-normal">
                 ควบคุมอุปกรณ์และติดตามข้อมูลจากที่เดียว (ลองกดเปิด-ปิดรีเลย์เพื่อทดสอบการตอบสนองได้จริง)
               </p>
             </div>
             
-            <div className="flex items-center gap-2 mt-4 sm:mt-0 font-mono text-xs bg-emerald-50 border border-emerald-200 text-emerald-800 px-3.5 py-1.5 rounded-full font-bold shadow-2xs">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+            <div className="flex items-center gap-2 font-mono text-xs bg-emerald-100 text-emerald-950 border-2 border-emerald-300 px-4 py-2 rounded-full font-bold shadow-2xs">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-ping" />
               <span>MQTT BROKER: CONNECTED</span>
             </div>
           </div>
@@ -774,47 +816,47 @@ export default function DeeDevIOTWebsite() {
                     <div
                       key={device.id}
                       onClick={() => setSelectedDashboardDeviceId(device.id)}
-                      className={`p-5 rounded-2xl border transition-all cursor-pointer ${
+                      className={`p-5 rounded-2xl border-2 transition-all cursor-pointer ${
                         isSelected 
-                          ? 'bg-white border-[#E11D48] ring-2 ring-[#E11D48]/20 shadow-md' 
-                          : 'bg-[#F8FAFC] border-slate-200/90 hover:border-slate-300 shadow-2xs'
+                          ? 'bg-white border-[#E11D48] ring-4 ring-[#E11D48]/15 shadow-md' 
+                          : 'bg-white border-slate-200/90 hover:border-slate-400 shadow-xs'
                       }`}
                     >
-                      <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-200/70">
+                      <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-200">
                         <div>
-                          <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                          <h4 className="text-sm font-extrabold text-slate-950 flex items-center gap-2">
                             <span>{device.name}</span>
                           </h4>
-                          <span className="text-[10px] font-mono text-slate-500">{device.locationName}</span>
+                          <span className="text-[10px] font-mono text-slate-600 font-medium">{device.locationName}</span>
                         </div>
 
                         <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold flex items-center gap-1.5 ${
-                          isOnline ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
-                          isWarning ? 'bg-amber-50 text-amber-700 border border-amber-200' :
-                          'bg-slate-100 text-slate-500 border border-slate-200'
+                          isOnline ? 'bg-emerald-100 text-emerald-900 border border-emerald-300' :
+                          isWarning ? 'bg-amber-100 text-amber-950 border border-amber-300' :
+                          'bg-slate-200 text-slate-700 border border-slate-300'
                         }`}>
-                          <span className={`w-1.5 h-1.5 rounded-full ${isOnline ? 'bg-emerald-500' : isWarning ? 'bg-amber-500' : 'bg-slate-400'}`} />
+                          <span className={`w-1.5 h-1.5 rounded-full ${isOnline ? 'bg-emerald-600' : isWarning ? 'bg-amber-600' : 'bg-slate-500'}`} />
                           <span>{device.connectionStatus}</span>
                         </span>
                       </div>
 
                       {/* Sensor Summary Boxes */}
                       <div className="grid grid-cols-2 gap-3 mb-4 font-mono text-xs">
-                        <div className="bg-rose-50/70 p-3 rounded-xl border border-rose-200/80">
-                          <span className="text-rose-700 block text-[10px] font-semibold">อุณหภูมิ</span>
-                          <span className="text-slate-900 font-extrabold text-base">{device.temperatureCelsius}°C</span>
+                        <div className="bg-rose-100/80 p-3 rounded-xl border border-rose-300">
+                          <span className="text-rose-950 block text-[10px] font-bold">อุณหภูมิ</span>
+                          <span className="text-rose-950 font-extrabold text-base">{device.temperatureCelsius}°C</span>
                         </div>
-                        <div className="bg-sky-50/70 p-3 rounded-xl border border-sky-200/80">
-                          <span className="text-sky-700 block text-[10px] font-semibold">ความชื้น</span>
-                          <span className="text-slate-900 font-extrabold text-base">{device.humidityPercentage}%</span>
+                        <div className="bg-sky-100/80 p-3 rounded-xl border border-sky-300">
+                          <span className="text-sky-950 block text-[10px] font-bold">ความชื้น</span>
+                          <span className="text-sky-950 font-extrabold text-base">{device.humidityPercentage}%</span>
                         </div>
                       </div>
 
                       {/* Relay Switch Button */}
-                      <div className="flex items-center justify-between pt-2 border-t border-slate-200/70 font-mono text-xs">
+                      <div className="flex items-center justify-between pt-2 border-t border-slate-200 font-mono text-xs">
                         <div className="flex items-center gap-1.5">
-                          <span className="text-slate-500 text-[11px]">สถานะรีเลย์:</span>
-                          <span className={`font-bold text-[11px] ${device.relayStatus ? 'text-[#E11D48]' : 'text-slate-400'}`}>
+                          <span className="text-slate-600 text-[11px] font-medium">สถานะรีเลย์:</span>
+                          <span className={`font-extrabold text-[11px] ${device.relayStatus ? 'text-[#E11D48]' : 'text-slate-500'}`}>
                             {device.relayStatus ? 'เปิด (ON)' : 'ปิด (OFF)'}
                           </span>
                         </div>
@@ -827,8 +869,8 @@ export default function DeeDevIOTWebsite() {
                           }}
                           className={`px-3.5 py-1.5 rounded-lg font-bold text-[11px] transition-all flex items-center gap-1.5 shadow-xs ${
                             device.relayStatus
-                              ? 'bg-gradient-to-r from-[#E11D48] to-[#EA580C] text-white hover:brightness-105 shadow-rose-200'
-                              : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200'
+                              ? 'bg-gradient-to-r from-[#E11D48] to-[#EA580C] text-white hover:brightness-105 shadow-rose-300/50'
+                              : 'bg-slate-200 text-slate-800 hover:bg-slate-300 border border-slate-300'
                           }`}
                         >
                           <Power size={12} />
@@ -841,16 +883,16 @@ export default function DeeDevIOTWebsite() {
                 })}
               </div>
 
-              {/* Recharts Live Visualization (Clean White Container) */}
-              <div className="p-6 bg-[#F8FAFC] border border-slate-200/90 rounded-2xl shadow-xs">
+              {/* Recharts Live Visualization (Clean High-Contrast Container) */}
+              <div className="p-6 bg-white border-2 border-slate-200/90 rounded-2xl shadow-xs">
                 <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-200 font-mono text-xs">
                   <div className="flex items-center gap-2">
                     <Activity size={15} className="text-[#E11D48]" />
-                    <span className="text-slate-900 font-bold">
+                    <span className="text-slate-950 font-extrabold">
                       กราฟแนวโน้มอุณหภูมิและความชื้น: <span className="text-[#0284C7]">{selectedDevice.name}</span> ({selectedDevice.hardwareModel})
                     </span>
                   </div>
-                  <span className="text-[10px] text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded border border-amber-200 font-bold">
+                  <span className="text-[10px] text-amber-950 bg-amber-100 px-2.5 py-0.5 rounded border border-amber-300 font-extrabold">
                     09:41 - 10:01 LIVE
                   </span>
                 </div>
@@ -861,65 +903,65 @@ export default function DeeDevIOTWebsite() {
                       <AreaChart data={selectedDevice.telemetryHistory} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
                         <defs>
                           <linearGradient id="tempGradientLight" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#E11D48" stopOpacity={0.25}/>
+                            <stop offset="5%" stopColor="#E11D48" stopOpacity={0.3}/>
                             <stop offset="95%" stopColor="#E11D48" stopOpacity={0.0}/>
                           </linearGradient>
                           <linearGradient id="humGradientLight" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#0284C7" stopOpacity={0.2}/>
+                            <stop offset="5%" stopColor="#0284C7" stopOpacity={0.25}/>
                             <stop offset="95%" stopColor="#0284C7" stopOpacity={0.0}/>
                           </linearGradient>
                         </defs>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-                        <XAxis dataKey="time" stroke="#64748B" fontSize={10} tickLine={false} />
-                        <YAxis stroke="#64748B" fontSize={10} domain={['dataMin - 2', 'dataMax + 2']} tickLine={false} />
+                        <CartesianGrid strokeDasharray="3 3" stroke="#CBD5E1" />
+                        <XAxis dataKey="time" stroke="#475569" fontSize={10} tickLine={false} />
+                        <YAxis stroke="#475569" fontSize={10} domain={['dataMin - 2', 'dataMax + 2']} tickLine={false} />
                         <Tooltip
-                          contentStyle={{ backgroundColor: '#FFFFFF', borderColor: '#CBD5E1', borderRadius: '8px', fontSize: '11px', fontFamily: 'monospace', boxShadow: '0 4px 15px rgba(0,0,0,0.08)' }}
+                          contentStyle={{ backgroundColor: '#FFFFFF', borderColor: '#94A3B8', borderRadius: '8px', fontSize: '11px', fontFamily: 'monospace', boxShadow: '0 4px 15px rgba(0,0,0,0.12)' }}
                           labelStyle={{ color: '#E11D48', fontWeight: 'bold' }}
                         />
                         <Area type="monotone" dataKey="temp" name="อุณหภูมิ (°C)" stroke="#E11D48" strokeWidth={2.5} fillOpacity={1} fill="url(#tempGradientLight)" />
-                        <Area type="monotone" dataKey="humidity" name="ความชื้น (%)" stroke="#0284C7" strokeWidth={2} fillOpacity={1} fill="url(#humGradientLight)" />
+                        <Area type="monotone" dataKey="humidity" name="ความชื้น (%)" stroke="#0284C7" strokeWidth={2.5} fillOpacity={1} fill="url(#humGradientLight)" />
                       </AreaChart>
                     </ResponsiveContainer>
                   ) : (
-                    <div className="h-full flex items-center justify-center text-xs font-mono text-slate-500">
+                    <div className="h-full flex items-center justify-center text-xs font-mono text-slate-600">
                       กำลังโหลดข้อมูลการวัด...
                     </div>
                   )}
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-slate-200 flex flex-wrap items-center justify-between font-mono text-[11px] text-slate-600">
+                <div className="mt-4 pt-3 border-t border-slate-200 flex flex-wrap items-center justify-between font-mono text-[11px] text-slate-700 font-medium">
                   <div className="flex items-center gap-5">
-                    <span>สัญญาณ: <strong className="text-emerald-700">{selectedDevice.wifiSignalDbm} dBm</strong></span>
-                    <span>Latency: <strong className="text-sky-700">{selectedDevice.connectionLatencyMs ? `${selectedDevice.connectionLatencyMs} ms` : 'N/A'}</strong></span>
+                    <span>สัญญาณ: <strong className="text-emerald-800">{selectedDevice.wifiSignalDbm} dBm</strong></span>
+                    <span>Latency: <strong className="text-sky-800">{selectedDevice.connectionLatencyMs ? `${selectedDevice.connectionLatencyMs} ms` : 'N/A'}</strong></span>
                   </div>
-                  <span>Last Seen: <strong className="text-amber-800">{selectedDevice.lastSeenTimestamp}</strong></span>
+                  <span>Last Seen: <strong className="text-amber-900">{selectedDevice.lastSeenTimestamp}</strong></span>
                 </div>
               </div>
 
             </div>
 
             {/* Right Column: Event History */}
-            <div className="lg:col-span-4 bg-[#F8FAFC] border border-slate-200/90 rounded-2xl p-6 shadow-xs">
+            <div className="lg:col-span-4 bg-white border-2 border-slate-200/90 rounded-2xl p-6 shadow-xs">
               <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-200 font-mono text-xs">
-                <span className="text-slate-900 font-bold flex items-center gap-2">
+                <span className="text-slate-950 font-extrabold flex items-center gap-2">
                   <Clock size={15} className="text-[#E11D48]" />
                   <span>EVENT HISTORY</span>
                 </span>
-                <span className="text-[10px] text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded border border-emerald-200 font-bold">
+                <span className="text-[10px] text-emerald-900 bg-emerald-100 px-2.5 py-0.5 rounded border border-emerald-300 font-bold">
                   REALTIME
                 </span>
               </div>
 
               <div className="space-y-3 font-mono text-xs">
                 {telemetryLogs.map((log) => (
-                  <div key={log.eventId} className="p-3 bg-white border border-slate-200/80 rounded-xl shadow-2xs">
+                  <div key={log.eventId} className="p-3 bg-slate-50 border border-slate-200 rounded-xl shadow-2xs">
                     <div className="flex items-center justify-between text-[10px] mb-1.5">
-                      <span className="text-[#EA580C] font-bold">{log.timestamp}</span>
-                      <span className="text-sky-800 bg-sky-50 px-1.5 py-0.5 rounded border border-sky-200 font-medium">
+                      <span className="text-[#EA580C] font-extrabold">{log.timestamp}</span>
+                      <span className="text-sky-900 bg-sky-100 px-2 py-0.5 rounded border border-sky-300 font-bold">
                         {log.deviceName}
                       </span>
                     </div>
-                    <p className="text-[11px] text-slate-600 leading-relaxed">
+                    <p className="text-[11px] text-slate-700 leading-relaxed font-normal">
                       {log.eventDescription}
                     </p>
                   </div>
@@ -927,7 +969,7 @@ export default function DeeDevIOTWebsite() {
               </div>
 
               <div className="mt-6 pt-4 border-t border-slate-200 text-center">
-                <span className="text-[11px] font-mono text-slate-600 block mb-2.5">
+                <span className="text-[11px] font-mono text-slate-700 block mb-2.5 font-medium">
                   ต้องการสร้างระบบมอนิเตอร์และควบคุมแบบนี้ในธุรกิจของคุณ?
                 </span>
                 <a
@@ -945,31 +987,31 @@ export default function DeeDevIOTWebsite() {
       </section>
 
       {/* ================= 04.E REAL PROJECT SHOWCASE ================= */}
-      <section id="works" className="py-20 sm:py-28 border-b border-slate-200/80 bg-[#FAFAFC] relative">
+      <section id="works" className="py-20 sm:py-28 border-b border-slate-300/80 bg-[#FAFAFC] relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 pb-6 border-b border-slate-200/80 gap-4">
             <div>
-              <span className="font-mono text-xs text-emerald-600 uppercase tracking-wider block mb-2 font-bold flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-500" />
+              <span className="font-mono text-xs text-emerald-700 uppercase tracking-wider block mb-2 font-extrabold flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-600" />
                 <span>[ REAL PORTFOLIO & WORKS ]</span>
               </span>
-              <h2 className="text-2xl sm:text-4xl font-extrabold uppercase tracking-tight text-slate-900">
+              <h2 className="text-2xl sm:text-4xl font-extrabold uppercase tracking-tight text-slate-950">
                 ผลงานและโปรเจกต์จริง
               </h2>
-              <p className="text-xs sm:text-sm text-slate-600 mt-2">
+              <p className="text-xs sm:text-sm text-slate-700 mt-2 font-normal">
                 โปรเจกต์ซอฟต์แวร์และฮาร์ดแวร์ที่พัฒนาและทดสอบการทำงานจริง จากฐานข้อมูล Google Sheets
               </p>
             </div>
 
-            {/* Dynamic Category Filter */}
+            {/* Dynamic Category Filter with High Contrast */}
             <div className="flex flex-wrap items-center gap-2 font-mono text-xs">
               <button
                 type="button"
                 onClick={() => setSelectedWorkCategory('all')}
-                className={`px-3.5 py-1.5 rounded-xl border transition-all ${
+                className={`px-4 py-2 rounded-xl border-2 transition-all ${
                   selectedWorkCategory === 'all'
-                    ? 'bg-slate-900 text-white border-slate-900 font-bold shadow-xs'
-                    : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400 hover:text-slate-900'
+                    ? 'bg-[#E11D48] text-white border-[#E11D48] font-bold shadow-xs'
+                    : 'bg-white text-slate-800 border-slate-300 hover:border-slate-500 font-bold'
                 }`}
               >
                 ทั้งหมด (ALL)
@@ -979,10 +1021,10 @@ export default function DeeDevIOTWebsite() {
                   key={cat}
                   type="button"
                   onClick={() => setSelectedWorkCategory(cat)}
-                  className={`px-3.5 py-1.5 rounded-xl border transition-all uppercase ${
+                  className={`px-4 py-2 rounded-xl border-2 transition-all uppercase ${
                     selectedWorkCategory.toLowerCase() === cat.toLowerCase()
-                      ? 'bg-slate-900 text-white border-slate-900 font-bold shadow-xs'
-                      : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400 hover:text-slate-900'
+                      ? 'bg-[#E11D48] text-white border-[#E11D48] font-bold shadow-xs'
+                      : 'bg-white text-slate-800 border-slate-300 hover:border-slate-500 font-bold'
                   }`}
                 >
                   {cat}
@@ -995,10 +1037,10 @@ export default function DeeDevIOTWebsite() {
             {filteredProjects.map((project) => (
               <article
                 key={project.id}
-                className="bg-white border border-slate-200/90 hover:border-[#E11D48] transition-all rounded-2xl flex flex-col justify-between overflow-hidden group shadow-xs hover:shadow-xl transform hover:-translate-y-1"
+                className="bg-white border-2 border-slate-200/90 hover:border-[#E11D48] transition-all rounded-2xl flex flex-col justify-between overflow-hidden group shadow-xs hover:shadow-xl transform hover:-translate-y-1"
               >
                 {/* Project Cover Image */}
-                <div className="relative h-48 w-full overflow-hidden bg-slate-100 border-b border-slate-100">
+                <div className="relative h-48 w-full overflow-hidden bg-slate-100 border-b border-slate-200">
                   {project.imageUrl ? (
                     <img
                       src={project.imageUrl}
@@ -1008,10 +1050,10 @@ export default function DeeDevIOTWebsite() {
                     />
                   ) : (
                     <div className="w-full h-full bg-gradient-to-br from-slate-50 via-rose-50/40 to-orange-50/40 flex items-center justify-center">
-                      <Layers size={36} className="text-slate-300 group-hover:text-[#E11D48] transition-colors" />
+                      <Layers size={36} className="text-slate-400 group-hover:text-[#E11D48] transition-colors" />
                     </div>
                   )}
-                  <div className="absolute top-3 right-3 px-2.5 py-0.5 rounded-full bg-white/95 backdrop-blur-sm border border-slate-200 text-[10px] font-mono text-slate-800 font-bold shadow-xs">
+                  <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-white/95 backdrop-blur-sm border border-slate-300 text-[10px] font-mono text-slate-900 font-bold shadow-xs">
                     {project.category}
                   </div>
                 </div>
@@ -1019,11 +1061,11 @@ export default function DeeDevIOTWebsite() {
                 {/* Content */}
                 <div className="p-6 flex-1 flex flex-col justify-between">
                   <div>
-                    <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-[#E11D48] transition-colors">
+                    <h3 className="text-lg font-extrabold text-slate-950 mb-2 group-hover:text-[#E11D48] transition-colors">
                       {project.name}
                     </h3>
                     
-                    <p className="text-xs text-slate-600 leading-relaxed mb-5 line-clamp-3">
+                    <p className="text-xs text-slate-700 leading-relaxed mb-5 line-clamp-3 font-normal">
                       {project.description}
                     </p>
 
@@ -1032,7 +1074,7 @@ export default function DeeDevIOTWebsite() {
                       {project.technologies.map((techItem) => (
                         <span
                           key={techItem}
-                          className="px-2.5 py-0.5 rounded-md bg-slate-50 border border-slate-200 text-slate-700 font-medium"
+                          className="px-2.5 py-1 rounded-md bg-slate-100 border border-slate-300 text-slate-800 font-bold"
                         >
                           {techItem}
                         </span>
@@ -1045,7 +1087,7 @@ export default function DeeDevIOTWebsite() {
                     <button
                       type="button"
                       onClick={() => setActiveProjectModal(project)}
-                      className="text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-1 font-semibold"
+                      className="text-slate-700 hover:text-slate-950 transition-colors flex items-center gap-1 font-bold"
                     >
                       <span>ดูรายละเอียด</span>
                       <ChevronRight size={14} className="text-[#0284C7]" />
@@ -1057,7 +1099,7 @@ export default function DeeDevIOTWebsite() {
                           href={project.manualUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-sky-700 hover:text-sky-900 bg-sky-50 hover:bg-sky-100 border border-sky-200 px-2.5 py-1 rounded-lg text-[11px] font-bold transition-colors inline-flex items-center gap-1"
+                          className="text-sky-900 hover:text-sky-950 bg-sky-100 hover:bg-sky-200 border border-sky-300 px-3 py-1.5 rounded-lg text-[11px] font-bold transition-colors inline-flex items-center gap-1 shadow-2xs"
                           title="เปิดดูคู่มือการใช้งาน"
                         >
                           <FileText size={12} />
@@ -1070,14 +1112,14 @@ export default function DeeDevIOTWebsite() {
                           href={project.demoUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-[#E11D48] hover:text-[#BE123C] bg-rose-50 hover:bg-rose-100 border border-rose-200 px-2.5 py-1 rounded-lg text-[11px] font-bold transition-colors inline-flex items-center gap-1"
+                          className="text-white bg-gradient-to-r from-[#E11D48] to-[#EA580C] hover:brightness-105 px-3.5 py-1.5 rounded-lg text-[11px] font-bold transition-colors inline-flex items-center gap-1 shadow-xs"
                           title="เปิดดูเนื้อหา / Live Demo"
                         >
                           <span>เปิดดูเนื้อหา</span>
                           <ExternalLink size={12} />
                         </a>
                       ) : (
-                        <span className="text-slate-400 text-[11px] px-1.5">Production</span>
+                        <span className="text-slate-500 text-[11px] px-2 py-0.5 rounded bg-slate-100 border border-slate-200">Production</span>
                       )}
                     </div>
                   </div>
@@ -1087,8 +1129,8 @@ export default function DeeDevIOTWebsite() {
 
             {/* Clean Empty State when no real projects exist */}
             {filteredProjects.length === 0 && (
-              <div className="col-span-full py-16 px-6 text-center bg-white border border-slate-200/90 rounded-2xl shadow-xs">
-                <div className="w-16 h-16 rounded-2xl bg-rose-50 border border-rose-200/80 flex items-center justify-center mx-auto mb-4 text-[#E11D48]">
+              <div className="col-span-full py-16 px-6 text-center bg-white border-2 border-slate-200/90 rounded-2xl shadow-xs">
+                <div className="w-16 h-16 rounded-2xl bg-rose-100 border border-rose-300 flex items-center justify-center mx-auto mb-4 text-[#E11D48]">
                   <Layers size={28} />
                 </div>
                 <h3 className="text-lg font-bold text-slate-900 mb-2">
@@ -1096,13 +1138,13 @@ export default function DeeDevIOTWebsite() {
                     ? 'อยู่ระหว่างอัปเดตข้อมูลผลงานจริง'
                     : `ไม่พบผลงานในหมวดหมู่ "${selectedWorkCategory}"`}
                 </h3>
-                <p className="text-xs sm:text-sm text-slate-500 max-w-md mx-auto mb-5 leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto mb-5 leading-relaxed">
                   {selectedWorkCategory === 'all'
                     ? 'ข้อมูลผลงานและโปรเจกต์ที่เสร็จสมบูรณ์จะแสดงที่นี่โดยตรงจากระบบหลังบ้าน (Admin Console)'
                     : 'สามารถเลือกหมวดหมู่อื่นเพื่อดูผลงานเพิ่มเติม หรือเพิ่มผลงานใหม่ใน Admin Console'}
                 </p>
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-700 font-mono text-xs font-semibold">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 text-slate-800 font-mono text-xs font-bold border border-slate-200">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
                   <span>ข้อมูลจริงแบบ Real-time จาก Google Sheets CMS</span>
                 </div>
               </div>
@@ -1112,24 +1154,24 @@ export default function DeeDevIOTWebsite() {
         </div>
       </section>
 
-      {/* ================= 04.F THAI BUSINESS CTA & CONTACT (Bright, Clean, Inviting) ================= */}
-      <section id="contact" className="py-20 sm:py-28 border-b border-slate-200/80 bg-white relative overflow-hidden">
+      {/* ================= 04.F THAI BUSINESS CTA & CONTACT (High-Impact Contrast) ================= */}
+      <section id="contact" className="py-20 sm:py-28 border-b border-slate-300/80 bg-white relative overflow-hidden">
         
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           
-          <span className="font-mono text-xs text-[#E11D48] uppercase tracking-wider block mb-3 font-bold">
+          <span className="font-mono text-xs text-[#E11D48] uppercase tracking-wider block mb-3 font-extrabold">
             [ ติดต่อสอบถาม / เริ่มต้นโปรเจกต์ ]
           </span>
 
-          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 mb-4">
+          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-950 mb-4">
             มีระบบที่อยากทำ แต่ยังไม่รู้จะเริ่มตรงไหน?
           </h2>
 
-          <h3 className="text-lg sm:text-2xl font-semibold bg-gradient-to-r from-[#0F172A] via-[#E11D48] to-[#EA580C] bg-clip-text text-transparent mb-4">
+          <h3 className="text-lg sm:text-2xl font-bold bg-gradient-to-r from-slate-950 via-[#E11D48] to-[#EA580C] bg-clip-text text-transparent mb-4">
             เล่าไอเดียหรือปัญหาของคุณให้เราฟังได้เลย
           </h3>
           
-          <p className="text-slate-600 text-xs sm:text-sm max-w-xl mx-auto mb-10 leading-relaxed font-normal">
+          <p className="text-slate-700 text-xs sm:text-sm max-w-xl mx-auto mb-10 leading-relaxed font-normal">
             เราช่วยวิเคราะห์ ออกแบบ และพัฒนาระบบให้เหมาะกับการใช้งานจริง ไม่ว่าจะเป็นระบบขนาดเล็กหรือระบบเฉพาะทางขององค์กร ทักมาคุยกันได้โดยไม่มีข้อผูกมัด
           </p>
 
@@ -1141,7 +1183,7 @@ export default function DeeDevIOTWebsite() {
               href={`https://line.me/ti/p/~${(siteConfig.contact_line || '@DEEDEVIOT').replace('@', '')}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto px-8 py-4 bg-[#06C755] hover:bg-[#05b34c] text-white font-mono text-xs uppercase tracking-wider font-bold rounded-xl transition-all flex items-center justify-center gap-2.5 shadow-[0_4px_20px_rgba(6,199,85,0.35)] transform hover:-translate-y-0.5"
+              className="w-full sm:w-auto px-8 py-4 bg-[#06C755] hover:bg-[#05b34c] text-white font-mono text-xs uppercase tracking-wider font-extrabold rounded-xl transition-all flex items-center justify-center gap-2.5 shadow-[0_4px_20px_rgba(6,199,85,0.35)] transform hover:-translate-y-0.5"
             >
               <MessageCircle size={18} />
               <span>คุยกับเราใน LINE →</span>
@@ -1150,7 +1192,7 @@ export default function DeeDevIOTWebsite() {
             {/* Email - Crisp Deep Slate / Rose */}
             <a
               href={`mailto:${siteConfig.contact_email || 'hello@deedeviot.com'}`}
-              className="w-full sm:w-auto px-8 py-4 bg-slate-900 hover:bg-[#E11D48] text-white font-mono text-xs uppercase tracking-wider font-bold rounded-xl transition-all flex items-center justify-center gap-2.5 shadow-md transform hover:-translate-y-0.5"
+              className="w-full sm:w-auto px-8 py-4 bg-slate-950 hover:bg-[#E11D48] text-white font-mono text-xs uppercase tracking-wider font-extrabold rounded-xl transition-all flex items-center justify-center gap-2.5 shadow-md transform hover:-translate-y-0.5"
             >
               <Mail size={18} />
               <span>ส่งอีเมลปรึกษาเรา</span>
@@ -1159,32 +1201,32 @@ export default function DeeDevIOTWebsite() {
 
           {/* Direct Channels Information Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 text-left font-mono text-xs">
-            <div className="p-4 bg-[#F8FAFC] border border-slate-200/90 rounded-2xl shadow-2xs">
-              <span className="text-[10px] text-emerald-700 block mb-1 font-bold">LINE OFFICIAL</span>
-              <span className="text-slate-900 font-bold">{siteConfig.contact_line || '@DEEDEVIOT'}</span>
+            <div className="p-4 bg-emerald-50/60 border-2 border-emerald-200/90 rounded-2xl shadow-2xs">
+              <span className="text-[10px] text-emerald-800 block mb-1 font-extrabold">LINE OFFICIAL</span>
+              <span className="text-slate-950 font-extrabold">{siteConfig.contact_line || '@DEEDEVIOT'}</span>
             </div>
 
-            <div className="p-4 bg-[#F8FAFC] border border-slate-200/90 rounded-2xl shadow-2xs">
-              <span className="text-[10px] text-rose-700 block mb-1 font-bold">EMAIL</span>
-              <a href={`mailto:${siteConfig.contact_email || 'hello@deedeviot.com'}`} className="text-slate-900 font-bold hover:text-[#E11D48] break-all">
+            <div className="p-4 bg-rose-50/60 border-2 border-rose-200/90 rounded-2xl shadow-2xs">
+              <span className="text-[10px] text-rose-800 block mb-1 font-extrabold">EMAIL</span>
+              <a href={`mailto:${siteConfig.contact_email || 'hello@deedeviot.com'}`} className="text-slate-950 font-extrabold hover:text-[#E11D48] break-all">
                 {siteConfig.contact_email || 'hello@deedeviot.com'}
               </a>
             </div>
 
-            <div className="p-4 bg-[#F8FAFC] border border-slate-200/90 rounded-2xl shadow-2xs">
-              <span className="text-[10px] text-amber-700 block mb-1 font-bold">TELEPHONE</span>
-              <a href={`tel:${siteConfig.contact_phone || '02-123-4567'}`} className="text-slate-900 font-bold hover:text-[#EA580C]">
+            <div className="p-4 bg-amber-50/60 border-2 border-amber-200/90 rounded-2xl shadow-2xs">
+              <span className="text-[10px] text-amber-800 block mb-1 font-extrabold">TELEPHONE</span>
+              <a href={`tel:${siteConfig.contact_phone || '02-123-4567'}`} className="text-slate-950 font-extrabold hover:text-[#EA580C]">
                 {siteConfig.contact_phone || '02-123-4567'}
               </a>
             </div>
 
-            <div className="p-4 bg-[#F8FAFC] border border-slate-200/90 rounded-2xl shadow-2xs">
-              <span className="text-[10px] text-sky-700 block mb-1 font-bold">FACEBOOK</span>
+            <div className="p-4 bg-sky-50/60 border-2 border-sky-200/90 rounded-2xl shadow-2xs">
+              <span className="text-[10px] text-sky-800 block mb-1 font-extrabold">FACEBOOK</span>
               <a 
                 href={siteConfig.facebook_url || "https://facebook.com/deedeviot"} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-slate-900 font-bold hover:text-[#0284C7] flex items-center gap-1"
+                className="text-slate-950 font-extrabold hover:text-[#0284C7] flex items-center gap-1"
               >
                 <span>DeeDevIOT</span>
                 <ExternalLink size={12} />

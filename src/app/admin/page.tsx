@@ -8,7 +8,7 @@ import {
   Menu as MenuIcon, X, Type, Zap, Lightbulb, Star, Phone, Globe, ChevronRight, Plus, 
   FileText, Image as ImageIcon, ExternalLink, ShieldCheck, FolderPlus,
   Layers, ArrowUpRight, Check, HelpCircle, Info, Edit3, ArrowLeft,
-  Sliders, Eye, Sparkles
+  Sliders, Eye, Sparkles, Mail, MessageSquare
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { convertToDirectLink } from '../../lib/utils/drive';
@@ -509,22 +509,47 @@ export default function AdminDashboard() {
 
   // ================= RENDER STATUS TOAST =================
   const renderStatus = () => status.type && (
-    <div className={`px-4 py-2 rounded-xl border text-xs flex items-center gap-2 shadow-xs transition-all ${
+    <div className={`px-4 py-2 rounded-xl border-2 text-xs flex items-center gap-2 shadow-md transition-all font-bold ${
       status.type === 'success' 
-        ? 'bg-emerald-50 border-emerald-200 text-emerald-800' 
-        : 'bg-rose-50 border-rose-200 text-rose-800'
+        ? 'bg-emerald-50 border-emerald-400 text-emerald-950' 
+        : 'bg-rose-50 border-rose-400 text-rose-950'
     }`}>
       {status.type === 'success' ? (
         <CheckCircle2 size={16} className="text-[#059669] shrink-0" />
       ) : (
         <AlertCircle size={16} className="text-[#E11D48] shrink-0" />
       )}
-      <span className="font-medium">{status.message}</span>
-      <button onClick={() => setStatus({ type: null, message: '' })} className="ml-1 text-slate-400 hover:text-slate-700">
+      <span>{status.message}</span>
+      <button onClick={() => setStatus({ type: null, message: '' })} className="ml-1 text-slate-500 hover:text-slate-900">
         <X size={13} />
       </button>
     </div>
   );
+
+  // Category theme styling for distinct visual differentiation
+  const CATEGORY_THEMES = [
+    {
+      badge: 'bg-rose-100 text-rose-950 border-rose-300',
+      activeBg: 'bg-rose-50 text-[#E11D48] border-2 border-rose-300 shadow-sm font-bold',
+      activeIcon: 'text-[#E11D48]',
+      activeSub: 'text-[#EA580C] font-semibold',
+      indicator: 'bg-[#E11D48]',
+    },
+    {
+      badge: 'bg-sky-100 text-sky-950 border-sky-300',
+      activeBg: 'bg-sky-50 text-[#0284C7] border-2 border-sky-300 shadow-sm font-bold',
+      activeIcon: 'text-[#0284C7]',
+      activeSub: 'text-[#0284C7] font-semibold',
+      indicator: 'bg-[#0284C7]',
+    },
+    {
+      badge: 'bg-emerald-100 text-emerald-950 border-emerald-300',
+      activeBg: 'bg-emerald-50 text-[#059669] border-2 border-emerald-300 shadow-sm font-bold',
+      activeIcon: 'text-[#059669]',
+      activeSub: 'text-[#059669] font-semibold',
+      indicator: 'bg-[#059669]',
+    }
+  ];
 
   return (
     <div className="min-h-screen bg-[#FAFAFC] text-[#0F172A] font-sans antialiased flex flex-col lg:flex-row relative">
@@ -539,7 +564,7 @@ export default function AdminDashboard() {
       {/* Mobile Drawer Backdrop */}
       {isMobileDrawerOpen && (
         <div 
-          className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-40 lg:hidden"
+          className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-40 lg:hidden"
           onClick={() => setIsMobileDrawerOpen(false)}
         />
       )}
@@ -547,23 +572,23 @@ export default function AdminDashboard() {
       {/* ================= SIDEBAR (DESKTOP & MOBILE DRAWER) ================= */}
       <aside className={`
         fixed lg:sticky top-0 inset-y-0 left-0 z-50 lg:z-30
-        h-screen bg-white/95 backdrop-blur-md border-r border-slate-200/80
+        h-screen bg-white/95 backdrop-blur-md border-r-2 border-slate-200/90
         flex flex-col shadow-sm transition-all duration-300
         ${isMobileDrawerOpen ? 'translate-x-0 w-80' : '-translate-x-full lg:translate-x-0'}
         ${isSidebarOpen ? 'lg:w-72' : 'lg:w-20'}
       `}>
         {/* Brand Header */}
-        <div className="p-4 sm:p-5 flex items-center justify-between border-b border-slate-200/80 h-18 shrink-0">
+        <div className="p-4 sm:p-5 flex items-center justify-between border-b-2 border-slate-200/90 h-18 shrink-0">
           <Link href="/" className="flex items-center gap-3 group focus:outline-none overflow-hidden">
-            <span className="relative flex h-3 w-3 shrink-0">
+            <span className="relative flex h-3.5 w-3.5 shrink-0">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E11D48] opacity-75" />
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-[#E11D48]" />
+              <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-[#E11D48]" />
             </span>
             {(isSidebarOpen || isMobileDrawerOpen) && (
               <div className="font-mono text-base tracking-wider font-bold truncate">
-                <span className="text-slate-900 group-hover:text-[#E11D48] transition-colors">DEEDEV</span>
+                <span className="text-slate-950 group-hover:text-[#E11D48] transition-colors font-extrabold">DEEDEV</span>
                 <span className="text-[#EA580C] mx-1">/</span>
-                <span className="bg-gradient-to-r from-[#E11D48] to-[#EA580C] bg-clip-text text-transparent font-extrabold">ADMIN</span>
+                <span className="bg-gradient-to-r from-[#E11D48] to-[#EA580C] bg-clip-text text-transparent font-black">ADMIN</span>
               </div>
             )}
           </Link>
@@ -572,7 +597,7 @@ export default function AdminDashboard() {
             {/* Mobile close button */}
             <button 
               onClick={() => setIsMobileDrawerOpen(false)} 
-              className="lg:hidden p-1.5 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg"
+              className="lg:hidden p-1.5 text-slate-700 hover:text-slate-950 hover:bg-slate-100 rounded-lg"
               aria-label="Close menu"
             >
               <X size={18} />
@@ -580,7 +605,7 @@ export default function AdminDashboard() {
             {/* Desktop collapse toggle */}
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="hidden lg:flex p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
+              className="hidden lg:flex p-1.5 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors border border-transparent hover:border-slate-200"
               title={isSidebarOpen ? "ย่อเมนู" : "ขยายเมนู"}
             >
               {isSidebarOpen ? <X size={16} /> : <MenuIcon size={16} />}
@@ -590,93 +615,98 @@ export default function AdminDashboard() {
 
         {/* Navigation Categories */}
         <nav className="flex-1 overflow-y-auto p-3.5 space-y-6 text-xs">
-          {MENU_CATEGORIES.map((category, catIdx) => (
-            <div key={catIdx} className="space-y-1.5">
-              {(isSidebarOpen || isMobileDrawerOpen) && (
-                <div className="px-3 pt-1 pb-1">
-                  <h4 className="text-[11px] font-mono font-bold tracking-wider uppercase text-slate-400">
-                    {category.categoryTitle}
-                  </h4>
-                  {category.categoryDesc && (
-                    <p className="text-[10px] text-slate-400 hidden xl:block font-normal">
-                      {category.categoryDesc}
-                    </p>
-                  )}
-                </div>
-              )}
+          {MENU_CATEGORIES.map((category, catIdx) => {
+            const theme = CATEGORY_THEMES[catIdx] || CATEGORY_THEMES[0];
 
-              <div className="space-y-1">
-                {category.items.map((item) => {
-                  const Icon = item.icon;
-                  const isActive = activeMenu === item.id;
-                  const count = getItemCount(item.countKey);
+            return (
+              <div key={catIdx} className="space-y-2">
+                {(isSidebarOpen || isMobileDrawerOpen) && (
+                  <div className="px-2 pt-1 pb-1">
+                    <div className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-mono font-bold uppercase tracking-wider mb-1 shadow-2xs border ${theme.badge}`}>
+                      <span className={`w-1.5 h-1.5 rounded-full ${theme.indicator}`} />
+                      <span>{category.categoryTitle}</span>
+                    </div>
+                    {category.categoryDesc && (
+                      <p className="text-[10px] text-slate-500 hidden xl:block font-medium">
+                        {category.categoryDesc}
+                      </p>
+                    )}
+                  </div>
+                )}
 
-                  return (
-                    <button
-                      key={item.id}
-                      onClick={() => {
-                        setActiveMenu(item.id);
-                        setStatus({ type: null, message: '' });
-                        setIsMobileDrawerOpen(false);
-                      }}
-                      className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left transition-all ${
-                        isActive
-                          ? 'bg-rose-50/90 text-[#E11D48] font-bold shadow-xs border border-rose-200/70'
-                          : 'text-slate-600 hover:text-slate-950 hover:bg-slate-100/70 font-medium'
-                      }`}
-                      title={!isSidebarOpen && !isMobileDrawerOpen ? `${item.label} (${item.labelEn})` : undefined}
-                    >
-                      <div className="flex items-center gap-3 truncate">
-                        <Icon 
-                          size={18} 
-                          className={`shrink-0 transition-colors ${
-                            isActive ? 'text-[#E11D48]' : 'text-slate-400 group-hover:text-slate-600'
-                          }`} 
-                        />
-                        {(isSidebarOpen || isMobileDrawerOpen) && (
-                          <div className="truncate">
-                            <span className="block text-xs truncate leading-tight">{item.label}</span>
-                            <span className={`block text-[10px] font-mono ${isActive ? 'text-[#EA580C]' : 'text-slate-400'}`}>
-                              {item.labelEn}
-                            </span>
-                          </div>
-                        )}
-                      </div>
+                <div className="space-y-1">
+                  {category.items.map((item) => {
+                    const Icon = item.icon;
+                    const isActive = activeMenu === item.id;
+                    const count = getItemCount(item.countKey);
 
-                      {(isSidebarOpen || isMobileDrawerOpen) && count !== undefined && (
-                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold shrink-0 ml-2 ${
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={() => {
+                          setActiveMenu(item.id);
+                          setStatus({ type: null, message: '' });
+                          setIsMobileDrawerOpen(false);
+                        }}
+                        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left transition-all ${
                           isActive
-                            ? 'bg-[#E11D48] text-white'
-                            : 'bg-slate-100 text-slate-600 border border-slate-200'
-                        }`}>
-                          {count}
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
+                            ? theme.activeBg
+                            : 'text-slate-700 hover:text-slate-950 hover:bg-slate-100 font-semibold border-2 border-transparent'
+                        }`}
+                        title={!isSidebarOpen && !isMobileDrawerOpen ? `${item.label} (${item.labelEn})` : undefined}
+                      >
+                        <div className="flex items-center gap-3 truncate">
+                          <Icon 
+                            size={18} 
+                            className={`shrink-0 transition-colors ${
+                              isActive ? theme.activeIcon : 'text-slate-500 group-hover:text-slate-800'
+                            }`} 
+                          />
+                          {(isSidebarOpen || isMobileDrawerOpen) && (
+                            <div className="truncate">
+                              <span className="block text-xs truncate leading-tight">{item.label}</span>
+                              <span className={`block text-[10px] font-mono ${isActive ? theme.activeSub : 'text-slate-500'}`}>
+                                {item.labelEn}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+
+                        {(isSidebarOpen || isMobileDrawerOpen) && count !== undefined && (
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold shrink-0 ml-2 shadow-2xs ${
+                            isActive
+                              ? 'bg-slate-950 text-white'
+                              : 'bg-slate-200 text-slate-800 border border-slate-300'
+                          }`}>
+                            {count}
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </nav>
 
         {/* Sidebar Footer Actions */}
-        <div className="p-3.5 border-t border-slate-200/80 bg-slate-50/50 space-y-2 shrink-0">
+        <div className="p-3.5 border-t-2 border-slate-200/90 bg-slate-50/70 space-y-2 shrink-0">
           {/* Quick link to front-end */}
           <Link
             href="/"
             target="_blank"
-            className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-slate-900 bg-white hover:bg-slate-50 border border-slate-200 transition-all shadow-xs"
+            className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-slate-900 hover:text-[#E11D48] bg-white hover:bg-slate-100 border-2 border-slate-300 hover:border-slate-400 transition-all shadow-xs"
             title="เปิดดูเว็บไซต์หน้าบ้านในแท็บใหม่"
           >
-            <ExternalLink size={14} className="text-slate-500 shrink-0" />
+            <ExternalLink size={14} className="text-slate-600 shrink-0" />
             {(isSidebarOpen || isMobileDrawerOpen) && <span>ดูหน้าเว็บจริง</span>}
           </Link>
 
           {/* Logout */}
           <button 
             onClick={handleLogout} 
-            className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-[#E11D48] hover:bg-rose-50 transition-colors border border-transparent hover:border-rose-200"
+            className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-rose-800 hover:text-rose-950 bg-rose-50 hover:bg-rose-100 transition-colors border-2 border-rose-200 hover:border-rose-300 shadow-xs"
             title="ออกจากระบบ"
           >
             <LogOut size={14} className="shrink-0" />
@@ -689,11 +719,11 @@ export default function AdminDashboard() {
       <main className="flex-1 min-w-0 flex flex-col min-h-screen relative z-10">
         
         {/* Top Navbar */}
-        <header className="sticky top-0 bg-white/85 backdrop-blur-md border-b border-slate-200/80 z-20 px-4 sm:px-8 py-3 flex items-center justify-between min-h-[64px] gap-4">
+        <header className="sticky top-0 bg-white/95 backdrop-blur-md border-b-2 border-slate-200/90 z-20 px-4 sm:px-8 py-3 flex items-center justify-between min-h-[64px] gap-4 shadow-xs">
           <div className="flex items-center gap-3">
             <button 
               onClick={() => setIsMobileDrawerOpen(true)}
-              className="lg:hidden p-2 rounded-xl border border-slate-200 bg-white text-slate-700 hover:text-slate-900 shadow-xs"
+              className="lg:hidden p-2 rounded-xl border-2 border-slate-300 bg-white text-slate-800 hover:text-slate-950 shadow-xs"
               aria-label="เปิดเมนู"
             >
               <MenuIcon size={18} />
@@ -701,13 +731,13 @@ export default function AdminDashboard() {
 
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs text-slate-400 font-mono hidden sm:inline">CONTROL PANEL /</span>
-                <h2 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
+                <span className="text-xs text-slate-500 font-mono font-semibold hidden sm:inline">CONTROL PANEL /</span>
+                <h2 className="text-sm sm:text-base font-extrabold text-slate-950 tracking-tight flex items-center gap-2">
                   <span>{activeMenuTitle}</span>
-                  <span className="text-xs font-mono font-normal text-slate-400">({activeMenuSubtitle})</span>
+                  <span className="text-xs font-mono font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">({activeMenuSubtitle})</span>
                 </h2>
               </div>
-              <p className="text-[11px] text-slate-500 hidden md:block">
+              <p className="text-[11px] text-slate-600 font-medium hidden md:block">
                 ระบบจัดการเนื้อหา DeeDev IOT เชื่อมต่อกับ Google Sheets อัตโนมัติ
               </p>
             </div>
@@ -715,8 +745,8 @@ export default function AdminDashboard() {
 
           <div className="flex items-center gap-3">
             {/* Real-time status indicator */}
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-emerald-50 border border-emerald-200 rounded-full text-[11px] font-medium text-emerald-700">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-emerald-100/90 border-2 border-emerald-300 rounded-full text-[11px] font-bold text-emerald-900 shadow-xs">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-pulse" />
               <span>Google Sheets Online</span>
             </div>
 
@@ -733,16 +763,16 @@ export default function AdminDashboard() {
             <div className="space-y-6">
               
               {/* Welcome Banner */}
-              <div className="relative overflow-hidden bg-gradient-to-r from-rose-500/10 via-orange-500/10 to-amber-500/10 border border-rose-200/80 rounded-2xl p-6 sm:p-8">
+              <div className="relative overflow-hidden bg-gradient-to-r from-rose-500/15 via-orange-500/10 to-amber-500/15 border-2 border-rose-300 rounded-2xl p-6 sm:p-8 shadow-sm">
                 <div className="max-w-2xl relative z-10 space-y-2">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-bold bg-white/90 text-[#E11D48] border border-rose-200 shadow-xs">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-bold bg-white text-[#E11D48] border-2 border-rose-200 shadow-xs">
                     <Sparkles size={13} />
                     <span>DEEDEV IOT BACKOFFICE</span>
                   </div>
-                  <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+                  <h1 className="text-xl sm:text-2xl font-black text-slate-950 tracking-tight">
                     ยินดีต้อนรับสู่ระบบหลังบ้าน DeeDev IOT
                   </h1>
-                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
                     จัดการข้อมูลบริการ ผลงานจริง ระบบเชื่อมต่อ และเนื้อหาหน้าเว็บไซต์ได้อย่างสะดวกและปลอดภัย ข้อมูลจะถูกบันทึกและซิงก์ตรงเข้าสู่ Google Sheets แบบเรียลไทม์
                   </p>
                 </div>
@@ -758,82 +788,82 @@ export default function AdminDashboard() {
                 {/* Metric 1: Services */}
                 <div 
                   onClick={() => setActiveMenu('services')}
-                  className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:border-rose-300 hover:shadow-md transition-all cursor-pointer group"
+                  className="bg-white p-5 rounded-2xl border-2 border-rose-300 hover:border-rose-500 shadow-xs hover:shadow-md transition-all cursor-pointer group"
                 >
                   <div className="flex justify-between items-start mb-3">
-                    <div className="w-10 h-10 rounded-xl bg-rose-50 text-[#E11D48] border border-rose-100 flex items-center justify-center group-hover:scale-105 transition-transform">
-                      <Server size={18} />
+                    <div className="w-11 h-11 rounded-xl bg-rose-100 text-[#E11D48] border border-rose-200 flex items-center justify-center group-hover:scale-105 transition-transform">
+                      <Server size={20} />
                     </div>
-                    <span className="text-2xl font-bold text-slate-900 font-mono">{services.length}</span>
+                    <span className="text-3xl font-black text-slate-950 font-mono">{services.length}</span>
                   </div>
-                  <h3 className="font-bold text-slate-900 text-sm group-hover:text-[#E11D48] transition-colors">
+                  <h3 className="font-bold text-slate-950 text-sm group-hover:text-[#E11D48] transition-colors">
                     บริการและผลงานจริง
                   </h3>
-                  <p className="text-[11px] text-slate-500 mt-0.5">Services & Real Works</p>
-                  <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400 group-hover:text-[#E11D48]">
+                  <p className="text-[11px] text-slate-600 font-medium mt-0.5">Services & Real Works</p>
+                  <div className="mt-3 pt-3 border-t-2 border-slate-100 flex items-center justify-between text-xs text-rose-700 font-bold group-hover:text-[#E11D48]">
                     <span>จัดการข้อมูล</span>
-                    <ChevronRight size={14} />
+                    <ChevronRight size={15} />
                   </div>
                 </div>
 
                 {/* Metric 2: Portfolio */}
                 <div 
                   onClick={() => setActiveMenu('integrations')}
-                  className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:border-amber-300 hover:shadow-md transition-all cursor-pointer group"
+                  className="bg-white p-5 rounded-2xl border-2 border-amber-300 hover:border-amber-500 shadow-xs hover:shadow-md transition-all cursor-pointer group"
                 >
                   <div className="flex justify-between items-start mb-3">
-                    <div className="w-10 h-10 rounded-xl bg-amber-50 text-[#EA580C] border border-amber-100 flex items-center justify-center group-hover:scale-105 transition-transform">
-                      <LinkIcon size={18} />
+                    <div className="w-11 h-11 rounded-xl bg-amber-100 text-[#EA580C] border border-amber-200 flex items-center justify-center group-hover:scale-105 transition-transform">
+                      <LinkIcon size={20} />
                     </div>
-                    <span className="text-2xl font-bold text-slate-900 font-mono">{integrations.length}</span>
+                    <span className="text-3xl font-black text-slate-950 font-mono">{integrations.length}</span>
                   </div>
-                  <h3 className="font-bold text-slate-900 text-sm group-hover:text-[#EA580C] transition-colors">
+                  <h3 className="font-bold text-slate-950 text-sm group-hover:text-[#EA580C] transition-colors">
                     ระบบการทำงาน / IoT
                   </h3>
-                  <p className="text-[11px] text-slate-500 mt-0.5">Portfolio & Systems</p>
-                  <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400 group-hover:text-[#EA580C]">
+                  <p className="text-[11px] text-slate-600 font-medium mt-0.5">Portfolio & Systems</p>
+                  <div className="mt-3 pt-3 border-t-2 border-slate-100 flex items-center justify-between text-xs text-amber-700 font-bold group-hover:text-[#EA580C]">
                     <span>จัดการข้อมูล</span>
-                    <ChevronRight size={14} />
+                    <ChevronRight size={15} />
                   </div>
                 </div>
 
                 {/* Metric 3: Concepts */}
                 <div 
                   onClick={() => setActiveMenu('concept')}
-                  className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:border-sky-300 hover:shadow-md transition-all cursor-pointer group"
+                  className="bg-white p-5 rounded-2xl border-2 border-sky-300 hover:border-sky-500 shadow-xs hover:shadow-md transition-all cursor-pointer group"
                 >
                   <div className="flex justify-between items-start mb-3">
-                    <div className="w-10 h-10 rounded-xl bg-sky-50 text-[#0284C7] border border-sky-100 flex items-center justify-center group-hover:scale-105 transition-transform">
-                      <Lightbulb size={18} />
+                    <div className="w-11 h-11 rounded-xl bg-sky-100 text-[#0284C7] border border-sky-200 flex items-center justify-center group-hover:scale-105 transition-transform">
+                      <Lightbulb size={20} />
                     </div>
-                    <span className="text-2xl font-bold text-slate-900 font-mono">{concepts.length}</span>
+                    <span className="text-3xl font-black text-slate-950 font-mono">{concepts.length}</span>
                   </div>
-                  <h3 className="font-bold text-slate-900 text-sm group-hover:text-[#0284C7] transition-colors">
+                  <h3 className="font-bold text-slate-950 text-sm group-hover:text-[#0284C7] transition-colors">
                     จุดเด่นและคอนเซปต์
                   </h3>
-                  <p className="text-[11px] text-slate-500 mt-0.5">Core Features & USP</p>
-                  <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400 group-hover:text-[#0284C7]">
+                  <p className="text-[11px] text-slate-600 font-medium mt-0.5">Core Features & USP</p>
+                  <div className="mt-3 pt-3 border-t-2 border-slate-100 flex items-center justify-between text-xs text-sky-700 font-bold group-hover:text-[#0284C7]">
                     <span>จัดการข้อมูล</span>
-                    <ChevronRight size={14} />
+                    <ChevronRight size={15} />
                   </div>
                 </div>
 
                 {/* Metric 4: Connection */}
-                <div className="bg-white p-5 rounded-2xl border border-emerald-200 shadow-xs">
+                <div className="bg-white p-5 rounded-2xl border-2 border-emerald-300 shadow-xs">
                   <div className="flex justify-between items-start mb-3">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-50 text-[#059669] border border-emerald-100 flex items-center justify-center">
-                      <ShieldCheck size={18} />
+                    <div className="w-11 h-11 rounded-xl bg-emerald-100 text-[#059669] border border-emerald-200 flex items-center justify-center">
+                      <ShieldCheck size={20} />
                     </div>
-                    <span className="text-[10px] px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 font-mono font-bold">
+                    <span className="text-[11px] px-3 py-1 rounded-full bg-emerald-600 text-white font-mono font-bold shadow-2xs">
                       ACTIVE
                     </span>
                   </div>
-                  <h3 className="font-bold text-slate-900 text-sm">
+                  <h3 className="font-bold text-slate-950 text-sm">
                     Google Sheets เชื่อมต่อปกติ
                   </h3>
-                  <p className="text-[11px] text-slate-500 mt-0.5">บันทึกข้อมูลแบบเรียลไทม์</p>
-                  <div className="mt-3 pt-3 border-t border-slate-100 flex items-center gap-1.5 text-xs text-emerald-600 font-medium">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                  <p className="text-[11px] text-slate-600 font-medium mt-0.5">บันทึกข้อมูลแบบเรียลไทม์</p>
+                  <div className="mt-3 pt-3 border-t-2 border-slate-100 flex items-center gap-1.5 text-xs text-emerald-800 font-bold">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                     <span>พร้อมรับคำสั่งแก้ไข</span>
                   </div>
                 </div>
@@ -841,30 +871,30 @@ export default function AdminDashboard() {
               </div>
 
               {/* Quick Navigation Shortcuts */}
-              <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div className="bg-white p-6 rounded-2xl border-2 border-slate-200/90 shadow-sm space-y-4">
+                <div className="flex items-center justify-between border-b-2 border-slate-100 pb-3">
                   <div>
-                    <h3 className="text-sm font-bold text-slate-900">
+                    <h3 className="text-sm font-extrabold text-slate-950">
                       ทางลัดจัดการข้อมูล (Direct Shortcuts)
                     </h3>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-slate-600 font-medium">
                       คลิกเพื่อไปยังส่วนที่ต้องการปรับปรุงได้อย่างรวดเร็ว
                     </p>
                   </div>
-                  <span className="text-xs font-mono text-slate-400">FAST ACCESS</span>
+                  <span className="text-xs font-mono font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">FAST ACCESS</span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   
                   <button 
                     onClick={() => setActiveMenu('services')}
-                    className="p-4 border border-slate-200 rounded-xl bg-slate-50/50 hover:bg-white hover:border-rose-300 hover:shadow-xs transition-all text-left flex items-start justify-between group"
+                    className="p-4 border-2 border-slate-200 rounded-xl bg-slate-50/70 hover:bg-white hover:border-rose-300 hover:shadow-md transition-all text-left flex items-start justify-between group"
                   >
                     <div className="space-y-1">
-                      <span className="text-xs font-bold text-slate-900 block group-hover:text-[#E11D48] transition-colors">
+                      <span className="text-xs font-extrabold text-slate-950 block group-hover:text-[#E11D48] transition-colors">
                         จัดการบริการและผลงานจริง
                       </span>
-                      <span className="text-[11px] text-slate-500 block leading-normal">
+                      <span className="text-[11px] text-slate-600 font-medium block leading-normal">
                         เพิ่ม/แก้ไข ภาพปก, ลิงก์ดูงานจริง, และคู่มือ
                       </span>
                     </div>
@@ -873,13 +903,13 @@ export default function AdminDashboard() {
 
                   <button 
                     onClick={() => setActiveMenu('integrations')}
-                    className="p-4 border border-slate-200 rounded-xl bg-slate-50/50 hover:bg-white hover:border-amber-300 hover:shadow-xs transition-all text-left flex items-start justify-between group"
+                    className="p-4 border-2 border-slate-200 rounded-xl bg-slate-50/70 hover:bg-white hover:border-amber-300 hover:shadow-md transition-all text-left flex items-start justify-between group"
                   >
                     <div className="space-y-1">
-                      <span className="text-xs font-bold text-slate-900 block group-hover:text-[#EA580C] transition-colors">
+                      <span className="text-xs font-extrabold text-slate-950 block group-hover:text-[#EA580C] transition-colors">
                         จัดการระบบ IoT & Portfolio
                       </span>
-                      <span className="text-[11px] text-slate-500 block leading-normal">
+                      <span className="text-[11px] text-slate-600 font-medium block leading-normal">
                         แก้ไขแท็กเทคโนโลยี, ลิงก์ระบบ, ภาพตัวอย่าง
                       </span>
                     </div>
@@ -888,13 +918,13 @@ export default function AdminDashboard() {
 
                   <button 
                     onClick={() => setActiveMenu('hero')}
-                    className="p-4 border border-slate-200 rounded-xl bg-slate-50/50 hover:bg-white hover:border-rose-300 hover:shadow-xs transition-all text-left flex items-start justify-between group"
+                    className="p-4 border-2 border-slate-200 rounded-xl bg-slate-50/70 hover:bg-white hover:border-rose-300 hover:shadow-md transition-all text-left flex items-start justify-between group"
                   >
                     <div className="space-y-1">
-                      <span className="text-xs font-bold text-slate-900 block group-hover:text-[#E11D48] transition-colors">
+                      <span className="text-xs font-extrabold text-slate-950 block group-hover:text-[#E11D48] transition-colors">
                         แก้ไขพาดหัวหลักหน้าแรก (Hero)
                       </span>
-                      <span className="text-[11px] text-slate-500 block leading-normal">
+                      <span className="text-[11px] text-slate-600 font-medium block leading-normal">
                         เปลี่ยนข้อความพาดหัวและปุ่มติดต่อหลัก
                       </span>
                     </div>
@@ -903,86 +933,28 @@ export default function AdminDashboard() {
 
                   <button 
                     onClick={() => setActiveMenu('contact')}
-                    className="p-4 border border-slate-200 rounded-xl bg-slate-50/50 hover:bg-white hover:border-emerald-300 hover:shadow-xs transition-all text-left flex items-start justify-between group"
+                    className="p-4 border-2 border-slate-200 rounded-xl bg-slate-50/70 hover:bg-white hover:border-emerald-300 hover:shadow-md transition-all text-left flex items-start justify-between group"
                   >
                     <div className="space-y-1">
-                      <span className="text-xs font-bold text-slate-900 block group-hover:text-[#059669] transition-colors">
+                      <span className="text-xs font-extrabold text-slate-950 block group-hover:text-[#059669] transition-colors">
                         ข้อมูลการติดต่อ & LINE
                       </span>
-                      <span className="text-[11px] text-slate-500 block leading-normal">
+                      <span className="text-[11px] text-slate-600 font-medium block leading-normal">
                         อัปเดต LINE ID, เบอร์โทรศัพท์, อีเมล, Facebook
                       </span>
                     </div>
                     <ChevronRight size={16} className="text-slate-400 group-hover:text-[#059669] shrink-0 mt-0.5" />
                   </button>
 
-                  <button 
-                    onClick={() => setActiveMenu('nav')}
-                    className="p-4 border border-slate-200 rounded-xl bg-slate-50/50 hover:bg-white hover:border-sky-300 hover:shadow-xs transition-all text-left flex items-start justify-between group"
-                  >
-                    <div className="space-y-1">
-                      <span className="text-xs font-bold text-slate-900 block group-hover:text-[#0284C7] transition-colors">
-                        จัดการเมนู Header
-                      </span>
-                      <span className="text-[11px] text-slate-500 block leading-normal">
-                        เพิ่มหรือปรับแต่งลิงก์เมนูนำทางด้านบน
-                      </span>
-                    </div>
-                    <ChevronRight size={16} className="text-slate-400 group-hover:text-[#0284C7] shrink-0 mt-0.5" />
-                  </button>
-
-                  <button 
-                    onClick={() => setActiveMenu('titles')}
-                    className="p-4 border border-slate-200 rounded-xl bg-slate-50/50 hover:bg-white hover:border-rose-300 hover:shadow-xs transition-all text-left flex items-start justify-between group"
-                  >
-                    <div className="space-y-1">
-                      <span className="text-xs font-bold text-slate-900 block group-hover:text-[#E11D48] transition-colors">
-                        หัวข้อเนื้อหา (Site Titles)
-                      </span>
-                      <span className="text-[11px] text-slate-500 block leading-normal">
-                        แก้ไขข้อความหัวข้อของแต่ละส่วนในหน้าแรก
-                      </span>
-                    </div>
-                    <ChevronRight size={16} className="text-slate-400 group-hover:text-[#E11D48] shrink-0 mt-0.5" />
-                  </button>
-
-                </div>
-              </div>
-
-              {/* Tips Banner */}
-              <div className="bg-sky-50/70 border border-sky-200/80 rounded-2xl p-5 flex items-start gap-4">
-                <div className="w-9 h-9 rounded-xl bg-sky-100 text-[#0284C7] flex items-center justify-center shrink-0">
-                  <Info size={18} />
-                </div>
-                <div className="text-xs space-y-1 text-slate-700">
-                  <span className="font-bold text-slate-900 block">
-                    คำแนะนำในการใส่รูปภาพและไฟล์คู่มือ:
-                  </span>
-                  <p>
-                    • <strong>รูปภาพจาก Google Drive:</strong> เพียงแชร์ไฟล์รูปเป็น &quot;ทุกคนที่มีลิงก์มีสิทธิ์ดู (Public View)&quot; แล้วนำลิงก์มาวางในระบบ ระบบจะแปลงเป็น Direct Link ให้อัตโนมัติทันที
-                  </p>
-                  <p>
-                    • <strong>คู่มือ & เอกสาร:</strong> สามารถใส่ได้ทั้งลิงก์ Google Drive, Google Docs หรือเว็บเอกสาร เพื่อให้ลูกค้าเปิดอ่านคู่มือได้โดยตรง
-                  </p>
-                </div>
-              </div>
-
-            </div>
-          )}
-
-          {/* ================= 02. SERVICES & WORKS ================= */}
-          {activeMenu === 'services' && (
-            <div className="grid xl:grid-cols-12 gap-6 items-start">
-              
-              {/* Form Column */}
-              <div className="xl:col-span-5 bg-white border border-slate-200/80 rounded-2xl p-5 sm:p-6 shadow-xs">
-                <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
+               {/* Form Column */}
+              <div className="xl:col-span-5 bg-white border-2 border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-sm">
+                <div className="flex items-center justify-between pb-4 mb-4 border-b-2 border-slate-100">
                   <div>
-                    <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                      <Server size={16} className="text-[#E11D48]" />
+                    <h3 className="text-sm font-extrabold text-slate-950 flex items-center gap-2">
+                      <Server size={18} className="text-[#E11D48]" />
                       <span>{isSvcEdit ? 'แก้ไขบริการ / ผลงาน' : 'เพิ่มบริการ / ผลงานใหม่'}</span>
                     </h3>
-                    <p className="text-[11px] text-slate-500">
+                    <p className="text-[11px] text-slate-600 font-medium">
                       {isSvcEdit ? `รหัสผลงาน: ${svcForm.id}` : 'กรอกรายละเอียดเพื่อบันทึกลง Google Sheets'}
                     </p>
                   </div>
@@ -995,7 +967,7 @@ export default function AdminDashboard() {
                         setSvcImageUrls(['']); 
                         setSvcVideoUrls(['']); 
                       }} 
-                      className="text-xs text-rose-600 hover:text-rose-700 font-medium px-2.5 py-1 rounded-lg bg-rose-50 border border-rose-200"
+                      className="text-xs text-rose-900 hover:text-rose-950 font-bold px-3 py-1 rounded-lg bg-rose-100 border-2 border-rose-300 shadow-2xs"
                     >
                       ยกเลิกแก้ไข
                     </button>
@@ -1005,7 +977,7 @@ export default function AdminDashboard() {
                 <form onSubmit={handleSvcSubmit} className="space-y-4 text-xs">
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                      <label className="block text-xs font-bold text-slate-800 mb-1">
                         รหัส ID (เว้นว่างเพื่อสร้างอัตโนมัติ)
                       </label>
                       <input 
@@ -1014,11 +986,11 @@ export default function AdminDashboard() {
                         onChange={(e) => setSvcForm({...svcForm, id: e.target.value})} 
                         placeholder="เช่น svc-1" 
                         readOnly={isSvcEdit} 
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 outline-none focus:bg-white focus:border-[#E11D48] transition-all" 
+                        className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#E11D48] transition-all" 
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                      <label className="block text-xs font-bold text-slate-800 mb-1">
                         หมวดหมู่ / ไอคอน
                       </label>
                       <input 
@@ -1026,27 +998,27 @@ export default function AdminDashboard() {
                         value={svcForm.icon} 
                         onChange={(e) => setSvcForm({...svcForm, icon: e.target.value})} 
                         placeholder="IoT / Web / System" 
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 outline-none focus:bg-white focus:border-[#E11D48] transition-all" 
+                        className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#E11D48] transition-all" 
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">
-                      ชื่อผลงาน (ภาษาไทย) *
+                    <label className="block text-xs font-bold text-slate-800 mb-1">
+                      ชื่อผลงาน (ภาษาไทย) <span className="text-[#E11D48]">*</span>
                     </label>
                     <input 
                       type="text" 
                       value={svcForm.title_th || ''} 
                       onChange={(e) => setSvcForm({...svcForm, title_th: e.target.value})} 
                       placeholder="เช่น ระบบควบคุมไฟอัจฉริยะ IoT" 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 outline-none focus:bg-white focus:border-[#E11D48] transition-all" 
+                      className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#E11D48] transition-all" 
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">
-                      ชื่อผลงาน (English) *
+                    <label className="block text-xs font-bold text-slate-800 mb-1">
+                      ชื่อผลงาน (English) <span className="text-[#E11D48]">*</span>
                     </label>
                     <input 
                       required 
@@ -1054,12 +1026,12 @@ export default function AdminDashboard() {
                       value={svcForm.title} 
                       onChange={(e) => setSvcForm({...svcForm, title: e.target.value})} 
                       placeholder="e.g. Smart IoT Lighting Controller" 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 outline-none focus:bg-white focus:border-[#E11D48] transition-all" 
+                      className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#E11D48] transition-all" 
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                    <label className="block text-xs font-bold text-slate-800 mb-1">
                       รายละเอียด (ภาษาไทย)
                     </label>
                     <textarea 
@@ -1067,13 +1039,13 @@ export default function AdminDashboard() {
                       value={svcForm.description_th || ''} 
                       onChange={(e) => setSvcForm({...svcForm, description_th: e.target.value})} 
                       placeholder="อธิบายการทำงานและประโยชน์ของผลงาน..." 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 outline-none focus:bg-white focus:border-[#E11D48] transition-all" 
+                      className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#E11D48] transition-all leading-relaxed" 
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">
-                      รายละเอียด (English) *
+                    <label className="block text-xs font-bold text-slate-800 mb-1">
+                      รายละเอียด (English) <span className="text-[#E11D48]">*</span>
                     </label>
                     <textarea 
                       required 
@@ -1081,21 +1053,21 @@ export default function AdminDashboard() {
                       value={svcForm.description} 
                       onChange={(e) => setSvcForm({...svcForm, description: e.target.value})} 
                       placeholder="System specifications and architecture details..." 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 outline-none focus:bg-white focus:border-[#E11D48] transition-all" 
+                      className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#E11D48] transition-all leading-relaxed" 
                     />
                   </div>
 
                   {/* Cover Image Input + Thumbnail Preview */}
-                  <div className="pt-2 border-t border-slate-100">
+                  <div className="pt-2 border-t-2 border-slate-100">
                     <div className="flex items-center justify-between mb-1.5">
-                      <label className="text-[11px] font-bold text-emerald-700 flex items-center gap-1.5">
-                        <ImageIcon size={14} className="text-[#059669]" />
+                      <label className="text-xs font-bold text-emerald-900 flex items-center gap-1.5">
+                        <ImageIcon size={15} className="text-[#059669]" />
                         <span>ลิงก์รูปภาพปก (Cover Image URL)</span>
                       </label>
                       <button 
                         type="button" 
                         onClick={() => setSvcImageUrls([...svcImageUrls, ''])} 
-                        className="text-[11px] text-[#E11D48] hover:underline font-semibold"
+                        className="text-xs text-[#E11D48] hover:underline font-extrabold"
                       >
                         + เพิ่มรูปภาพ
                       </button>
@@ -1113,17 +1085,17 @@ export default function AdminDashboard() {
                               setSvcImageUrls(arr); 
                             }} 
                             placeholder="https://drive.google.com/... หรือ Direct Link รูปภาพ" 
-                            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 outline-none focus:bg-white focus:border-emerald-500 transition-all" 
+                            className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-emerald-500 transition-all" 
                           />
                           {url.trim() && (
-                            <div className="flex items-center gap-2 p-1.5 bg-slate-100 rounded-lg border border-slate-200/80">
+                            <div className="flex items-center gap-2.5 p-2 bg-slate-100 rounded-xl border-2 border-slate-200">
                               <img 
                                 src={convertToDirectLink(url)} 
                                 alt="preview" 
-                                className="w-10 h-10 object-cover rounded bg-white border border-slate-200 shrink-0"
+                                className="w-12 h-12 object-cover rounded-lg bg-white border-2 border-slate-300 shrink-0" 
                                 onError={(e) => (e.currentTarget.style.display = 'none')} 
                               />
-                              <span className="text-[10px] text-slate-500 truncate">
+                              <span className="text-[11px] text-slate-700 font-bold truncate">
                                 ตัวอย่างรูปภาพ (Direct Preview)
                               </span>
                             </div>
@@ -1131,15 +1103,15 @@ export default function AdminDashboard() {
                         </div>
                       ))}
                     </div>
-                    <span className="text-[10px] text-slate-400 mt-1 block">
+                    <span className="text-[11px] text-slate-500 font-medium mt-1 block">
                       รองรับลิงก์ Google Drive โดยตรง (ระบบแปลงให้ทันที)
                     </span>
                   </div>
 
                   {/* Content / Demo Link */}
                   <div>
-                    <label className="text-[11px] font-bold text-[#0284C7] block mb-1 flex items-center gap-1.5">
-                      <ExternalLink size={14} />
+                    <label className="text-xs font-bold text-sky-900 block mb-1 flex items-center gap-1.5">
+                      <ExternalLink size={15} className="text-[#0284C7]" />
                       <span>ลิงก์เปิดดูเนื้อหา / Live Demo URL</span>
                     </label>
                     <input 
@@ -1147,14 +1119,14 @@ export default function AdminDashboard() {
                       value={svcForm.demoUrl || ''} 
                       onChange={(e) => setSvcForm({...svcForm, demoUrl: e.target.value})} 
                       placeholder="https://your-project.vercel.app" 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 outline-none focus:bg-white focus:border-[#0284C7] transition-all" 
+                      className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#0284C7] transition-all" 
                     />
                   </div>
 
                   {/* Manual / Documentation Link */}
                   <div>
-                    <label className="text-[11px] font-bold text-[#EA580C] block mb-1 flex items-center gap-1.5">
-                      <FileText size={14} />
+                    <label className="text-xs font-bold text-amber-900 block mb-1 flex items-center gap-1.5">
+                      <FileText size={15} className="text-[#EA580C]" />
                       <span>ลิงก์คู่มือการใช้งาน (Manual / Docs URL)</span>
                     </label>
                     <input 
@@ -1162,54 +1134,54 @@ export default function AdminDashboard() {
                       value={svcForm.manualUrl || ''} 
                       onChange={(e) => setSvcForm({...svcForm, manualUrl: e.target.value})} 
                       placeholder="https://docs.google.com/... หรือ ลิงก์ PDF" 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 outline-none focus:bg-white focus:border-[#EA580C] transition-all" 
+                      className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#EA580C] transition-all" 
                     />
                   </div>
 
                   {/* Submit Button */}
                   <button 
                     disabled={isSaving} 
-                    className="w-full py-2.5 bg-gradient-to-r from-[#E11D48] to-[#EA580C] hover:opacity-95 text-white rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 mt-4 shadow-sm"
+                    className="w-full py-3 bg-gradient-to-r from-[#E11D48] to-[#EA580C] hover:opacity-95 text-white rounded-xl font-extrabold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 mt-4 shadow-md hover:shadow-lg"
                   >
-                    {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : <Save size={14} />} 
+                    {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : <Save size={15} />} 
                     <span>บันทึกลง Google Sheets</span>
                   </button>
                 </form>
               </div>
 
               {/* List Column */}
-              <div className="xl:col-span-7 bg-white border border-slate-200/80 rounded-2xl p-5 sm:p-6 shadow-xs">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 pb-3 border-b border-slate-100">
+              <div className="xl:col-span-7 bg-white border-2 border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-sm">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 pb-3 border-b-2 border-slate-100">
                   <div>
-                    <h3 className="font-bold text-slate-900 text-sm">
+                    <h3 className="font-extrabold text-slate-950 text-sm">
                       รายการผลงานจริงทั้งหมด ({services.length})
                     </h3>
-                    <p className="text-[11px] text-slate-500">
+                    <p className="text-[11px] text-slate-600 font-medium">
                       แสดงผลงานที่ดึงมาจากแท็บ Services ใน Google Sheets
                     </p>
                   </div>
                   <div className="relative w-full sm:w-56">
-                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
                     <input 
                       type="text" 
                       placeholder="ค้นหาชื่อผลงาน, รหัส..." 
                       value={svcSearch} 
                       onChange={(e) => setSvcSearch(e.target.value)} 
-                      className="w-full pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 outline-none focus:bg-white focus:border-[#E11D48]" 
+                      className="w-full pl-8 pr-3 py-1.5 bg-slate-50 border-2 border-slate-200 rounded-xl text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#E11D48]" 
                     />
                   </div>
                 </div>
 
                 {isLoadingSvc ? (
-                  <div className="p-12 text-center text-slate-400 flex flex-col items-center gap-2">
+                  <div className="p-12 text-center text-slate-500 flex flex-col items-center gap-2">
                     <Loader2 className="animate-spin w-6 h-6 text-[#E11D48]" />
-                    <span>กำลังโหลดข้อมูลจาก Google Sheets...</span>
+                    <span className="font-bold">กำลังโหลดข้อมูลจาก Google Sheets...</span>
                   </div>
                 ) : services.length === 0 ? (
-                  <div className="p-12 text-center text-slate-500 border border-dashed border-slate-200 rounded-xl bg-slate-50/50">
-                    <Server size={32} className="mx-auto text-slate-300 mb-2" />
-                    <p className="font-semibold text-slate-700">ยังไม่มีข้อมูลบริการหรือผลงาน</p>
-                    <p className="text-xs text-slate-400 mt-1">สามารถเพิ่มข้อมูลผ่านฟอร์มด้านซ้ายได้ทันที</p>
+                  <div className="p-12 text-center text-slate-600 border-2 border-dashed border-slate-300 rounded-xl bg-slate-50/70">
+                    <Server size={36} className="mx-auto text-slate-400 mb-2" />
+                    <p className="font-bold text-slate-900">ยังไม่มีข้อมูลบริการหรือผลงาน</p>
+                    <p className="text-xs text-slate-500 mt-1">สามารถเพิ่มข้อมูลผ่านฟอร์มด้านซ้ายได้ทันที</p>
                   </div>
                 ) : (
                   <div className="space-y-3">
@@ -1222,7 +1194,7 @@ export default function AdminDashboard() {
                       .map(svc => (
                       <div 
                         key={svc.id} 
-                        className="bg-slate-50/60 hover:bg-slate-50 border border-slate-200/80 p-4 rounded-xl flex flex-col sm:flex-row justify-between items-start gap-4 transition-all hover:shadow-xs"
+                        className="bg-white hover:bg-slate-50/90 border-2 border-slate-200/90 hover:border-slate-300 p-4 rounded-xl flex flex-col sm:flex-row justify-between items-start gap-4 transition-all shadow-xs"
                       >
                         {/* Thumbnail on left */}
                         <div className="flex items-start gap-3 flex-1 min-w-0">
@@ -1230,39 +1202,39 @@ export default function AdminDashboard() {
                             <img 
                               src={convertToDirectLink(svc.imageUrl.split(',')[0])} 
                               alt="thumb" 
-                              className="w-14 h-14 rounded-lg object-cover bg-white border border-slate-200 shrink-0"
+                              className="w-14 h-14 rounded-lg object-cover bg-white border-2 border-slate-300 shrink-0 shadow-2xs"
                               onError={(e) => (e.currentTarget.style.display = 'none')}
                             />
                           ) : (
-                            <div className="w-14 h-14 rounded-lg bg-slate-200 text-slate-400 flex items-center justify-center shrink-0">
+                            <div className="w-14 h-14 rounded-lg bg-slate-100 text-slate-400 border-2 border-slate-200 flex items-center justify-center shrink-0">
                               <ImageIcon size={20} />
                             </div>
                           )}
 
                           <div className="space-y-1 min-w-0 flex-1">
                             <div className="flex flex-wrap items-center gap-2">
-                              <span className="font-bold text-slate-900 text-xs">
+                              <span className="font-extrabold text-slate-950 text-xs">
                                 {svc.title_th || svc.title}
                               </span>
                               {svc.title_th && svc.title && (
-                                <span className="text-slate-400 text-[11px]">({svc.title})</span>
+                                <span className="text-slate-600 text-[11px] font-medium">({svc.title})</span>
                               )}
-                              <span className="px-2 py-0.5 rounded-md text-[10px] font-mono bg-rose-50 text-[#E11D48] border border-rose-100 font-semibold">
+                              <span className="px-2 py-0.5 rounded-md text-[10px] font-mono bg-rose-100 text-rose-950 border border-rose-300 font-bold">
                                 {svc.icon || 'Service'}
                               </span>
-                              <span className="text-slate-400 text-[10px] font-mono">
+                              <span className="text-slate-600 text-[10px] font-mono font-bold bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
                                 #{svc.id}
                               </span>
                             </div>
 
-                            <p className="text-[11px] text-slate-600 line-clamp-2 leading-relaxed">
+                            <p className="text-[11px] text-slate-700 font-medium line-clamp-2 leading-relaxed">
                               {svc.description_th || svc.description}
                             </p>
 
                             <div className="flex flex-wrap gap-2 text-[10px] pt-1">
                               {svc.imageUrl && (
-                                <span className="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 font-medium flex items-center gap-1">
-                                  <ImageIcon size={11} /> มีภาพประกอบ
+                                <span className="px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-950 border border-emerald-300 font-bold flex items-center gap-1 shadow-2xs">
+                                  <ImageIcon size={12} /> มีภาพประกอบ
                                 </span>
                               )}
                               {svc.demoUrl && (
@@ -1270,9 +1242,9 @@ export default function AdminDashboard() {
                                   href={svc.demoUrl} 
                                   target="_blank" 
                                   rel="noopener noreferrer" 
-                                  className="px-2 py-0.5 rounded bg-sky-50 text-sky-700 border border-sky-200 font-medium flex items-center gap-1 hover:underline"
+                                  className="px-2.5 py-1 rounded-md bg-sky-100 text-sky-950 border border-sky-300 font-bold flex items-center gap-1 hover:underline shadow-2xs"
                                 >
-                                  <ExternalLink size={11} /> เปิดดูเนื้อหา
+                                  <ExternalLink size={12} /> เปิดดูเนื้อหา
                                 </a>
                               )}
                               {svc.manualUrl && (
@@ -1280,9 +1252,9 @@ export default function AdminDashboard() {
                                   href={svc.manualUrl} 
                                   target="_blank" 
                                   rel="noopener noreferrer" 
-                                  className="px-2 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 font-medium flex items-center gap-1 hover:underline"
+                                  className="px-2.5 py-1 rounded-md bg-amber-100 text-amber-950 border border-amber-300 font-bold flex items-center gap-1 hover:underline shadow-2xs"
                                 >
-                                  <FileText size={11} /> ดูคู่มือ
+                                  <FileText size={12} /> ดูคู่มือ
                                 </a>
                               )}
                             </div>
@@ -1298,16 +1270,16 @@ export default function AdminDashboard() {
                               setSvcVideoUrls(svc.videoUrls ? svc.videoUrls.split(',').map(u=>u.trim()) : ['']); 
                               setIsSvcEdit(true); 
                             }} 
-                            className="px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 text-[11px] font-semibold flex items-center gap-1 shadow-xs"
+                            className="px-3 py-1.5 rounded-lg border-2 border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-bold flex items-center gap-1.5 shadow-xs"
                           >
-                            <Edit3 size={12} />
+                            <Edit3 size={13} />
                             <span>แก้ไข</span>
                           </button>
                           <button 
                             onClick={() => handleDeleteSvc(svc.id)} 
-                            className="px-3 py-1.5 rounded-lg border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 text-[11px] font-semibold flex items-center gap-1"
+                            className="px-3 py-1.5 rounded-lg border-2 border-rose-300 bg-rose-100 hover:bg-rose-200 text-rose-950 text-xs font-bold flex items-center gap-1.5 shadow-xs"
                           >
-                            <Trash2 size={12} />
+                            <Trash2 size={13} />
                             <span>ลบ</span>
                           </button>
                         </div>
@@ -1325,14 +1297,14 @@ export default function AdminDashboard() {
             <div className="grid xl:grid-cols-12 gap-6 items-start">
               
               {/* Form Column */}
-              <div className="xl:col-span-5 bg-white border border-slate-200/80 rounded-2xl p-5 sm:p-6 shadow-xs">
-                <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
+              <div className="xl:col-span-5 bg-white border-2 border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-sm">
+                <div className="flex items-center justify-between pb-4 mb-4 border-b-2 border-slate-100">
                   <div>
-                    <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                      <LinkIcon size={16} className="text-[#EA580C]" />
+                    <h3 className="text-sm font-extrabold text-slate-950 flex items-center gap-2">
+                      <LinkIcon size={18} className="text-[#EA580C]" />
                       <span>{isIntEdit ? 'แก้ไขระบบงาน / IoT' : 'เพิ่มระบบงาน / IoT ใหม่'}</span>
                     </h3>
-                    <p className="text-[11px] text-slate-500">
+                    <p className="text-[11px] text-slate-600 font-medium">
                       {isIntEdit ? `รหัสระบบ: ${intForm.id}` : 'กรอกข้อมูลเพื่อบันทึกลงแท็บ Integrations'}
                     </p>
                   </div>
@@ -1340,7 +1312,7 @@ export default function AdminDashboard() {
                     <button 
                       type="button" 
                       onClick={() => { setIntForm(emptyInt); setIsIntEdit(false); }} 
-                      className="text-xs text-rose-600 hover:text-rose-700 font-medium px-2.5 py-1 rounded-lg bg-rose-50 border border-rose-200"
+                      className="text-xs text-rose-900 hover:text-rose-950 font-bold px-3 py-1 rounded-lg bg-rose-100 border-2 border-rose-300 shadow-2xs"
                     >
                       ยกเลิกแก้ไข
                     </button>
@@ -1350,7 +1322,7 @@ export default function AdminDashboard() {
                 <form onSubmit={handleIntSubmit} className="space-y-4 text-xs">
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                      <label className="block text-xs font-bold text-slate-800 mb-1">
                         รหัส ID (เว้นว่างเพื่อสร้างอัตโนมัติ)
                       </label>
                       <input 
@@ -1359,11 +1331,11 @@ export default function AdminDashboard() {
                         onChange={(e) => setIntForm({...intForm, id: e.target.value})} 
                         placeholder="เช่น int-1" 
                         readOnly={isIntEdit} 
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 outline-none focus:bg-white focus:border-[#EA580C] transition-all" 
+                        className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#EA580C] transition-all" 
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                      <label className="block text-xs font-bold text-slate-800 mb-1">
                         หมวดหมู่ / แท็กเทคโนโลยี
                       </label>
                       <input 
@@ -1371,27 +1343,27 @@ export default function AdminDashboard() {
                         value={intForm.tag} 
                         onChange={(e) => setIntForm({...intForm, tag: e.target.value})} 
                         placeholder="ESP32-C3 / Next.js / MQTT" 
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 outline-none focus:bg-white focus:border-[#EA580C] transition-all" 
+                        className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#EA580C] transition-all" 
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">
-                      ชื่อระบบงาน (ภาษาไทย) *
+                    <label className="block text-xs font-bold text-slate-800 mb-1">
+                      ชื่อระบบงาน (ภาษาไทย) <span className="text-[#EA580C]">*</span>
                     </label>
                     <input 
                       type="text" 
                       value={intForm.title_th || ''} 
                       onChange={(e) => setIntForm({...intForm, title_th: e.target.value})} 
                       placeholder="เช่น ระบบตรวจวัดสิ่งแวดล้อมและแจ้งเตือน LINE" 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 outline-none focus:bg-white focus:border-[#EA580C] transition-all" 
+                      className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#EA580C] transition-all" 
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">
-                      ชื่อระบบงาน (English) *
+                    <label className="block text-xs font-bold text-slate-800 mb-1">
+                      ชื่อระบบงาน (English) <span className="text-[#EA580C]">*</span>
                     </label>
                     <input 
                       required 
@@ -1399,12 +1371,12 @@ export default function AdminDashboard() {
                       value={intForm.title} 
                       onChange={(e) => setIntForm({...intForm, title: e.target.value})} 
                       placeholder="e.g. Environmental Sensor Unit" 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 outline-none focus:bg-white focus:border-[#EA580C] transition-all" 
+                      className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#EA580C] transition-all" 
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                    <label className="block text-xs font-bold text-slate-800 mb-1">
                       รายละเอียด (ภาษาไทย)
                     </label>
                     <textarea 
@@ -1412,12 +1384,12 @@ export default function AdminDashboard() {
                       value={intForm.description_th || ''} 
                       onChange={(e) => setIntForm({...intForm, description_th: e.target.value})} 
                       placeholder="อธิบายการเชื่อมต่อ ฟังก์ชัน และฮาร์ดแวร์..." 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 outline-none focus:bg-white focus:border-[#EA580C] transition-all" 
+                      className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#EA580C] transition-all leading-relaxed" 
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                    <label className="block text-xs font-bold text-slate-800 mb-1">
                       รายละเอียด (English)
                     </label>
                     <textarea 
@@ -1425,14 +1397,14 @@ export default function AdminDashboard() {
                       value={intForm.description} 
                       onChange={(e) => setIntForm({...intForm, description: e.target.value})} 
                       placeholder="Technical implementation and hardware sensors..." 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 outline-none focus:bg-white focus:border-[#EA580C] transition-all" 
+                      className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#EA580C] transition-all leading-relaxed" 
                     />
                   </div>
 
                   {/* Cover Image */}
-                  <div className="pt-2 border-t border-slate-100">
-                    <label className="text-[11px] font-bold text-emerald-700 block mb-1 flex items-center gap-1.5">
-                      <ImageIcon size={14} className="text-[#059669]" />
+                  <div className="pt-2 border-t-2 border-slate-100">
+                    <label className="text-xs font-bold text-emerald-900 block mb-1 flex items-center gap-1.5">
+                      <ImageIcon size={15} className="text-[#059669]" />
                       <span>ลิงก์รูปภาพปก (Cover Image URL)</span>
                     </label>
                     <input 
@@ -1440,25 +1412,25 @@ export default function AdminDashboard() {
                       value={intForm.imageUrl} 
                       onChange={(e) => setIntForm({...intForm, imageUrl: e.target.value})} 
                       placeholder="https://drive.google.com/... หรือ Direct URL" 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 outline-none focus:bg-white focus:border-emerald-500 transition-all" 
+                      className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-emerald-500 transition-all" 
                     />
                     {intForm.imageUrl && (
-                      <div className="mt-2 flex items-center gap-2 p-1.5 bg-slate-100 rounded-lg border border-slate-200/80">
+                      <div className="mt-2 flex items-center gap-2.5 p-2 bg-slate-100 rounded-xl border-2 border-slate-200">
                         <img 
                           src={convertToDirectLink(intForm.imageUrl)} 
                           alt="preview" 
-                          className="w-10 h-10 object-cover rounded bg-white border border-slate-200 shrink-0"
+                          className="w-12 h-12 object-cover rounded-lg bg-white border-2 border-slate-300 shrink-0 shadow-2xs" 
                           onError={(e) => (e.currentTarget.style.display = 'none')} 
                         />
-                        <span className="text-[10px] text-slate-500 truncate">ตัวอย่างรูปภาพ</span>
+                        <span className="text-[11px] text-slate-700 font-bold truncate">ตัวอย่างรูปภาพ (Direct Preview)</span>
                       </div>
                     )}
                   </div>
 
                   {/* Reference URL */}
                   <div>
-                    <label className="text-[11px] font-bold text-[#0284C7] block mb-1 flex items-center gap-1.5">
-                      <ExternalLink size={14} />
+                    <label className="text-xs font-bold text-sky-900 block mb-1 flex items-center gap-1.5">
+                      <ExternalLink size={15} className="text-[#0284C7]" />
                       <span>ลิงก์ระบบจริง / Reference URL</span>
                     </label>
                     <input 
@@ -1466,14 +1438,14 @@ export default function AdminDashboard() {
                       value={intForm.referenceUrl} 
                       onChange={(e) => setIntForm({...intForm, referenceUrl: e.target.value})} 
                       placeholder="https://demo.example.com" 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 outline-none focus:bg-white focus:border-[#0284C7] transition-all" 
+                      className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#0284C7] transition-all" 
                     />
                   </div>
 
                   {/* Manual URL */}
                   <div>
-                    <label className="text-[11px] font-bold text-[#EA580C] block mb-1 flex items-center gap-1.5">
-                      <FileText size={14} />
+                    <label className="text-xs font-bold text-amber-900 block mb-1 flex items-center gap-1.5">
+                      <FileText size={15} className="text-[#EA580C]" />
                       <span>ลิงก์คู่มือ / Document URL</span>
                     </label>
                     <input 
@@ -1481,53 +1453,53 @@ export default function AdminDashboard() {
                       value={intForm.manualUrl || ''} 
                       onChange={(e) => setIntForm({...intForm, manualUrl: e.target.value})} 
                       placeholder="https://docs.example.com" 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 outline-none focus:bg-white focus:border-[#EA580C] transition-all" 
+                      className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#EA580C] transition-all" 
                     />
                   </div>
 
                   <button 
                     disabled={isSaving} 
-                    className="w-full py-2.5 bg-gradient-to-r from-[#EA580C] to-[#E11D48] hover:opacity-95 text-white rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 mt-4 shadow-sm"
+                    className="w-full py-3 bg-gradient-to-r from-[#EA580C] to-[#E11D48] hover:opacity-95 text-white rounded-xl font-extrabold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 mt-4 shadow-md hover:shadow-lg"
                   >
-                    {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : <Save size={14} />} 
+                    {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : <Save size={15} />} 
                     <span>บันทึกลง Google Sheets</span>
                   </button>
                 </form>
               </div>
 
               {/* List Column */}
-              <div className="xl:col-span-7 bg-white border border-slate-200/80 rounded-2xl p-5 sm:p-6 shadow-xs">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 pb-3 border-b border-slate-100">
+              <div className="xl:col-span-7 bg-white border-2 border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-sm">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 pb-3 border-b-2 border-slate-100">
                   <div>
-                    <h3 className="font-bold text-slate-900 text-sm">
+                    <h3 className="font-extrabold text-slate-950 text-sm">
                       รายการระบบการทำงานจริง ({integrations.length})
                     </h3>
-                    <p className="text-[11px] text-slate-500">
+                    <p className="text-[11px] text-slate-600 font-medium">
                       แสดงรายการโปรเจกต์และระบบเชื่อมต่อในแท็บ Integrations
                     </p>
                   </div>
                   <div className="relative w-full sm:w-56">
-                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
                     <input 
                       type="text" 
                       placeholder="ค้นหาชื่อโปรเจกต์..." 
                       value={intSearch} 
                       onChange={(e) => setIntSearch(e.target.value)} 
-                      className="w-full pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 outline-none focus:bg-white focus:border-[#EA580C]" 
+                      className="w-full pl-8 pr-3 py-1.5 bg-slate-50 border-2 border-slate-200 rounded-xl text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#EA580C]" 
                     />
                   </div>
                 </div>
 
                 {isLoadingInt ? (
-                  <div className="p-12 text-center text-slate-400 flex flex-col items-center gap-2">
+                  <div className="p-12 text-center text-slate-500 flex flex-col items-center gap-2">
                     <Loader2 className="animate-spin w-6 h-6 text-[#EA580C]" />
-                    <span>กำลังโหลดข้อมูลจาก Google Sheets...</span>
+                    <span className="font-bold">กำลังโหลดข้อมูลจาก Google Sheets...</span>
                   </div>
                 ) : integrations.length === 0 ? (
-                  <div className="p-12 text-center text-slate-500 border border-dashed border-slate-200 rounded-xl bg-slate-50/50">
-                    <LinkIcon size={32} className="mx-auto text-slate-300 mb-2" />
-                    <p className="font-semibold text-slate-700">ยังไม่มีข้อมูลระบบการทำงาน</p>
-                    <p className="text-xs text-slate-400 mt-1">สามารถเพิ่มข้อมูลผ่านฟอร์มด้านซ้ายได้ทันที</p>
+                  <div className="p-12 text-center text-slate-600 border-2 border-dashed border-slate-300 rounded-xl bg-slate-50/70">
+                    <LinkIcon size={36} className="mx-auto text-slate-400 mb-2" />
+                    <p className="font-bold text-slate-900">ยังไม่มีข้อมูลระบบการทำงาน</p>
+                    <p className="text-xs text-slate-500 mt-1">สามารถเพิ่มข้อมูลผ่านฟอร์มด้านซ้ายได้ทันที</p>
                   </div>
                 ) : (
                   <div className="space-y-3">
@@ -1540,107 +1512,15 @@ export default function AdminDashboard() {
                       .map(item => (
                       <div 
                         key={item.id} 
-                        className="bg-slate-50/60 hover:bg-slate-50 border border-slate-200/80 p-4 rounded-xl flex flex-col sm:flex-row justify-between items-start gap-4 transition-all hover:shadow-xs"
-                      >
-                        <div className="flex items-start gap-3 flex-1 min-w-0">
-                          {item.imageUrl ? (
-                            <img 
-                              src={convertToDirectLink(item.imageUrl)} 
-                              alt="thumb" 
-                              className="w-14 h-14 rounded-lg object-cover bg-white border border-slate-200 shrink-0"
-                              onError={(e) => (e.currentTarget.style.display = 'none')}
-                            />
-                          ) : (
-                            <div className="w-14 h-14 rounded-lg bg-slate-200 text-slate-400 flex items-center justify-center shrink-0">
-                              <ImageIcon size={20} />
-                            </div>
-                          )}
-
-                          <div className="space-y-1 min-w-0 flex-1">
-                            <div className="flex flex-wrap items-center gap-2">
-                              <span className="font-bold text-slate-900 text-xs">
-                                {item.title_th || item.title}
-                              </span>
-                              {item.title_th && item.title && (
-                                <span className="text-slate-400 text-[11px]">({item.title})</span>
-                              )}
-                              <span className="px-2 py-0.5 rounded-md text-[10px] font-mono bg-amber-50 text-[#EA580C] border border-amber-100 font-semibold">
-                                {item.tag || 'System'}
-                              </span>
-                              <span className="text-slate-400 text-[10px] font-mono">
-                                #{item.id}
-                              </span>
-                            </div>
-
-                            <p className="text-[11px] text-slate-600 line-clamp-2 leading-relaxed">
-                              {item.description_th || item.description}
-                            </p>
-
-                            <div className="flex flex-wrap gap-2 text-[10px] pt-1">
-                              {item.imageUrl && (
-                                <span className="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 font-medium flex items-center gap-1">
-                                  <ImageIcon size={11} /> มีภาพประกอบ
-                                </span>
-                              )}
-                              {item.referenceUrl && (
-                                <a 
-                                  href={item.referenceUrl} 
-                                  target="_blank" 
-                                  rel="noopener noreferrer" 
-                                  className="px-2 py-0.5 rounded bg-sky-50 text-sky-700 border border-sky-200 font-medium flex items-center gap-1 hover:underline"
-                                >
-                                  <ExternalLink size={11} /> เปิดดูเนื้อหา
-                                </a>
-                              )}
-                              {item.manualUrl && (
-                                <a 
-                                  href={item.manualUrl} 
-                                  target="_blank" 
-                                  rel="noopener noreferrer" 
-                                  className="px-2 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 font-medium flex items-center gap-1 hover:underline"
-                                >
-                                  <FileText size={11} /> ดูคู่มือ
-                                </a>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Actions */}
-                        <div className="flex gap-2 shrink-0 self-end sm:self-start">
-                          <button 
-                            onClick={() => { setIntForm(item); setIsIntEdit(true); }} 
-                            className="px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 text-[11px] font-semibold flex items-center gap-1 shadow-xs"
-                          >
-                            <Edit3 size={12} />
-                            <span>แก้ไข</span>
-                          </button>
-                          <button 
-                            onClick={() => handleDeleteInt(item.id)} 
-                            className="px-3 py-1.5 rounded-lg border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 text-[11px] font-semibold flex items-center gap-1"
-                          >
-                            <Trash2 size={12} />
-                            <span>ลบ</span>
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-            </div>
-          )}
-
-          {/* ================= 04. HERO SECTION CONFIG ================= */}
+                         {/* ================= 04. HERO SECTION CONFIG ================= */}
           {activeMenu === 'hero' && (
-            <div className="max-w-4xl mx-auto bg-white border border-slate-200/80 rounded-2xl p-6 sm:p-8 shadow-xs">
-              <div className="pb-4 mb-6 border-b border-slate-100">
-                <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+            <div className="max-w-4xl mx-auto bg-white border-2 border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-sm">
+              <div className="pb-4 mb-6 border-b-2 border-slate-100">
+                <h3 className="text-base font-extrabold text-slate-950 flex items-center gap-2">
                   <Zap size={18} className="text-[#E11D48]" />
                   <span>แก้ไขเนื้อหาส่วนหลักหน้าแรก (Hero Section)</span>
                 </h3>
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-slate-600 font-medium mt-1">
                   กำหนดข้อความป้าย Badge, พาดหัวหลัก, คำโปรย และปุ่ม Action ที่แสดงบนส่วนบนสุดของหน้าเว็บ
                 </p>
               </div>
@@ -1649,32 +1529,32 @@ export default function AdminDashboard() {
                 
                 {/* Badges */}
                 <div className="space-y-3">
-                  <h4 className="font-bold text-slate-800 text-xs flex items-center gap-1.5">
+                  <h4 className="font-extrabold text-slate-950 text-xs flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-[#E11D48]" />
                     <span>ข้อความป้ายกำกับ (Badge Label)</span>
                   </h4>
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                      <label className="block text-xs font-bold text-slate-800 mb-1">
                         ข้อความภาษาไทย
                       </label>
                       <input 
                         type="text" 
                         value={configData.hero_badge_th} 
                         onChange={e => setConfigData({...configData, hero_badge_th: e.target.value})} 
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 outline-none focus:bg-white focus:border-[#E11D48] transition-all" 
+                        className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#E11D48] transition-all" 
                         placeholder="เช่น ผู้เชี่ยวชาญด้านระบบ IoT & AI"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                      <label className="block text-xs font-bold text-slate-800 mb-1">
                         English Badge
                       </label>
                       <input 
                         type="text" 
                         value={configData.hero_badge_en} 
                         onChange={e => setConfigData({...configData, hero_badge_en: e.target.value})} 
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 outline-none focus:bg-white focus:border-[#E11D48] transition-all" 
+                        className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#E11D48] transition-all" 
                         placeholder="e.g. Next-Gen IoT Solutions"
                       />
                     </div>
@@ -1682,118 +1562,118 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Main Headlines */}
-                <div className="space-y-3 pt-4 border-t border-slate-100">
-                  <h4 className="font-bold text-slate-800 text-xs flex items-center gap-1.5">
+                <div className="space-y-3 pt-4 border-t-2 border-slate-100">
+                  <h4 className="font-extrabold text-slate-950 text-xs flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-[#EA580C]" />
                     <span>พาดหัวหลัก (Main Headline)</span>
                   </h4>
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                      <label className="block text-xs font-bold text-slate-800 mb-1">
                         พาดหัวหลัก (ภาษาไทย)
                       </label>
                       <textarea 
                         rows={3} 
                         value={configData.hero_headline_th} 
                         onChange={e => setConfigData({...configData, hero_headline_th: e.target.value})} 
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 outline-none focus:bg-white focus:border-[#EA580C] transition-all leading-relaxed" 
+                        className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl p-3 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#EA580C] transition-all leading-relaxed" 
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                      <label className="block text-xs font-bold text-slate-800 mb-1">
                         Headline (English)
                       </label>
                       <textarea 
                         rows={3} 
                         value={configData.hero_headline_en} 
                         onChange={e => setConfigData({...configData, hero_headline_en: e.target.value})} 
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 outline-none focus:bg-white focus:border-[#EA580C] transition-all leading-relaxed" 
+                        className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl p-3 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#EA580C] transition-all leading-relaxed" 
                       />
                     </div>
                   </div>
                 </div>
 
                 {/* Sub-headline */}
-                <div className="space-y-3 pt-4 border-t border-slate-100">
-                  <h4 className="font-bold text-slate-800 text-xs flex items-center gap-1.5">
+                <div className="space-y-3 pt-4 border-t-2 border-slate-100">
+                  <h4 className="font-extrabold text-slate-950 text-xs flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-sky-500" />
                     <span>คำโปรยรอง (Sub-headline)</span>
                   </h4>
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                      <label className="block text-xs font-bold text-slate-800 mb-1">
                         คำโปรย (ภาษาไทย)
                       </label>
                       <textarea 
                         rows={3} 
                         value={configData.hero_sub_th} 
                         onChange={e => setConfigData({...configData, hero_sub_th: e.target.value})} 
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 outline-none focus:bg-white focus:border-[#0284C7] transition-all leading-relaxed" 
+                        className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl p-3 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#0284C7] transition-all leading-relaxed" 
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                      <label className="block text-xs font-bold text-slate-800 mb-1">
                         Sub-headline (English)
                       </label>
                       <textarea 
                         rows={3} 
                         value={configData.hero_sub_en} 
                         onChange={e => setConfigData({...configData, hero_sub_en: e.target.value})} 
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 outline-none focus:bg-white focus:border-[#0284C7] transition-all leading-relaxed" 
+                        className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl p-3 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#0284C7] transition-all leading-relaxed" 
                       />
                     </div>
                   </div>
                 </div>
 
                 {/* CTA Buttons */}
-                <div className="space-y-4 pt-4 border-t border-slate-100">
-                  <h4 className="font-bold text-slate-800 text-xs flex items-center gap-1.5">
+                <div className="space-y-4 pt-4 border-t-2 border-slate-100">
+                  <h4 className="font-extrabold text-slate-950 text-xs flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-emerald-500" />
                     <span>ปุ่มกระตุ้นการตัดสินใจ (Call to Action Buttons)</span>
                   </h4>
                   <div className="grid md:grid-cols-2 gap-6">
-                    <div className="p-4 bg-slate-50 rounded-xl border border-slate-200/80 space-y-2">
-                      <span className="font-bold text-slate-900 block text-xs">ปุ่มหลัก (Primary CTA)</span>
+                    <div className="p-4 bg-slate-50/70 rounded-xl border-2 border-slate-200 space-y-2.5">
+                      <span className="font-extrabold text-slate-950 block text-xs">ปุ่มหลัก (Primary CTA)</span>
                       <div>
-                        <label className="block text-[11px] text-slate-500 mb-1">ข้อความบนปุ่ม (TH)</label>
+                        <label className="block text-[11px] font-bold text-slate-700 mb-1">ข้อความบนปุ่ม (TH)</label>
                         <input 
                           type="text" 
                           value={configData.hero_btn1_text_th} 
                           onChange={e => setConfigData({...configData, hero_btn1_text_th: e.target.value})} 
-                          className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-800" 
+                          className="w-full bg-white border-2 border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:border-[#E11D48]" 
                         />
                       </div>
                       <div>
-                        <label className="block text-[11px] text-slate-500 mb-1">ลิงก์ปลายทาง (Link)</label>
+                        <label className="block text-[11px] font-bold text-slate-700 mb-1">ลิงก์ปลายทาง (Link)</label>
                         <input 
                           type="text" 
                           value={configData.hero_btn1_link} 
                           onChange={e => setConfigData({...configData, hero_btn1_link: e.target.value})} 
-                          className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-800 font-mono" 
-                          placeholder="#contact หรือ /services"
+                          className="w-full bg-white border-2 border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-950 font-mono font-medium outline-none hover:border-slate-300 focus:border-[#E11D48]" 
+                          placeholder="#contact หรือ /services" 
                         />
                       </div>
                     </div>
 
-                    <div className="p-4 bg-slate-50 rounded-xl border border-slate-200/80 space-y-2">
-                      <span className="font-bold text-slate-900 block text-xs">ปุ่มรอง (Secondary CTA)</span>
+                    <div className="p-4 bg-slate-50/70 rounded-xl border-2 border-slate-200 space-y-2.5">
+                      <span className="font-extrabold text-slate-950 block text-xs">ปุ่มรอง (Secondary CTA)</span>
                       <div>
-                        <label className="block text-[11px] text-slate-500 mb-1">ข้อความบนปุ่ม (TH)</label>
+                        <label className="block text-[11px] font-bold text-slate-700 mb-1">ข้อความบนปุ่ม (TH)</label>
                         <input 
                           type="text" 
                           value={configData.hero_btn2_text_th} 
                           onChange={e => setConfigData({...configData, hero_btn2_text_th: e.target.value})} 
-                          className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-800" 
+                          className="w-full bg-white border-2 border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:border-[#EA580C]" 
                         />
                       </div>
                       <div>
-                        <label className="block text-[11px] text-slate-500 mb-1">ลิงก์ปลายทาง (Link)</label>
+                        <label className="block text-[11px] font-bold text-slate-700 mb-1">ลิงก์ปลายทาง (Link)</label>
                         <input 
                           type="text" 
                           value={configData.hero_btn2_link} 
                           onChange={e => setConfigData({...configData, hero_btn2_link: e.target.value})} 
-                          className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-800 font-mono" 
-                          placeholder="#works หรือ /portfolio"
+                          className="w-full bg-white border-2 border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-950 font-mono font-medium outline-none hover:border-slate-300 focus:border-[#EA580C]" 
+                          placeholder="#works หรือ /portfolio" 
                         />
                       </div>
                     </div>
@@ -1802,7 +1682,7 @@ export default function AdminDashboard() {
 
                 <button 
                   disabled={isSaving} 
-                  className="w-full py-3 bg-gradient-to-r from-[#E11D48] to-[#EA580C] hover:opacity-95 text-white rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 mt-6 shadow-sm"
+                  className="w-full py-3.5 bg-gradient-to-r from-[#E11D48] to-[#EA580C] hover:opacity-95 text-white rounded-xl font-extrabold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 mt-6 shadow-md hover:shadow-lg"
                 >
                   {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : <Save size={15} />} 
                   <span>บันทึกส่วน HERO SECTION ลง GOOGLE SHEETS</span>
@@ -1816,17 +1696,17 @@ export default function AdminDashboard() {
             <div className="grid xl:grid-cols-12 gap-6 items-start">
               
               {/* Form */}
-              <div className="xl:col-span-5 bg-white border border-slate-200/80 rounded-2xl p-5 sm:p-6 shadow-xs">
-                <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
-                  <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                    <Type size={16} className="text-[#E11D48]" />
+              <div className="xl:col-span-5 bg-white border-2 border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-sm">
+                <div className="flex items-center justify-between pb-4 mb-4 border-b-2 border-slate-100">
+                  <h3 className="text-sm font-extrabold text-slate-950 flex items-center gap-2">
+                    <Type size={18} className="text-[#0284C7]" />
                     <span>{isNavEdit ? 'แก้ไขเมนู Header' : 'เพิ่มเมนู Header ใหม่'}</span>
                   </h3>
                   {isNavEdit && (
                     <button 
                       type="button" 
                       onClick={() => { setNavForm(emptyNav); setIsNavEdit(false); }} 
-                      className="text-xs text-rose-600 hover:text-rose-700 font-medium px-2.5 py-1 rounded-lg bg-rose-50 border border-rose-200"
+                      className="text-xs text-rose-900 hover:text-rose-950 font-bold px-3 py-1 rounded-lg bg-rose-100 border-2 border-rose-300 shadow-2xs"
                     >
                       ยกเลิก
                     </button>
@@ -1835,7 +1715,7 @@ export default function AdminDashboard() {
 
                 <form onSubmit={handleNavSubmit} className="space-y-4 text-xs">
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                    <label className="block text-xs font-bold text-slate-800 mb-1">
                       รหัสเมนู ID
                     </label>
                     <input 
@@ -1844,11 +1724,11 @@ export default function AdminDashboard() {
                       onChange={e => setNavForm({...navForm, id: e.target.value})} 
                       placeholder="nav-1" 
                       readOnly={isNavEdit} 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800" 
+                      className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#0284C7] transition-all" 
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                    <label className="block text-xs font-bold text-slate-800 mb-1">
                       ชื่อเมนู (ภาษาไทย)
                     </label>
                     <input 
@@ -1856,12 +1736,12 @@ export default function AdminDashboard() {
                       value={navForm.label_th} 
                       onChange={e => setNavForm({...navForm, label_th: e.target.value})} 
                       placeholder="บริการที่รับทำ" 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800" 
+                      className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#0284C7] transition-all" 
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">
-                      ชื่อเมนู (English) *
+                    <label className="block text-xs font-bold text-slate-800 mb-1">
+                      ชื่อเมนู (English) <span className="text-[#0284C7]">*</span>
                     </label>
                     <input 
                       required 
@@ -1869,12 +1749,12 @@ export default function AdminDashboard() {
                       value={navForm.label_en} 
                       onChange={e => setNavForm({...navForm, label_en: e.target.value})} 
                       placeholder="Services" 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800" 
+                      className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#0284C7] transition-all" 
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">
-                      ลิงก์ปลายทาง (HREF) *
+                    <label className="block text-xs font-bold text-slate-800 mb-1">
+                      ลิงก์ปลายทาง (HREF) <span className="text-[#0284C7]">*</span>
                     </label>
                     <input 
                       required 
@@ -1882,28 +1762,28 @@ export default function AdminDashboard() {
                       value={navForm.href} 
                       onChange={e => setNavForm({...navForm, href: e.target.value})} 
                       placeholder="#services หรือ /services" 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 font-mono" 
+                      className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-mono font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#0284C7] transition-all" 
                     />
                   </div>
 
                   <button 
                     disabled={isSaving} 
-                    className="w-full py-2.5 bg-gradient-to-r from-[#E11D48] to-[#EA580C] hover:opacity-95 text-white rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 mt-4 shadow-sm"
+                    className="w-full py-3 bg-gradient-to-r from-[#0284C7] to-[#E11D48] hover:opacity-95 text-white rounded-xl font-extrabold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 mt-4 shadow-md hover:shadow-lg"
                   >
-                    {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : <Save size={14} />} 
+                    {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : <Save size={15} />} 
                     <span>บันทึกเมนู</span>
                   </button>
                 </form>
               </div>
 
               {/* List */}
-              <div className="xl:col-span-7 bg-white border border-slate-200/80 rounded-2xl p-5 sm:p-6 shadow-xs">
-                <h3 className="font-bold text-slate-900 text-sm mb-4 pb-3 border-b border-slate-100">
+              <div className="xl:col-span-7 bg-white border-2 border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-sm">
+                <h3 className="font-extrabold text-slate-950 text-sm mb-4 pb-3 border-b-2 border-slate-100">
                   รายการเมนูบน Header ({navItems.length})
                 </h3>
 
                 {navItems.length === 0 ? (
-                  <div className="p-8 text-center text-slate-400 border border-dashed border-slate-200 rounded-xl">
+                  <div className="p-8 text-center text-slate-500 border-2 border-dashed border-slate-300 rounded-xl bg-slate-50/70">
                     ยังไม่มีข้อมูลเมนูในระบบ
                   </div>
                 ) : (
@@ -1911,26 +1791,26 @@ export default function AdminDashboard() {
                     {navItems.map(item => (
                       <div 
                         key={item.id} 
-                        className="bg-slate-50 border border-slate-200/80 p-3.5 rounded-xl flex justify-between items-center text-xs"
+                        className="bg-white hover:bg-slate-50/90 border-2 border-slate-200/90 hover:border-slate-300 p-3.5 rounded-xl flex justify-between items-center text-xs shadow-xs"
                       >
                         <div>
-                          <span className="font-bold text-slate-900">
+                          <span className="font-extrabold text-slate-950">
                             {item.label_th || item.label_en}
                           </span>
-                          <span className="text-slate-400 font-mono text-[11px] ml-2">
+                          <span className="text-slate-600 font-mono text-[11px] font-bold ml-2">
                             ({item.label_en}) &bull; {item.href}
                           </span>
                         </div>
                         <div className="flex gap-2 shrink-0">
                           <button 
                             onClick={() => { setNavForm(item); setIsNavEdit(true); }} 
-                            className="px-2.5 py-1 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 text-[11px] font-semibold"
+                            className="px-3 py-1.5 rounded-lg border-2 border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-bold shadow-xs"
                           >
                             แก้ไข
                           </button>
                           <button 
                             onClick={() => handleDeleteNav(item.id)} 
-                            className="px-2.5 py-1 rounded-lg border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 text-[11px] font-semibold"
+                            className="px-3 py-1.5 rounded-lg border-2 border-rose-300 bg-rose-100 hover:bg-rose-200 text-rose-950 text-xs font-bold shadow-xs"
                           >
                             ลบ
                           </button>
@@ -1949,17 +1829,17 @@ export default function AdminDashboard() {
             <div className="grid xl:grid-cols-12 gap-6 items-start">
               
               {/* Form */}
-              <div className="xl:col-span-5 bg-white border border-slate-200/80 rounded-2xl p-5 sm:p-6 shadow-xs">
-                <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
-                  <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                    <Lightbulb size={16} className="text-[#0284C7]" />
+              <div className="xl:col-span-5 bg-white border-2 border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-sm">
+                <div className="flex items-center justify-between pb-4 mb-4 border-b-2 border-slate-100">
+                  <h3 className="text-sm font-extrabold text-slate-950 flex items-center gap-2">
+                    <Lightbulb size={18} className="text-[#0284C7]" />
                     <span>{isConceptEdit ? 'แก้ไขจุดเด่น / คอนเซปต์' : 'เพิ่มคอนเซปต์ใหม่'}</span>
                   </h3>
                   {isConceptEdit && (
                     <button 
                       type="button" 
                       onClick={() => { setConceptForm(emptyConcept); setIsConceptEdit(false); }} 
-                      className="text-xs text-rose-600 hover:text-rose-700 font-medium px-2.5 py-1 rounded-lg bg-rose-50 border border-rose-200"
+                      className="text-xs text-rose-900 hover:text-rose-950 font-bold px-3 py-1 rounded-lg bg-rose-100 border-2 border-rose-300 shadow-2xs"
                     >
                       ยกเลิก
                     </button>
@@ -1969,7 +1849,7 @@ export default function AdminDashboard() {
                 <form onSubmit={handleConceptSubmit} className="space-y-4 text-xs">
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                      <label className="block text-xs font-bold text-slate-800 mb-1">
                         รหัส ID
                       </label>
                       <input 
@@ -1978,11 +1858,11 @@ export default function AdminDashboard() {
                         onChange={e => setConceptForm({...conceptForm, id: e.target.value})} 
                         placeholder="concept-1" 
                         readOnly={isConceptEdit} 
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800" 
+                        className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#0284C7] transition-all" 
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                      <label className="block text-xs font-bold text-slate-800 mb-1">
                         ไอคอน (Icon Name)
                       </label>
                       <input 
@@ -1990,13 +1870,13 @@ export default function AdminDashboard() {
                         value={conceptForm.icon} 
                         onChange={e => setConceptForm({...conceptForm, icon: e.target.value})} 
                         placeholder="Cpu / Shield / Zap" 
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800" 
+                        className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#0284C7] transition-all" 
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                    <label className="block text-xs font-bold text-slate-800 mb-1">
                       หัวข้อ (ภาษาไทย)
                     </label>
                     <input 
@@ -2004,13 +1884,13 @@ export default function AdminDashboard() {
                       value={conceptForm.title_th} 
                       onChange={e => setConceptForm({...conceptForm, title_th: e.target.value})} 
                       placeholder="ความเสถียรระดับโรงงานอุตสาหกรรม" 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800" 
+                      className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#0284C7] transition-all" 
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">
-                      หัวข้อ (English) *
+                    <label className="block text-xs font-bold text-slate-800 mb-1">
+                      หัวข้อ (English) <span className="text-[#0284C7]">*</span>
                     </label>
                     <input 
                       required 
@@ -2018,12 +1898,12 @@ export default function AdminDashboard() {
                       value={conceptForm.title_en} 
                       onChange={e => setConceptForm({...conceptForm, title_en: e.target.value})} 
                       placeholder="Industrial Grade Stability" 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800" 
+                      className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#0284C7] transition-all" 
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                    <label className="block text-xs font-bold text-slate-800 mb-1">
                       คำอธิบาย (ภาษาไทย)
                     </label>
                     <textarea 
@@ -2031,12 +1911,12 @@ export default function AdminDashboard() {
                       value={conceptForm.desc_th} 
                       onChange={e => setConceptForm({...conceptForm, desc_th: e.target.value})} 
                       placeholder="คำอธิบายสั้นๆ เกี่ยวกับจุดเด่นนี้..." 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800" 
+                      className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#0284C7] transition-all leading-relaxed" 
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                    <label className="block text-xs font-bold text-slate-800 mb-1">
                       คำอธิบาย (English)
                     </label>
                     <textarea 
@@ -2044,28 +1924,28 @@ export default function AdminDashboard() {
                       value={conceptForm.desc_en} 
                       onChange={e => setConceptForm({...conceptForm, desc_en: e.target.value})} 
                       placeholder="Short description..." 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800" 
+                      className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#0284C7] transition-all leading-relaxed" 
                     />
                   </div>
 
                   <button 
                     disabled={isSaving} 
-                    className="w-full py-2.5 bg-gradient-to-r from-[#0284C7] to-[#E11D48] hover:opacity-95 text-white rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 mt-4 shadow-sm"
+                    className="w-full py-3 bg-gradient-to-r from-[#0284C7] to-[#E11D48] hover:opacity-95 text-white rounded-xl font-extrabold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 mt-4 shadow-md hover:shadow-lg"
                   >
-                    {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : <Save size={14} />} 
+                    {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : <Save size={15} />} 
                     <span>บันทึกคอนเซปต์</span>
                   </button>
                 </form>
               </div>
 
               {/* List */}
-              <div className="xl:col-span-7 bg-white border border-slate-200/80 rounded-2xl p-5 sm:p-6 shadow-xs">
-                <h3 className="font-bold text-slate-900 text-sm mb-4 pb-3 border-b border-slate-100">
+              <div className="xl:col-span-7 bg-white border-2 border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-sm">
+                <h3 className="font-extrabold text-slate-950 text-sm mb-4 pb-3 border-b-2 border-slate-100">
                   รายการจุดเด่น & คอนเซปต์ ({concepts.length})
                 </h3>
 
                 {concepts.length === 0 ? (
-                  <div className="p-8 text-center text-slate-400 border border-dashed border-slate-200 rounded-xl">
+                  <div className="p-8 text-center text-slate-500 border-2 border-dashed border-slate-300 rounded-xl bg-slate-50/70">
                     ยังไม่มีข้อมูลคอนเซปต์ในระบบ
                   </div>
                 ) : (
@@ -2073,34 +1953,34 @@ export default function AdminDashboard() {
                     {concepts.map(c => (
                       <div 
                         key={c.id} 
-                        className="bg-slate-50 border border-slate-200/80 p-4 rounded-xl flex justify-between items-start text-xs"
+                        className="bg-white hover:bg-slate-50/90 border-2 border-slate-200/90 hover:border-slate-300 p-4 rounded-xl flex justify-between items-start text-xs shadow-xs"
                       >
                         <div className="space-y-1 flex-1 pr-3">
                           <div className="flex items-center gap-2">
-                            <span className="font-bold text-slate-900">
+                            <span className="font-extrabold text-slate-950">
                               {c.title_th || c.title_en}
                             </span>
                             {c.title_th && c.title_en && (
-                              <span className="text-slate-400 text-[11px]">({c.title_en})</span>
+                              <span className="text-slate-600 text-[11px] font-medium">({c.title_en})</span>
                             )}
-                            <span className="px-2 py-0.5 rounded text-[10px] bg-sky-50 text-sky-700 border border-sky-200 font-mono">
+                            <span className="px-2 py-0.5 rounded text-[10px] bg-sky-100 text-sky-950 border border-sky-300 font-mono font-bold">
                               {c.icon || 'Feature'}
                             </span>
                           </div>
-                          <p className="text-[11px] text-slate-600 leading-relaxed">
+                          <p className="text-[11px] text-slate-700 font-medium leading-relaxed">
                             {c.desc_th || c.desc_en}
                           </p>
                         </div>
                         <div className="flex gap-2 shrink-0">
                           <button 
                             onClick={() => { setConceptForm(c); setIsConceptEdit(true); }} 
-                            className="px-2.5 py-1 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 text-[11px] font-semibold"
+                            className="px-3 py-1.5 rounded-lg border-2 border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-bold shadow-xs"
                           >
                             แก้ไข
                           </button>
                           <button 
                             onClick={() => handleDeleteConcept(c.id)} 
-                            className="px-2.5 py-1 rounded-lg border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 text-[11px] font-semibold"
+                            className="px-3 py-1.5 rounded-lg border-2 border-rose-300 bg-rose-100 hover:bg-rose-200 text-rose-950 text-xs font-bold shadow-xs"
                           >
                             ลบ
                           </button>
@@ -2121,17 +2001,17 @@ export default function AdminDashboard() {
               <div className="grid xl:grid-cols-12 gap-6 items-start">
                 
                 {/* Section Form */}
-                <div className="xl:col-span-5 bg-white border border-slate-200/80 rounded-2xl p-5 sm:p-6 shadow-xs">
-                  <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
-                    <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                      <FolderPlus size={16} className="text-[#E11D48]" />
+                <div className="xl:col-span-5 bg-white border-2 border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-sm">
+                  <div className="flex items-center justify-between pb-4 mb-4 border-b-2 border-slate-100">
+                    <h3 className="text-sm font-extrabold text-slate-950 flex items-center gap-2">
+                      <FolderPlus size={18} className="text-[#E11D48]" />
                       <span>{isSectionEdit ? 'แก้ไขส่วนเสริม' : 'เพิ่มส่วนเสริมใหม่'}</span>
                     </h3>
                     {isSectionEdit && (
                       <button 
                         type="button" 
                         onClick={() => { setSectionForm(emptySection); setIsSectionEdit(false); }} 
-                        className="text-xs text-rose-600 hover:text-rose-700 font-medium px-2.5 py-1 rounded-lg bg-rose-50 border border-rose-200"
+                        className="text-xs text-rose-900 hover:text-rose-950 font-bold px-3 py-1 rounded-lg bg-rose-100 border-2 border-rose-300 shadow-2xs"
                       >
                         ยกเลิก
                       </button>
@@ -2140,7 +2020,7 @@ export default function AdminDashboard() {
 
                   <form onSubmit={handleSectionSubmit} className="space-y-4 text-xs">
                     <div>
-                      <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                      <label className="block text-xs font-bold text-slate-800 mb-1">
                         รหัสส่วนเสริม (Section ID)
                       </label>
                       <input 
@@ -2149,11 +2029,11 @@ export default function AdminDashboard() {
                         onChange={e => setSectionForm({...sectionForm, id: e.target.value})} 
                         placeholder="custom-section-1" 
                         readOnly={isSectionEdit} 
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800" 
+                        className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#E11D48] transition-all" 
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                      <label className="block text-xs font-bold text-slate-800 mb-1">
                         ชื่อหัวข้อ (ภาษาไทย)
                       </label>
                       <input 
@@ -2161,12 +2041,12 @@ export default function AdminDashboard() {
                         value={sectionForm.title_th} 
                         onChange={e => setSectionForm({...sectionForm, title_th: e.target.value})} 
                         placeholder="เทคโนโลยีที่เราเลือกใช้" 
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800" 
+                        className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#E11D48] transition-all" 
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-semibold text-slate-600 mb-1">
-                        Title (English) *
+                      <label className="block text-xs font-bold text-slate-800 mb-1">
+                        Title (English) <span className="text-[#E11D48]">*</span>
                       </label>
                       <input 
                         required 
@@ -2174,11 +2054,11 @@ export default function AdminDashboard() {
                         value={sectionForm.title_en} 
                         onChange={e => setSectionForm({...sectionForm, title_en: e.target.value})} 
                         placeholder="Technology Stack" 
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800" 
+                        className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#E11D48] transition-all" 
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                      <label className="block text-xs font-bold text-slate-800 mb-1">
                         คำโปรยย่อย (Subtitle)
                       </label>
                       <input 
@@ -2186,28 +2066,28 @@ export default function AdminDashboard() {
                         value={sectionForm.subtitle_th} 
                         onChange={e => setSectionForm({...sectionForm, subtitle_th: e.target.value})} 
                         placeholder="Hardware และ Cloud Platform ที่ทันสมัย" 
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800" 
+                        className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#E11D48] transition-all" 
                       />
                     </div>
 
                     <button 
                       disabled={isSaving} 
-                      className="w-full py-2.5 bg-gradient-to-r from-[#E11D48] to-[#EA580C] hover:opacity-95 text-white rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 mt-4 shadow-sm"
+                      className="w-full py-3 bg-gradient-to-r from-[#E11D48] to-[#EA580C] hover:opacity-95 text-white rounded-xl font-extrabold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 mt-4 shadow-md hover:shadow-lg"
                     >
-                      {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : <Save size={14} />} 
+                      {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : <Save size={15} />} 
                       <span>บันทึกส่วนเสริม</span>
                     </button>
                   </form>
                 </div>
 
                 {/* Section List */}
-                <div className="xl:col-span-7 bg-white border border-slate-200/80 rounded-2xl p-5 sm:p-6 shadow-xs">
-                  <h3 className="font-bold text-slate-900 text-sm mb-4 pb-3 border-b border-slate-100">
+                <div className="xl:col-span-7 bg-white border-2 border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-sm">
+                  <h3 className="font-extrabold text-slate-950 text-sm mb-4 pb-3 border-b-2 border-slate-100">
                     รายการส่วนเสริมทั้งหมด ({sections.length})
                   </h3>
 
                   {sections.length === 0 ? (
-                    <div className="p-8 text-center text-slate-400 border border-dashed border-slate-200 rounded-xl">
+                    <div className="p-8 text-center text-slate-500 border-2 border-dashed border-slate-300 rounded-xl bg-slate-50/70">
                       ยังไม่มีข้อมูลส่วนเสริมในระบบ
                     </div>
                   ) : (
@@ -2216,35 +2096,35 @@ export default function AdminDashboard() {
                         <div 
                           key={s.id} 
                           onClick={() => setSelectedSectionId(s.id)}
-                          className={`p-4 rounded-xl border transition-all cursor-pointer flex justify-between items-center text-xs ${
+                          className={`p-4 rounded-xl border-2 transition-all cursor-pointer flex justify-between items-center text-xs ${
                             selectedSectionId === s.id 
-                              ? 'bg-rose-50/70 border-rose-300 shadow-xs' 
-                              : 'bg-slate-50 border-slate-200 hover:border-slate-300'
+                              ? 'bg-rose-50/90 border-rose-400 shadow-sm ring-2 ring-rose-200/60' 
+                              : 'bg-white hover:bg-slate-50/90 border-slate-200/90 hover:border-slate-300 shadow-2xs'
                           }`}
                         >
                           <div>
                             <div className="flex items-center gap-2">
-                              <span className="font-bold text-slate-900">
+                              <span className="font-extrabold text-slate-950">
                                 {s.title_th || s.title_en}
                               </span>
-                              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white text-slate-600 border border-slate-200">
+                              <span className="text-[10px] font-mono px-2 py-0.5 rounded font-bold bg-slate-100 text-slate-800 border border-slate-300">
                                 #{s.id}
                               </span>
                             </div>
-                            <span className="text-slate-500 text-[11px] block mt-0.5">
+                            <span className="text-slate-600 text-[11px] font-medium block mt-0.5">
                               {s.subtitle_th || s.subtitle_en}
                             </span>
                           </div>
                           <div className="flex gap-2 shrink-0">
                             <button 
                               onClick={(e) => { e.stopPropagation(); setSectionForm(s); setIsSectionEdit(true); }} 
-                              className="px-2.5 py-1 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 text-[11px] font-semibold"
+                              className="px-3 py-1.5 rounded-lg border-2 border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-bold shadow-xs"
                             >
                               แก้ไข
                             </button>
                             <button 
                               onClick={(e) => { e.stopPropagation(); handleDeleteSection(s.id); }} 
-                              className="px-2.5 py-1 rounded-lg border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 text-[11px] font-semibold"
+                              className="px-3 py-1.5 rounded-lg border-2 border-rose-300 bg-rose-100 hover:bg-rose-200 text-rose-950 text-xs font-bold shadow-xs"
                             >
                               ลบ
                             </button>
@@ -2259,29 +2139,29 @@ export default function AdminDashboard() {
 
               {/* Sub-items manager for selected section */}
               {selectedSectionId && (
-                <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-xs">
-                  <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
+                <div className="bg-white border-2 border-slate-200/90 rounded-2xl p-6 shadow-sm">
+                  <div className="flex items-center justify-between pb-3 mb-4 border-b-2 border-slate-100">
                     <div>
-                      <h4 className="font-bold text-slate-900 text-sm flex items-center gap-2">
-                        <Layers size={16} className="text-[#E11D48]" />
+                      <h4 className="font-extrabold text-slate-950 text-sm flex items-center gap-2">
+                        <Layers size={18} className="text-[#E11D48]" />
                         <span>จัดการรายการย่อยในหมวด: #{selectedSectionId}</span>
                       </h4>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-slate-600 font-medium">
                         เพิ่มไอเทมย่อยที่จะแสดงเป็นการ์ดในส่วนเสริมนี้
                       </p>
                     </div>
                     <button 
                       onClick={() => setSelectedSectionId(null)} 
-                      className="text-xs text-slate-500 hover:text-slate-800 px-3 py-1 rounded-lg bg-slate-100"
+                      className="text-xs font-bold text-slate-800 hover:text-slate-950 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-300 shadow-2xs"
                     >
                       ปิดส่วนนี้
                     </button>
                   </div>
 
                   {/* Sub-item form */}
-                  <form onSubmit={handleSectionItemSubmit} className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6 bg-slate-50 p-4 rounded-xl border border-slate-200/80">
+                  <form onSubmit={handleSectionItemSubmit} className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6 bg-slate-50/90 p-4 rounded-xl border-2 border-slate-200">
                     <div>
-                      <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                      <label className="block text-xs font-bold text-slate-800 mb-1">
                         หัวข้อย่อย (ภาษาไทย)
                       </label>
                       <input 
@@ -2289,28 +2169,29 @@ export default function AdminDashboard() {
                         type="text" 
                         value={sectionItemForm.title_th} 
                         onChange={e => setSectionItemForm({...sectionItemForm, title_th: e.target.value})} 
-                        className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-800" 
+                        className="w-full bg-white border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:border-[#E11D48] transition-all" 
                         placeholder="เช่น ESP32-C3 Controller"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                      <label className="block text-xs font-bold text-slate-800 mb-1">
                         ลิงก์รูปภาพ (Image URL)
                       </label>
                       <input 
                         type="text" 
                         value={sectionItemForm.imageUrl} 
                         onChange={e => setSectionItemForm({...sectionItemForm, imageUrl: e.target.value})} 
-                        className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-800" 
+                        className="w-full bg-white border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:border-[#E11D48] transition-all" 
                         placeholder="https://..."
                       />
                     </div>
                     <div className="flex items-end">
                       <button 
                         disabled={isSaving} 
-                        className="w-full py-2 bg-[#E11D48] hover:bg-[#c62828] text-white rounded-lg font-bold text-xs uppercase tracking-wider shadow-xs"
+                        className="w-full py-2.5 bg-gradient-to-r from-[#E11D48] to-[#EA580C] hover:opacity-95 text-white rounded-xl font-extrabold text-xs uppercase tracking-wider shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-1.5"
                       >
-                        {isSectionItemEdit ? 'อัปเดตรายการ' : '+ เพิ่มรายการย่อย'}
+                        {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : null}
+                        <span>{isSectionItemEdit ? 'อัปเดตรายการ' : '+ เพิ่มรายการย่อย'}</span>
                       </button>
                     </div>
                   </form>
@@ -2320,19 +2201,19 @@ export default function AdminDashboard() {
                     {sectionItems.filter(it => it.section_id === selectedSectionId).map(it => (
                       <div 
                         key={it.id} 
-                        className="p-3 bg-slate-50 border border-slate-200 rounded-xl flex justify-between items-center text-xs"
+                        className="p-3.5 bg-white border-2 border-slate-200 rounded-xl flex justify-between items-center text-xs shadow-2xs"
                       >
-                        <span className="font-semibold text-slate-800">{it.title_th || it.title_en}</span>
+                        <span className="font-bold text-slate-950">{it.title_th || it.title_en}</span>
                         <div className="flex gap-2">
                           <button 
                             onClick={() => { setSectionItemForm(it); setIsSectionItemEdit(true); }} 
-                            className="px-2 py-1 rounded bg-white border border-slate-200 text-slate-700 text-[10px]"
+                            className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-900 text-xs font-bold shadow-2xs"
                           >
                             แก้ไข
                           </button>
                           <button 
                             onClick={() => handleDeleteSectionItem(it.id)} 
-                            className="px-2 py-1 rounded bg-rose-50 border border-rose-200 text-rose-700 text-[10px]"
+                            className="px-2.5 py-1 rounded-lg bg-rose-100 hover:bg-rose-200 border border-rose-300 text-rose-950 text-xs font-bold shadow-2xs"
                           >
                             ลบ
                           </button>
@@ -2348,13 +2229,13 @@ export default function AdminDashboard() {
 
           {/* ================= 08. SITE TITLES & HEADINGS ================= */}
           {activeMenu === 'titles' && (
-            <div className="max-w-4xl mx-auto bg-white border border-slate-200/80 rounded-2xl p-6 sm:p-8 shadow-xs">
-              <div className="pb-4 mb-6 border-b border-slate-100">
-                <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                  <Star size={18} className="text-[#EA580C]" />
+            <div className="max-w-4xl mx-auto bg-white border-2 border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-sm">
+              <div className="pb-4 mb-6 border-b-2 border-slate-100">
+                <h3 className="text-base font-extrabold text-slate-950 flex items-center gap-2.5">
+                  <Star size={20} className="text-[#EA580C]" />
                   <span>แก้ไขหัวข้อและคำอธิบายของแต่ละส่วน (Section Titles)</span>
                 </h3>
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-slate-600 font-medium mt-1">
                   ปรับแต่งข้อความส่วนหัวของโซนบริการ ผลงานจริง เหตุผลที่ควรเลือกเรา และ Call-to-Action
                 </p>
               </div>
@@ -2362,75 +2243,84 @@ export default function AdminDashboard() {
               <form onSubmit={handleConfSubmit} className="space-y-5 text-xs">
                 
                 {/* Services Zone */}
-                <div className="p-4 bg-slate-50 rounded-xl border border-slate-200/80 space-y-3">
-                  <span className="font-bold text-slate-900 block text-xs">โซนบริการ (Services Zone)</span>
+                <div className="p-5 bg-slate-50/90 rounded-xl border-2 border-slate-200 space-y-3.5">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                    <span className="font-extrabold text-slate-950 text-xs">โซนบริการ (Services Zone)</span>
+                  </div>
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[11px] text-slate-600 mb-1">หัวข้อบริการ (Services Title TH)</label>
+                      <label className="block text-xs font-bold text-slate-800 mb-1">หัวข้อบริการ (Services Title TH)</label>
                       <input 
                         type="text" 
                         value={configData.solutions_title_th} 
                         onChange={e => setConfigData({...configData, solutions_title_th: e.target.value})} 
-                        className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800" 
+                        className="w-full bg-white border-2 border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:border-[#EA580C] transition-all" 
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-slate-600 mb-1">คำอธิบายบริการ (Description TH)</label>
+                      <label className="block text-xs font-bold text-slate-800 mb-1">คำอธิบายบริการ (Description TH)</label>
                       <input 
                         type="text" 
                         value={configData.solutions_description_th} 
                         onChange={e => setConfigData({...configData, solutions_description_th: e.target.value})} 
-                        className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800" 
+                        className="w-full bg-white border-2 border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:border-[#EA580C] transition-all" 
                       />
                     </div>
                   </div>
                 </div>
 
                 {/* Portfolio Zone */}
-                <div className="p-4 bg-slate-50 rounded-xl border border-slate-200/80 space-y-3">
-                  <span className="font-bold text-slate-900 block text-xs">โซนผลงานจริง (Portfolio Zone)</span>
+                <div className="p-5 bg-slate-50/90 rounded-xl border-2 border-slate-200 space-y-3.5">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+                    <span className="font-extrabold text-slate-950 text-xs">โซนผลงานจริง (Portfolio Zone)</span>
+                  </div>
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[11px] text-slate-600 mb-1">หัวข้อผลงาน (Portfolio Title TH)</label>
+                      <label className="block text-xs font-bold text-slate-800 mb-1">หัวข้อผลงาน (Portfolio Title TH)</label>
                       <input 
                         type="text" 
                         value={configData.integrations_title_th} 
                         onChange={e => setConfigData({...configData, integrations_title_th: e.target.value})} 
-                        className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800" 
+                        className="w-full bg-white border-2 border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:border-[#EA580C] transition-all" 
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-slate-600 mb-1">คำอธิบายผลงาน (Description TH)</label>
+                      <label className="block text-xs font-bold text-slate-800 mb-1">คำอธิบายผลงาน (Description TH)</label>
                       <input 
                         type="text" 
                         value={configData.port_desc_th} 
                         onChange={e => setConfigData({...configData, port_desc_th: e.target.value})} 
-                        className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800" 
+                        className="w-full bg-white border-2 border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:border-[#EA580C] transition-all" 
                       />
                     </div>
                   </div>
                 </div>
 
                 {/* Why Choose & CTA */}
-                <div className="p-4 bg-slate-50 rounded-xl border border-slate-200/80 space-y-3">
-                  <span className="font-bold text-slate-900 block text-xs">ทำไมต้องเลือกเรา & แบนเนอร์ติดต่อ</span>
+                <div className="p-5 bg-slate-50/90 rounded-xl border-2 border-slate-200 space-y-3.5">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-sky-500"></span>
+                    <span className="font-extrabold text-slate-950 text-xs">ทำไมต้องเลือกเรา & แบนเนอร์ติดต่อ</span>
+                  </div>
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[11px] text-slate-600 mb-1">หัวข้อ Why Choose Us (TH)</label>
+                      <label className="block text-xs font-bold text-slate-800 mb-1">หัวข้อ Why Choose Us (TH)</label>
                       <input 
                         type="text" 
                         value={configData.why_choose_title_th} 
                         onChange={e => setConfigData({...configData, why_choose_title_th: e.target.value})} 
-                        className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800" 
+                        className="w-full bg-white border-2 border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:border-[#EA580C] transition-all" 
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-slate-600 mb-1">ข้อความหัวข้อแบนเนอร์ CTA (TH)</label>
+                      <label className="block text-xs font-bold text-slate-800 mb-1">ข้อความหัวข้อแบนเนอร์ CTA (TH)</label>
                       <input 
                         type="text" 
                         value={configData.cta_heading_th} 
                         onChange={e => setConfigData({...configData, cta_heading_th: e.target.value})} 
-                        className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800" 
+                        className="w-full bg-white border-2 border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:border-[#EA580C] transition-all" 
                       />
                     </div>
                   </div>
@@ -2438,9 +2328,9 @@ export default function AdminDashboard() {
 
                 <button 
                   disabled={isSaving} 
-                  className="w-full py-3 bg-gradient-to-r from-[#EA580C] to-[#E11D48] hover:opacity-95 text-white rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 mt-6 shadow-sm"
+                  className="w-full py-3.5 bg-gradient-to-r from-[#EA580C] to-[#E11D48] hover:opacity-95 text-white rounded-xl font-extrabold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 mt-6 shadow-md hover:shadow-lg"
                 >
-                  {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : <Save size={15} />} 
+                  {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : <Save size={16} />} 
                   <span>บันทึกหัวข้อเนื้อหา</span>
                 </button>
               </form>
@@ -2449,13 +2339,13 @@ export default function AdminDashboard() {
 
           {/* ================= 09. CONTACT INFORMATION ================= */}
           {activeMenu === 'contact' && (
-            <div className="max-w-4xl mx-auto bg-white border border-slate-200/80 rounded-2xl p-6 sm:p-8 shadow-xs">
-              <div className="pb-4 mb-6 border-b border-slate-100">
-                <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                  <Phone size={18} className="text-[#059669]" />
+            <div className="max-w-4xl mx-auto bg-white border-2 border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-sm">
+              <div className="pb-4 mb-6 border-b-2 border-slate-100">
+                <h3 className="text-base font-extrabold text-slate-950 flex items-center gap-2.5">
+                  <Phone size={20} className="text-[#059669]" />
                   <span>แก้ไขข้อมูลการติดต่อ (Contact Information)</span>
                 </h3>
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-slate-600 font-medium mt-1">
                   ปรับปรุงช่องทางการติดต่อ อีเมล เบอร์โทรศัพท์ LINE Official และลิงก์ Facebook
                 </p>
               </div>
@@ -2464,91 +2354,95 @@ export default function AdminDashboard() {
                 
                 {/* Contact channels */}
                 <div className="grid md:grid-cols-3 gap-4">
-                  <div>
-                    <label className="block text-[11px] font-bold text-rose-700 mb-1">
-                      อีเมล (Email)
+                  <div className="bg-rose-50/50 p-3.5 rounded-xl border-2 border-rose-200">
+                    <label className="block text-xs font-extrabold text-rose-950 mb-1.5 flex items-center gap-1.5">
+                      <Mail size={14} className="text-rose-600" />
+                      <span>อีเมล (Email)</span>
                     </label>
                     <input 
                       type="text" 
                       value={configData.contact_email} 
                       onChange={e => setConfigData({...configData, contact_email: e.target.value})} 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 outline-none focus:bg-white focus:border-[#E11D48]" 
+                      className="w-full bg-white border-2 border-rose-200 rounded-xl px-3.5 py-2 text-xs text-slate-950 font-medium outline-none hover:border-rose-300 focus:border-[#E11D48] transition-all" 
                       placeholder="contact@deedeviot.com"
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-[11px] font-bold text-amber-700 mb-1">
-                      เบอร์โทรศัพท์ (Phone)
+                  <div className="bg-amber-50/50 p-3.5 rounded-xl border-2 border-amber-200">
+                    <label className="block text-xs font-extrabold text-amber-950 mb-1.5 flex items-center gap-1.5">
+                      <Phone size={14} className="text-amber-600" />
+                      <span>เบอร์โทรศัพท์ (Phone)</span>
                     </label>
                     <input 
                       type="text" 
                       value={configData.contact_phone} 
                       onChange={e => setConfigData({...configData, contact_phone: e.target.value})} 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 outline-none focus:bg-white focus:border-[#EA580C]" 
+                      className="w-full bg-white border-2 border-amber-200 rounded-xl px-3.5 py-2 text-xs text-slate-950 font-medium outline-none hover:border-amber-300 focus:border-[#EA580C] transition-all" 
                       placeholder="08x-xxx-xxxx"
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-[11px] font-bold text-emerald-700 mb-1">
-                      LINE Official ID
+                  <div className="bg-emerald-50/50 p-3.5 rounded-xl border-2 border-emerald-200">
+                    <label className="block text-xs font-extrabold text-emerald-950 mb-1.5 flex items-center gap-1.5">
+                      <MessageSquare size={14} className="text-emerald-600" />
+                      <span>LINE Official ID</span>
                     </label>
                     <input 
                       type="text" 
                       value={configData.contact_line} 
                       onChange={e => setConfigData({...configData, contact_line: e.target.value})} 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 outline-none focus:bg-white focus:border-[#059669]" 
+                      className="w-full bg-white border-2 border-emerald-200 rounded-xl px-3.5 py-2 text-xs text-slate-950 font-medium outline-none hover:border-emerald-300 focus:border-[#059669] transition-all" 
                       placeholder="@DEEDEVIOT"
                     />
                   </div>
                 </div>
 
                 {/* Facebook */}
-                <div>
-                  <label className="block text-[11px] font-bold text-sky-700 mb-1">
-                    Facebook Page URL
+                <div className="bg-sky-50/50 p-3.5 rounded-xl border-2 border-sky-200">
+                  <label className="block text-xs font-extrabold text-sky-950 mb-1.5 flex items-center gap-1.5">
+                    <Globe size={14} className="text-sky-600" />
+                    <span>Facebook Page URL</span>
                   </label>
                   <input 
                     type="text" 
                     value={configData.facebook_url} 
                     onChange={e => setConfigData({...configData, facebook_url: e.target.value})} 
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 outline-none focus:bg-white focus:border-[#0284C7]" 
+                    className="w-full bg-white border-2 border-sky-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-950 font-medium outline-none hover:border-sky-300 focus:border-[#0284C7] transition-all" 
                     placeholder="https://facebook.com/deedeviot"
                   />
                 </div>
 
                 {/* Contact titles */}
-                <div className="grid md:grid-cols-2 gap-4 pt-4 border-t border-slate-100">
+                <div className="grid md:grid-cols-2 gap-4 pt-4 border-t-2 border-slate-100">
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                    <label className="block text-xs font-bold text-slate-800 mb-1">
                       หัวข้อส่วนติดต่อ (Contact Title TH)
                     </label>
                     <input 
                       type="text" 
                       value={configData.contact_title_th} 
                       onChange={e => setConfigData({...configData, contact_title_th: e.target.value})} 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 outline-none focus:bg-white focus:border-[#059669]" 
+                      className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#059669] transition-all" 
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                    <label className="block text-xs font-bold text-slate-800 mb-1">
                       คำอธิบายส่วนติดต่อ (Contact Description TH)
                     </label>
                     <input 
                       type="text" 
                       value={configData.contact_description_th} 
                       onChange={e => setConfigData({...configData, contact_description_th: e.target.value})} 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 outline-none focus:bg-white focus:border-[#059669]" 
+                      className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#059669] transition-all" 
                     />
                   </div>
                 </div>
 
                 <button 
                   disabled={isSaving} 
-                  className="w-full py-3 bg-gradient-to-r from-[#059669] to-[#0284C7] hover:opacity-95 text-white rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 mt-6 shadow-sm"
+                  className="w-full py-3.5 bg-gradient-to-r from-[#059669] to-[#0284C7] hover:opacity-95 text-white rounded-xl font-extrabold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 mt-6 shadow-md hover:shadow-lg"
                 >
-                  {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : <Save size={15} />} 
+                  {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : <Save size={16} />} 
                   <span>บันทึกข้อมูลติดต่อ</span>
                 </button>
               </form>
@@ -2557,13 +2451,13 @@ export default function AdminDashboard() {
 
           {/* ================= 10. FOOTER CONFIG ================= */}
           {activeMenu === 'footer' && (
-            <div className="max-w-4xl mx-auto bg-white border border-slate-200/80 rounded-2xl p-6 sm:p-8 shadow-xs">
-              <div className="pb-4 mb-6 border-b border-slate-100">
-                <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                  <Globe size={18} className="text-[#0284C7]" />
+            <div className="max-w-4xl mx-auto bg-white border-2 border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-sm">
+              <div className="pb-4 mb-6 border-b-2 border-slate-100">
+                <h3 className="text-base font-extrabold text-slate-950 flex items-center gap-2.5">
+                  <Globe size={20} className="text-[#0284C7]" />
                   <span>แก้ไขข้อมูลส่วนท้ายเว็บไซต์ (Footer Configuration)</span>
                 </h3>
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-slate-600 font-medium mt-1">
                   ปรับแต่งคำแนะนำแนะนำบริษัทและลิขสิทธิ์ด้านล่างสุดของเว็บไซต์
                 </p>
               </div>
@@ -2571,46 +2465,46 @@ export default function AdminDashboard() {
               <form onSubmit={handleConfSubmit} className="space-y-5 text-xs">
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                    <label className="block text-xs font-bold text-slate-800 mb-1">
                       คำแนะนำบริษัทสั้นๆ (ภาษาไทย)
                     </label>
                     <textarea 
                       rows={3} 
                       value={configData.footer_bio_th} 
                       onChange={e => setConfigData({...configData, footer_bio_th: e.target.value})} 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 outline-none focus:bg-white focus:border-[#0284C7]" 
+                      className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl p-3.5 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#0284C7] transition-all leading-relaxed" 
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                    <label className="block text-xs font-bold text-slate-800 mb-1">
                       Short Bio (English)
                     </label>
                     <textarea 
                       rows={3} 
                       value={configData.footer_bio_en} 
                       onChange={e => setConfigData({...configData, footer_bio_en: e.target.value})} 
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 outline-none focus:bg-white focus:border-[#0284C7]" 
+                      className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl p-3.5 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#0284C7] transition-all leading-relaxed" 
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                  <label className="block text-xs font-bold text-slate-800 mb-1">
                     Facebook Page Link
                   </label>
                   <input 
                     type="text" 
                     value={configData.facebook_url} 
                     onChange={e => setConfigData({...configData, facebook_url: e.target.value})} 
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 outline-none focus:bg-white focus:border-[#0284C7]" 
+                    className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#0284C7] transition-all" 
                   />
                 </div>
 
                 <button 
                   disabled={isSaving} 
-                  className="w-full py-3 bg-gradient-to-r from-[#0284C7] to-[#E11D48] hover:opacity-95 text-white rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 mt-6 shadow-sm"
+                  className="w-full py-3.5 bg-gradient-to-r from-[#0284C7] to-[#E11D48] hover:opacity-95 text-white rounded-xl font-extrabold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 mt-6 shadow-md hover:shadow-lg"
                 >
-                  {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : <Save size={15} />} 
+                  {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : <Save size={16} />} 
                   <span>บันทึกส่วน FOOTER</span>
                 </button>
               </form>
