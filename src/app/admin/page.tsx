@@ -946,7 +946,62 @@ export default function AdminDashboard() {
                     <ChevronRight size={16} className="text-slate-400 group-hover:text-[#059669] shrink-0 mt-0.5" />
                   </button>
 
-               {/* Form Column */}
+                  <button 
+                    onClick={() => setActiveMenu('concept')}
+                    className="p-4 border-2 border-slate-200 rounded-xl bg-slate-50/70 hover:bg-white hover:border-sky-300 hover:shadow-md transition-all text-left flex items-start justify-between group"
+                  >
+                    <div className="space-y-1">
+                      <span className="text-xs font-extrabold text-slate-950 block group-hover:text-[#0284C7] transition-colors">
+                        จุดเด่นและคอนเซปต์
+                      </span>
+                      <span className="text-[11px] text-slate-600 font-medium block leading-normal">
+                        จัดการ 4-6 จุดเด่นสำคัญและฟีเจอร์หลัก
+                      </span>
+                    </div>
+                    <ChevronRight size={16} className="text-slate-400 group-hover:text-[#0284C7] shrink-0 mt-0.5" />
+                  </button>
+
+                  <button 
+                    onClick={() => setActiveMenu('titles')}
+                    className="p-4 border-2 border-slate-200 rounded-xl bg-slate-50/70 hover:bg-white hover:border-amber-300 hover:shadow-md transition-all text-left flex items-start justify-between group"
+                  >
+                    <div className="space-y-1">
+                      <span className="text-xs font-extrabold text-slate-950 block group-hover:text-[#EA580C] transition-colors">
+                        หัวข้อเว็บไซต์ & Footer
+                      </span>
+                      <span className="text-[11px] text-slate-600 font-medium block leading-normal">
+                        ปรับแก้ข้อความพาดหัวโซนบริการและคำอธิบาย
+                      </span>
+                    </div>
+                    <ChevronRight size={16} className="text-slate-400 group-hover:text-[#EA580C] shrink-0 mt-0.5" />
+                  </button>
+
+                </div>
+              </div>
+
+              {/* Sync Tips Banner */}
+              <div className="bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-5 sm:p-6 flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-emerald-200/80 text-emerald-900 border border-emerald-300 flex items-center justify-center shrink-0">
+                  <Sparkles size={20} />
+                </div>
+                <div className="space-y-1 text-xs">
+                  <h4 className="font-extrabold text-emerald-950 text-sm">
+                    ข้อแนะนำในการจัดการข้อมูล
+                  </h4>
+                  <p className="text-emerald-900 font-medium leading-relaxed">
+                    เมื่อคุณทำการบันทึกข้อมูลในแต่ละหัวข้อ ระบบจะทำการบันทึกลง Google Sheets ทันทีและอัปเดตหน้าบ้านให้คุณแบบ Real-time หากข้อมูลยังไม่แสดงในหน้าเว็บ กรุณารอสักครู่หรือกดปุ่ม &quot;ซิงก์ข้อมูล&quot; ด้านบน
+                  </p>
+                </div>
+              </div>
+
+            </div>
+          )}
+
+          {/* ================= 02. SERVICES & REAL WORKS ================= */}
+          {activeMenu === 'services' && (
+            <div className="grid xl:grid-cols-12 gap-6 items-start">
+              
+              {/* Form Column */}
               <div className="xl:col-span-5 bg-white border-2 border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-sm">
                 <div className="flex items-center justify-between pb-4 mb-4 border-b-2 border-slate-100">
                   <div>
@@ -1512,7 +1567,103 @@ export default function AdminDashboard() {
                       .map(item => (
                       <div 
                         key={item.id} 
-                         {/* ================= 04. HERO SECTION CONFIG ================= */}
+                        className="bg-white hover:bg-slate-50/90 border-2 border-slate-200/90 hover:border-slate-300 p-4 rounded-xl flex flex-col sm:flex-row justify-between items-start gap-4 transition-all shadow-xs"
+                      >
+                        {/* Thumbnail on left */}
+                        <div className="flex items-start gap-3 flex-1 min-w-0">
+                          {item.imageUrl ? (
+                            <img 
+                              src={convertToDirectLink(item.imageUrl.split(',')[0])} 
+                              alt="thumb" 
+                              className="w-14 h-14 rounded-lg object-cover bg-white border-2 border-slate-300 shrink-0 shadow-2xs"
+                              onError={(e) => (e.currentTarget.style.display = 'none')}
+                            />
+                          ) : (
+                            <div className="w-14 h-14 rounded-lg bg-slate-100 text-slate-400 border-2 border-slate-200 flex items-center justify-center shrink-0">
+                              <ImageIcon size={20} />
+                            </div>
+                          )}
+
+                          <div className="space-y-1 min-w-0 flex-1">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <span className="font-extrabold text-slate-950 text-xs">
+                                {item.title_th || item.title}
+                              </span>
+                              {item.title_th && item.title && (
+                                <span className="text-slate-600 text-[11px] font-medium">({item.title})</span>
+                              )}
+                              <span className="px-2 py-0.5 rounded-md text-[10px] font-mono bg-amber-100 text-amber-950 border border-amber-300 font-bold">
+                                {item.tag || 'System'}
+                              </span>
+                              <span className="text-slate-600 text-[10px] font-mono font-bold bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
+                                #{item.id}
+                              </span>
+                            </div>
+
+                            <p className="text-[11px] text-slate-700 font-medium line-clamp-2 leading-relaxed">
+                              {item.description_th || item.description}
+                            </p>
+
+                            <div className="flex flex-wrap gap-2 text-[10px] pt-1">
+                              {item.imageUrl && (
+                                <span className="px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-950 border border-emerald-300 font-bold flex items-center gap-1 shadow-2xs">
+                                  <ImageIcon size={12} /> มีภาพประกอบ
+                                </span>
+                              )}
+                              {item.referenceUrl && (
+                                <a 
+                                  href={item.referenceUrl} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer" 
+                                  className="px-2.5 py-1 rounded-md bg-sky-100 text-sky-950 border border-sky-300 font-bold flex items-center gap-1 hover:underline shadow-2xs"
+                                >
+                                  <ExternalLink size={12} /> ลิงก์ระบบ
+                                </a>
+                              )}
+                              {item.manualUrl && (
+                                <a 
+                                  href={item.manualUrl} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer" 
+                                  className="px-2.5 py-1 rounded-md bg-amber-100 text-amber-950 border border-amber-300 font-bold flex items-center gap-1 hover:underline shadow-2xs"
+                                >
+                                  <FileText size={12} /> ดูคู่มือ
+                                </a>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Actions */}
+                        <div className="flex gap-2 shrink-0 self-end sm:self-start">
+                          <button 
+                            onClick={() => { 
+                              setIntForm(item); 
+                              setIsIntEdit(true); 
+                            }} 
+                            className="px-3 py-1.5 rounded-lg border-2 border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-bold flex items-center gap-1.5 shadow-xs"
+                          >
+                            <Edit3 size={13} />
+                            <span>แก้ไข</span>
+                          </button>
+                          <button 
+                            onClick={() => handleDeleteInt(item.id)} 
+                            className="px-3 py-1.5 rounded-lg border-2 border-rose-300 bg-rose-100 hover:bg-rose-200 text-rose-950 text-xs font-bold flex items-center gap-1.5 shadow-xs"
+                          >
+                            <Trash2 size={13} />
+                            <span>ลบ</span>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+            </div>
+          )}
+
+          {/* ================= 04. HERO SECTION CONFIG ================= */}
           {activeMenu === 'hero' && (
             <div className="max-w-4xl mx-auto bg-white border-2 border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-sm">
               <div className="pb-4 mb-6 border-b-2 border-slate-100">
