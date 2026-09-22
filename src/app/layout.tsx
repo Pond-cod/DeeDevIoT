@@ -5,6 +5,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
+  viewportFit: 'cover',
   themeColor: '#FFFFFF',
 }
 
@@ -39,7 +40,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="font-sans antialiased bg-[#FAFAFC] text-[#0F172A] min-h-screen selection:bg-[#E11D48]/15 selection:text-[#E11D48] overflow-x-hidden">
+      <body className="font-sans antialiased bg-[#FAFAFC] text-[#0F172A] min-h-screen selection:bg-[#E11D48]/15 selection:text-[#E11D48] overflow-x-hidden pb-[env(safe-area-inset-bottom)]">
         {children}
       </body>
     </html>

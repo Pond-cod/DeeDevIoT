@@ -382,10 +382,10 @@ export default function DeeDevIOTWebsite() {
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-xl border-2 border-slate-200 bg-white text-slate-800 hover:text-slate-950 shadow-xs"
+              className="md:hidden p-2.5 min-w-[44px] min-h-[44px] rounded-xl border-2 border-slate-200 bg-white text-slate-800 hover:text-slate-950 shadow-xs flex items-center justify-center touch-target"
               aria-label="เมนูหลัก"
             >
-              {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
+              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
         </div>
@@ -393,85 +393,89 @@ export default function DeeDevIOTWebsite() {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-40 md:hidden bg-white/98 backdrop-blur-xl pt-20 px-6 pb-8 flex flex-col justify-between">
-          <div className="flex items-center gap-2.5 pb-4 mb-2 border-b border-slate-200">
-            <div className="w-9 h-9 rounded-xl overflow-hidden border border-slate-200 bg-white p-0.5 shadow-2xs">
-              <img src="/logo.jpg" alt="DeeDevIoT" className="w-full h-full object-cover rounded-lg" />
-            </div>
-            <div className="font-mono text-base tracking-wider font-bold flex items-center">
-              <span className="text-slate-950 font-black">DEEDEV</span>
-              <span className="text-[#EA580C] mx-0.5 font-black">/</span>
-              <span className="bg-gradient-to-r from-[#E11D48] to-[#EA580C] bg-clip-text text-transparent font-extrabold">IOT</span>
-            </div>
-          </div>
-          <nav className="flex flex-col space-y-2.5 font-mono text-sm tracking-wider text-slate-800">
-            <a 
-              href="#hero" 
-              onClick={() => setMobileMenuOpen(false)} 
-              className="py-3 px-3.5 rounded-xl border-2 border-slate-200 bg-slate-50/60 hover:bg-slate-100 flex items-center justify-between font-bold"
-            >
-              <span>หน้าแรก (Home)</span>
-              <ChevronRight size={16} className="text-slate-400" />
-            </a>
-            <a 
-              href="#works" 
-              onClick={() => setMobileMenuOpen(false)} 
-              className="py-3 px-3.5 rounded-xl border-2 border-rose-200 bg-rose-50/50 hover:bg-rose-100/60 flex items-center justify-between font-bold text-rose-950"
-            >
-              <span>ผลงานจริง (Works)</span>
-              <ChevronRight size={16} className="text-rose-600" />
-            </a>
-            <a 
-              href="#services" 
-              onClick={() => setMobileMenuOpen(false)} 
-              className="py-3 px-3.5 rounded-xl border-2 border-sky-200 bg-sky-50/50 hover:bg-sky-100/60 flex items-center justify-between font-bold text-sky-950"
-            >
-              <span>บริการที่รับทำ (Services)</span>
-              <ChevronRight size={16} className="text-sky-600" />
-            </a>
-            <a 
-              href="#solutions" 
-              onClick={() => setMobileMenuOpen(false)} 
-              className="py-3 px-3.5 rounded-xl border-2 border-emerald-200 bg-emerald-50/50 hover:bg-emerald-100/60 flex items-center justify-between font-bold text-emerald-950"
-            >
-              <div className="flex items-center gap-2">
-                <span>โซลูชัน & IoT Lab (Solutions)</span>
-                <span className="text-[10px] bg-emerald-600 text-white px-2 py-0.5 rounded-full font-bold animate-pulse">LIVE</span>
+        <div className="fixed inset-0 z-40 md:hidden bg-white/98 backdrop-blur-xl pt-20 px-5 sm:px-6 pb-8 flex flex-col justify-between overflow-y-auto overscroll-contain safe-area-bottom">
+          <div>
+            <div className="flex items-center gap-2.5 pb-4 mb-3 border-b border-slate-200">
+              <div className="w-10 h-10 rounded-xl overflow-hidden border border-slate-200 bg-white p-0.5 shadow-2xs shrink-0">
+                <img src="/logo.jpg" alt="DeeDevIoT" className="w-full h-full object-cover rounded-lg" />
               </div>
-              <ChevronRight size={16} className="text-emerald-600" />
-            </a>
-            <a 
-              href="#contact" 
-              onClick={() => setMobileMenuOpen(false)} 
-              className="py-3 px-3.5 rounded-xl border-2 border-amber-200 bg-amber-50/50 hover:bg-amber-100/60 flex items-center justify-between font-bold text-amber-950"
-            >
-              <span>ช่องทางติดต่อ (Contact)</span>
-              <ChevronRight size={16} className="text-amber-600" />
-            </a>
-            <a 
-              href="#about" 
-              onClick={() => setMobileMenuOpen(false)} 
-              className="py-3 px-3.5 rounded-xl border-2 border-purple-200 bg-purple-50/50 hover:bg-purple-100/60 flex items-center justify-between font-bold text-purple-950"
-            >
-              <span>เกี่ยวกับเรา (About)</span>
-              <ChevronRight size={16} className="text-purple-600" />
-            </a>
-          </nav>
-          <div className="pt-4">
+              <div className="font-mono text-base tracking-wider font-bold flex items-center">
+                <span className="text-slate-950 font-black">DEEDEV</span>
+                <span className="text-[#EA580C] mx-0.5 font-black">/</span>
+                <span className="bg-gradient-to-r from-[#E11D48] to-[#EA580C] bg-clip-text text-transparent font-extrabold">IOT</span>
+              </div>
+            </div>
+
+            <nav className="flex flex-col space-y-2 font-mono text-sm tracking-wider text-slate-800">
+              <a 
+                href="#hero" 
+                onClick={() => setMobileMenuOpen(false)} 
+                className="py-3 px-3.5 min-h-[46px] rounded-xl border-2 border-slate-200 bg-slate-50/60 hover:bg-slate-100 flex items-center justify-between font-bold"
+              >
+                <span>หน้าแรก (Home)</span>
+                <ChevronRight size={16} className="text-slate-400" />
+              </a>
+              <a 
+                href="#works" 
+                onClick={() => setMobileMenuOpen(false)} 
+                className="py-3 px-3.5 min-h-[46px] rounded-xl border-2 border-rose-200 bg-rose-50/50 hover:bg-rose-100/60 flex items-center justify-between font-bold text-rose-950"
+              >
+                <span>ผลงานจริง (Works)</span>
+                <ChevronRight size={16} className="text-rose-600" />
+              </a>
+              <a 
+                href="#services" 
+                onClick={() => setMobileMenuOpen(false)} 
+                className="py-3 px-3.5 min-h-[46px] rounded-xl border-2 border-sky-200 bg-sky-50/50 hover:bg-sky-100/60 flex items-center justify-between font-bold text-sky-950"
+              >
+                <span>บริการที่รับทำ (Services)</span>
+                <ChevronRight size={16} className="text-sky-600" />
+              </a>
+              <a 
+                href="#solutions" 
+                onClick={() => setMobileMenuOpen(false)} 
+                className="py-3 px-3.5 min-h-[46px] rounded-xl border-2 border-emerald-200 bg-emerald-50/50 hover:bg-emerald-100/60 flex items-center justify-between font-bold text-emerald-950"
+              >
+                <div className="flex items-center gap-2">
+                  <span>โซลูชัน & IoT Lab (Solutions)</span>
+                  <span className="text-[10px] bg-emerald-600 text-white px-2 py-0.5 rounded-full font-bold animate-pulse">LIVE</span>
+                </div>
+                <ChevronRight size={16} className="text-emerald-600" />
+              </a>
+              <a 
+                href="#contact" 
+                onClick={() => setMobileMenuOpen(false)} 
+                className="py-3 px-3.5 min-h-[46px] rounded-xl border-2 border-amber-200 bg-amber-50/50 hover:bg-amber-100/60 flex items-center justify-between font-bold text-amber-950"
+              >
+                <span>ช่องทางติดต่อ (Contact)</span>
+                <ChevronRight size={16} className="text-amber-600" />
+              </a>
+              <a 
+                href="#about" 
+                onClick={() => setMobileMenuOpen(false)} 
+                className="py-3 px-3.5 min-h-[46px] rounded-xl border-2 border-purple-200 bg-purple-50/50 hover:bg-purple-100/60 flex items-center justify-between font-bold text-purple-950"
+              >
+                <span>เกี่ยวกับเรา (About)</span>
+                <ChevronRight size={16} className="text-purple-600" />
+              </a>
+            </nav>
+          </div>
+
+          <div className="pt-5 mt-4 border-t border-slate-100">
             <a
               href="#contact"
               onClick={() => setMobileMenuOpen(false)}
-              className="w-full py-4 bg-gradient-to-r from-[#E11D48] via-[#F43F5E] to-[#EA580C] text-white font-mono text-xs uppercase tracking-wider font-bold rounded-xl flex items-center justify-center gap-2 shadow-md"
+              className="w-full py-4 min-h-[48px] bg-gradient-to-r from-[#E11D48] via-[#F43F5E] to-[#EA580C] text-white font-mono text-xs uppercase tracking-wider font-bold rounded-xl flex items-center justify-center gap-2 shadow-md touch-target"
             >
               <span>ปรึกษาโปรเจกต์ฟรี</span>
-              <ArrowRight size={14} />
+              <ArrowRight size={15} />
             </a>
           </div>
         </div>
       )}
 
       {/* ================= 01. HOME // HERO SECTION (Vibrant Aurora & High Contrast) ================= */}
-      <section id="hero" className="relative pt-32 sm:pt-40 pb-20 border-b border-slate-300/80 overflow-hidden bg-aurora-hero bg-circuit-dots">
+      <section id="hero" className="relative pt-32 sm:pt-40 pb-16 sm:pb-20 border-b border-slate-300/80 overflow-hidden bg-aurora-hero bg-circuit-dots">
         
         {/* Soft Ambient Aurora Halos */}
         <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-gradient-to-b from-rose-200/50 via-orange-100/40 to-transparent blur-[120px] pointer-events-none -z-10" />
@@ -482,26 +486,26 @@ export default function DeeDevIOTWebsite() {
           
           {/* Badge */}
           <div className="flex items-center gap-2 mb-6">
-            <span className="px-4 py-1.5 rounded-full bg-white/95 backdrop-blur-md border-2 border-slate-200 text-xs font-mono text-slate-800 flex items-center gap-2.5 shadow-xs">
+            <span className="px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-md border-2 border-slate-200 text-xs font-mono text-slate-800 flex items-center gap-2.5 shadow-xs max-w-full overflow-hidden truncate">
               <img src="/logo.jpg" alt="DeeDevIoT" className="w-5 h-5 rounded-full object-cover shadow-2xs border border-slate-200 shrink-0" />
-              <span className="text-slate-950 font-extrabold tracking-wider">DEEDEV IOT</span>
-              <span className="text-slate-300">|</span>
-              <span className="text-slate-700 font-semibold">Connecting Devices. Developing Futures.</span>
+              <span className="text-slate-950 font-extrabold tracking-wider shrink-0">DEEDEV IOT</span>
+              <span className="text-slate-300 shrink-0">|</span>
+              <span className="text-slate-700 font-semibold truncate">Connecting Devices. Developing Futures.</span>
             </span>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             
             {/* Left Content */}
             <div className="lg:col-span-7">
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-950 leading-[1.18] mb-6">
+              <h1 className="text-[28px] xs:text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-950 leading-[1.22] mb-5 sm:mb-6">
                 มีไอเดีย แต่ยังไม่รู้จะทำ
                 <span className="block mt-1 bg-gradient-to-r from-[#E11D48] via-[#EA580C] to-[#D97706] bg-clip-text text-transparent">
                   ระบบอย่างไร?
                 </span>
               </h1>
 
-              <h2 className="text-lg sm:text-2xl font-bold text-slate-900 mb-4 leading-snug">
+              <h2 className="text-base sm:text-2xl font-bold text-slate-900 mb-4 leading-snug">
                 DeeDevIOT ช่วยเปลี่ยนไอเดียของคุณให้กลายเป็น{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0284C7] via-[#059669] to-[#EA580C] font-extrabold">
                   Web Application, IoT และระบบ IT
@@ -509,14 +513,14 @@ export default function DeeDevIOTWebsite() {
                 ที่ใช้งานได้จริงโดยทีมงานคนไทย
               </h2>
 
-              <p className="text-sm sm:text-base text-slate-700 max-w-2xl leading-relaxed mb-8 font-normal">
+              <p className="text-xs sm:text-base text-slate-700 max-w-2xl leading-relaxed mb-6 sm:mb-8 font-normal">
                 ตั้งแต่การออกแบบระบบ พัฒนาโปรแกรม เชื่อมต่ออุปกรณ์ ไปจนถึงนำระบบไปใช้งานจริง สำหรับเจ้าของธุรกิจ SME โรงงาน และผู้ที่ต้องการลดงาน Manual ด้วยระบบดิจิทัล
               </p>
 
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-8">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 sm:gap-4 mb-6 sm:mb-8">
                 <a
                   href="#contact"
-                  className="px-8 py-4 bg-gradient-to-r from-[#E11D48] via-[#F43F5E] to-[#EA580C] hover:brightness-105 text-white font-mono text-xs uppercase tracking-wider font-bold rounded-xl transition-all flex items-center justify-center gap-2.5 shadow-[0_4px_20px_rgba(225,29,72,0.35)] hover:shadow-[0_6px_25px_rgba(225,29,72,0.45)] transform hover:-translate-y-0.5"
+                  className="px-8 py-3.5 sm:py-4 min-h-[48px] bg-gradient-to-r from-[#E11D48] via-[#F43F5E] to-[#EA580C] hover:brightness-105 text-white font-mono text-xs uppercase tracking-wider font-bold rounded-xl transition-all flex items-center justify-center gap-2.5 shadow-[0_4px_20px_rgba(225,29,72,0.35)] hover:shadow-[0_6px_25px_rgba(225,29,72,0.45)] transform hover:-translate-y-0.5 touch-target"
                 >
                   <Sparkles size={16} />
                   <span>ปรึกษาโปรเจกต์ฟรี</span>
@@ -525,24 +529,24 @@ export default function DeeDevIOTWebsite() {
 
                 <a
                   href="#works"
-                  className="px-8 py-4 bg-white/95 backdrop-blur-md text-slate-900 border-2 border-slate-300 hover:border-slate-500 hover:text-slate-950 font-mono text-xs uppercase tracking-wider font-bold rounded-xl transition-all flex items-center justify-center gap-2 shadow-xs transform hover:-translate-y-0.5"
+                  className="px-8 py-3.5 sm:py-4 min-h-[48px] bg-white/95 backdrop-blur-md text-slate-900 border-2 border-slate-300 hover:border-slate-500 hover:text-slate-950 font-mono text-xs uppercase tracking-wider font-bold rounded-xl transition-all flex items-center justify-center gap-2 shadow-xs transform hover:-translate-y-0.5 touch-target"
                 >
                   <span>ดูผลงานจริง</span>
                   <ArrowDown size={14} className="text-[#0284C7]" />
                 </a>
               </div>
 
-              <div className="flex flex-wrap items-center gap-3 text-xs font-mono font-bold">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[11px] sm:text-xs font-mono font-bold">
                 <span className="flex items-center gap-1.5 text-emerald-900 bg-emerald-100/90 px-3 py-1.5 rounded-lg border border-emerald-300 shadow-2xs">
-                  <CheckCircle2 size={14} className="text-emerald-700" />
+                  <CheckCircle2 size={14} className="text-emerald-700 shrink-0" />
                   <span>รับพัฒนาตามโจทย์จริง</span>
                 </span>
                 <span className="flex items-center gap-1.5 text-sky-900 bg-sky-100/90 px-3 py-1.5 rounded-lg border border-sky-300 shadow-2xs">
-                  <CheckCircle2 size={14} className="text-sky-700" />
+                  <CheckCircle2 size={14} className="text-sky-700 shrink-0" />
                   <span>ส่งมอบ Source Code 100%</span>
                 </span>
                 <span className="flex items-center gap-1.5 text-amber-950 bg-amber-100/90 px-3 py-1.5 rounded-lg border border-amber-300 shadow-2xs">
-                  <CheckCircle2 size={14} className="text-amber-700" />
+                  <CheckCircle2 size={14} className="text-amber-700 shrink-0" />
                   <span>ปรึกษาแนวทางเทคนิคฟรี</span>
                 </span>
               </div>
@@ -658,11 +662,11 @@ export default function DeeDevIOTWebsite() {
             </div>
 
             {/* Dynamic Category Filter Pills */}
-            <div className="flex flex-wrap items-center gap-2 font-mono text-xs">
+            <div className="flex flex-nowrap sm:flex-wrap items-center gap-2 font-mono text-xs overflow-x-auto no-scrollbar py-1.5 -mx-4 px-4 sm:mx-0 sm:px-0">
               <button
                 type="button"
                 onClick={() => setSelectedWorkCategory('all')}
-                className={`px-4 py-2 rounded-xl border-2 transition-all font-bold ${
+                className={`px-4 py-2.5 rounded-xl border-2 transition-all font-bold shrink-0 whitespace-nowrap min-h-[42px] flex items-center ${
                   selectedWorkCategory === 'all'
                     ? 'bg-gradient-to-r from-[#E11D48] to-[#EA580C] text-white border-transparent shadow-md transform -translate-y-0.5'
                     : 'bg-white/95 backdrop-blur-sm text-slate-800 border-slate-300 hover:border-slate-500 shadow-2xs'
@@ -675,7 +679,7 @@ export default function DeeDevIOTWebsite() {
                   key={cat}
                   type="button"
                   onClick={() => setSelectedWorkCategory(cat)}
-                  className={`px-4 py-2 rounded-xl border-2 transition-all uppercase font-bold ${
+                  className={`px-4 py-2.5 rounded-xl border-2 transition-all uppercase font-bold shrink-0 whitespace-nowrap min-h-[42px] flex items-center ${
                     selectedWorkCategory.toLowerCase() === cat.toLowerCase()
                       ? 'bg-gradient-to-r from-[#E11D48] to-[#EA580C] text-white border-transparent shadow-md transform -translate-y-0.5'
                       : 'bg-white/95 backdrop-blur-sm text-slate-800 border-slate-300 hover:border-slate-500 shadow-2xs'
@@ -741,22 +745,22 @@ export default function DeeDevIOTWebsite() {
                     <button
                       type="button"
                       onClick={() => setActiveProjectModal(project)}
-                      className="text-slate-700 hover:text-slate-950 transition-colors flex items-center gap-1 font-bold"
+                      className="text-slate-700 hover:text-slate-950 transition-colors flex items-center gap-1.5 font-bold min-h-[40px] px-1"
                     >
                       <span>ดูรายละเอียด</span>
                       <ChevronRight size={14} className="text-[#0284C7]" />
                     </button>
 
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-2">
                       {project.manualUrl && (
                         <a
                           href={project.manualUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-sky-900 hover:text-sky-950 bg-sky-100 hover:bg-sky-200 border border-sky-300 px-3 py-1.5 rounded-lg text-[11px] font-bold transition-colors inline-flex items-center gap-1 shadow-2xs"
+                          className="text-sky-900 hover:text-sky-950 bg-sky-100 hover:bg-sky-200 border border-sky-300 px-3 py-2 rounded-lg text-xs font-bold transition-colors inline-flex items-center gap-1.5 shadow-2xs min-h-[40px]"
                           title="เปิดดูคู่มือการใช้งาน"
                         >
-                          <FileText size={12} />
+                          <FileText size={13} />
                           <span>คู่มือ</span>
                         </a>
                       )}
@@ -766,14 +770,14 @@ export default function DeeDevIOTWebsite() {
                           href={project.demoUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-white bg-gradient-to-r from-[#E11D48] to-[#EA580C] hover:brightness-105 px-3.5 py-1.5 rounded-lg text-[11px] font-bold transition-colors inline-flex items-center gap-1 shadow-xs"
+                          className="text-white bg-gradient-to-r from-[#E11D48] to-[#EA580C] hover:brightness-105 px-3.5 py-2 rounded-lg text-xs font-bold transition-colors inline-flex items-center gap-1.5 shadow-xs min-h-[40px]"
                           title="เปิดดูเนื้อหา / Live Demo"
                         >
                           <span>เปิดดูเนื้อหา</span>
-                          <ExternalLink size={12} />
+                          <ExternalLink size={13} />
                         </a>
                       ) : (
-                        <span className="text-slate-500 text-[11px] px-2 py-0.5 rounded bg-slate-100 border border-slate-200">Production</span>
+                        <span className="text-slate-500 text-[11px] px-2.5 py-1 rounded bg-slate-100 border border-slate-200">Production</span>
                       )}
                     </div>
                   </div>
@@ -841,10 +845,10 @@ export default function DeeDevIOTWebsite() {
               { title: 'API Integration', desc: 'เชื่อมต่อภายนอก', color: 'from-rose-500 to-red-600', textCol: 'text-rose-900', borderHover: 'hover:border-rose-400' },
               { title: 'Database', desc: 'จัดเก็บข้อมูลปลอดภัย', color: 'from-blue-500 to-cyan-600', textCol: 'text-blue-900', borderHover: 'hover:border-blue-400' },
               { title: 'IT Solutions', desc: 'วางระบบโครงสร้าง', color: 'from-orange-500 to-amber-600', textCol: 'text-orange-950', borderHover: 'hover:border-orange-400' }
-            ].map((cap) => (
+            ].map((cap, idx) => (
               <div 
                 key={cap.title} 
-                className={`p-4 rounded-xl bg-white/95 backdrop-blur-sm border-2 border-slate-200/90 ${cap.borderHover} transition-all transform hover:-translate-y-1 shadow-xs hover:shadow-md group`}
+                className={`p-4 rounded-xl bg-white/95 backdrop-blur-sm border-2 border-slate-200/90 ${cap.borderHover} transition-all transform hover:-translate-y-1 shadow-xs hover:shadow-md group ${idx === 6 ? 'col-span-2 sm:col-span-1' : ''}`}
               >
                 <div className={`w-8 h-1 rounded-full bg-gradient-to-r ${cap.color} mx-auto mb-3 group-hover:w-12 transition-all`} />
                 <div className={`font-extrabold text-xs mb-1 ${cap.textCol}`}>{cap.title}</div>
@@ -1103,13 +1107,13 @@ export default function DeeDevIOTWebsite() {
                             e.stopPropagation();
                             handleToggleRelay(device.id);
                           }}
-                          className={`px-3.5 py-1.5 rounded-lg font-bold text-[11px] transition-all flex items-center gap-1.5 shadow-xs ${
+                          className={`px-4 py-2 rounded-xl font-bold text-xs transition-all flex items-center gap-1.5 shadow-xs min-h-[44px] touch-target ${
                             device.relayStatus
                               ? 'bg-gradient-to-r from-[#E11D48] to-[#EA580C] text-white hover:brightness-105 shadow-rose-300/50'
                               : 'bg-slate-200 text-slate-800 hover:bg-slate-300 border border-slate-300'
                           }`}
                         >
-                          <Power size={12} />
+                          <Power size={13} />
                           <span>{device.relayStatus ? 'ปิดสวิตช์' : 'เปิดสวิตช์'}</span>
                         </button>
                       </div>
@@ -1120,12 +1124,12 @@ export default function DeeDevIOTWebsite() {
               </div>
 
               {/* Recharts Live Visualization */}
-              <div className="p-6 bg-white/95 backdrop-blur-sm border-2 border-slate-200/90 rounded-2xl shadow-xs">
+              <div className="p-4 sm:p-6 bg-white/95 backdrop-blur-sm border-2 border-slate-200/90 rounded-2xl shadow-xs">
                 <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-200 font-mono text-xs">
                   <div className="flex items-center gap-2">
                     <Activity size={15} className="text-[#E11D48]" />
-                    <span className="text-slate-950 font-extrabold">
-                      กราฟแนวโน้มอุณหภูมิและความชื้น: <span className="text-[#0284C7]">{selectedDevice.name}</span> ({selectedDevice.hardwareModel})
+                    <span className="text-slate-950 font-extrabold text-[11px] sm:text-xs">
+                      กราฟแนวโน้ม: <span className="text-[#0284C7]">{selectedDevice.name}</span>
                     </span>
                   </div>
                   <span className="text-[10px] text-amber-950 bg-amber-100 px-2.5 py-0.5 rounded border border-amber-300 font-extrabold">
@@ -1133,10 +1137,10 @@ export default function DeeDevIOTWebsite() {
                   </span>
                 </div>
 
-                <div className="h-52 w-full">
+                <div className="h-44 sm:h-52 w-full">
                   {isClientMounted ? (
                     <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={selectedDevice.telemetryHistory} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
+                      <AreaChart data={selectedDevice.telemetryHistory} margin={{ top: 10, right: 8, left: -22, bottom: 0 }}>
                         <defs>
                           <linearGradient id="tempGradientLight" x1="0" y1="0" x2="0" y2="1">
                             <stop offset="5%" stopColor="#E11D48" stopOpacity={0.3}/>
@@ -1165,8 +1169,8 @@ export default function DeeDevIOTWebsite() {
                   )}
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-slate-200 flex flex-wrap items-center justify-between font-mono text-[11px] text-slate-700 font-medium">
-                  <div className="flex items-center gap-5">
+                <div className="mt-4 pt-3 border-t border-slate-200 flex flex-wrap items-center justify-between font-mono text-[11px] text-slate-700 font-medium gap-2">
+                  <div className="flex items-center gap-4">
                     <span>สัญญาณ: <strong className="text-emerald-800">{selectedDevice.wifiSignalDbm} dBm</strong></span>
                     <span>Latency: <strong className="text-sky-800">{selectedDevice.connectionLatencyMs ? `${selectedDevice.connectionLatencyMs} ms` : 'N/A'}</strong></span>
                   </div>
@@ -1177,7 +1181,7 @@ export default function DeeDevIOTWebsite() {
             </div>
 
             {/* Right Column: Event History */}
-            <div className="lg:col-span-4 bg-white/95 backdrop-blur-sm border-2 border-slate-200/90 rounded-2xl p-6 shadow-xs">
+            <div className="lg:col-span-4 bg-white/95 backdrop-blur-sm border-2 border-slate-200/90 rounded-2xl p-4 sm:p-6 shadow-xs">
               <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-200 font-mono text-xs">
                 <span className="text-slate-950 font-extrabold flex items-center gap-2">
                   <Clock size={15} className="text-[#E11D48]" />
@@ -1188,7 +1192,7 @@ export default function DeeDevIOTWebsite() {
                 </span>
               </div>
 
-              <div className="space-y-3 font-mono text-xs">
+              <div className="space-y-3 font-mono text-xs max-h-[340px] overflow-y-auto pr-1">
                 {telemetryLogs.map((log) => (
                   <div key={log.eventId} className="p-3 bg-slate-50 border border-slate-200 rounded-xl shadow-2xs">
                     <div className="flex items-center justify-between text-[10px] mb-1.5">
@@ -1254,7 +1258,7 @@ export default function DeeDevIOTWebsite() {
               href={`https://line.me/ti/p/~${(siteConfig.contact_line || '@DEEDEVIOT').replace('@', '')}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto px-8 py-4 bg-[#06C755] hover:bg-[#05b34c] text-white font-mono text-xs uppercase tracking-wider font-extrabold rounded-xl transition-all flex items-center justify-center gap-2.5 shadow-[0_4px_20px_rgba(6,199,85,0.35)] transform hover:-translate-y-0.5"
+              className="w-full sm:w-auto px-8 py-4 bg-[#06C755] hover:bg-[#05b34c] text-white font-mono text-xs uppercase tracking-wider font-extrabold rounded-xl transition-all flex items-center justify-center gap-2.5 shadow-[0_4px_20px_rgba(6,199,85,0.35)] transform hover:-translate-y-0.5 min-h-[48px] touch-target"
             >
               <MessageCircle size={18} />
               <span>คุยกับเราใน LINE →</span>
@@ -1263,7 +1267,7 @@ export default function DeeDevIOTWebsite() {
             {/* Email - Crisp Deep Slate / Rose */}
             <a
               href={`mailto:${siteConfig.contact_email || 'hello@deedeviot.com'}`}
-              className="w-full sm:w-auto px-8 py-4 bg-slate-950 hover:bg-[#E11D48] text-white font-mono text-xs uppercase tracking-wider font-extrabold rounded-xl transition-all flex items-center justify-center gap-2.5 shadow-md transform hover:-translate-y-0.5"
+              className="w-full sm:w-auto px-8 py-4 bg-slate-950 hover:bg-[#E11D48] text-white font-mono text-xs uppercase tracking-wider font-extrabold rounded-xl transition-all flex items-center justify-center gap-2.5 shadow-md transform hover:-translate-y-0.5 min-h-[48px] touch-target"
             >
               <Mail size={18} />
               <span>ส่งอีเมลปรึกษาเรา</span>
@@ -1271,7 +1275,7 @@ export default function DeeDevIOTWebsite() {
           </div>
 
           {/* Direct Channels Information Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 text-left font-mono text-xs">
+          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 text-left font-mono text-xs">
             <div className="p-4 bg-emerald-50/80 border-2 border-emerald-200/90 rounded-2xl shadow-2xs">
               <span className="text-[10px] text-emerald-800 block mb-1 font-extrabold">LINE OFFICIAL</span>
               <span className="text-slate-950 font-extrabold">{siteConfig.contact_line || '@DEEDEVIOT'}</span>
@@ -1592,21 +1596,24 @@ export default function DeeDevIOTWebsite() {
 
       {/* ================= ARCHITECTURE / PROJECT MODAL ================= */}
       {activeProjectModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-6 bg-slate-900/60 backdrop-blur-sm">
           <div 
-            className="w-full max-w-2xl bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 relative shadow-2xl max-h-[90vh] overflow-y-auto"
+            className="w-full max-w-2xl bg-white border-t sm:border border-slate-200 rounded-t-3xl sm:rounded-2xl p-5 sm:p-8 relative shadow-2xl max-h-[92vh] sm:max-h-[90vh] overflow-y-auto safe-area-bottom"
             role="dialog"
             aria-modal="true"
           >
+            {/* Mobile Pull Handle Indicator */}
+            <div className="w-12 h-1.5 bg-slate-300 rounded-full mx-auto mb-4 sm:hidden" />
+
             {/* Modal Cover Image if available */}
             {activeProjectModal.imageUrl && (
-              <div className="relative h-48 sm:h-56 -mx-6 sm:-mx-8 -mt-6 sm:-mt-8 mb-6 overflow-hidden rounded-t-2xl bg-slate-100 border-b border-slate-200">
+              <div className="relative h-44 sm:h-56 -mx-5 sm:-mx-8 -mt-2 sm:-mt-8 mb-5 overflow-hidden rounded-t-xl sm:rounded-t-2xl bg-slate-100 border-b border-slate-200">
                 <img
                   src={activeProjectModal.imageUrl}
                   alt={activeProjectModal.name}
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-white/95 backdrop-blur-sm border border-slate-200 text-xs font-mono text-slate-800 font-bold shadow-xs">
+                <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-white/95 backdrop-blur-sm border border-slate-200 text-xs font-mono text-slate-800 font-bold shadow-xs">
                   {activeProjectModal.category}
                 </div>
               </div>
@@ -1624,7 +1631,7 @@ export default function DeeDevIOTWebsite() {
               <button
                 type="button"
                 onClick={() => setActiveProjectModal(null)}
-                className="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg border border-slate-200 bg-slate-50 transition-colors"
+                className="w-10 h-10 flex items-center justify-center text-slate-500 hover:text-slate-800 rounded-xl border border-slate-200 bg-slate-50 transition-colors touch-target shrink-0"
                 aria-label="ปิดหน้าต่าง"
               >
                 <X size={18} />
@@ -1660,24 +1667,24 @@ export default function DeeDevIOTWebsite() {
               </div>
             </div>
 
-            <div className="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 font-mono">
+            <div className="pt-4 border-t border-slate-100 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 font-mono">
               <button
                 type="button"
                 onClick={() => setActiveProjectModal(null)}
-                className="px-4 py-2 border border-slate-200 text-xs text-slate-600 hover:text-slate-900 rounded-lg transition-colors"
+                className="w-full sm:w-auto px-5 py-3 border border-slate-300 text-xs text-slate-700 hover:text-slate-950 font-bold rounded-xl transition-colors min-h-[44px] flex items-center justify-center touch-target"
               >
                 ปิดหน้าต่าง
               </button>
 
-              <div className="flex items-center gap-2">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                 {activeProjectModal.manualUrl && (
                   <a
                     href={activeProjectModal.manualUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-2 bg-sky-50 hover:bg-sky-100 border border-sky-200 text-sky-700 hover:text-sky-900 text-xs font-bold rounded-lg inline-flex items-center gap-1.5 transition-colors shadow-2xs"
+                    className="w-full sm:w-auto px-4 py-3 bg-sky-50 hover:bg-sky-100 border border-sky-300 text-sky-800 hover:text-sky-950 text-xs font-bold rounded-xl inline-flex items-center justify-center gap-2 transition-colors shadow-2xs min-h-[44px] touch-target"
                   >
-                    <FileText size={13} />
+                    <FileText size={15} />
                     <span>เปิดดูคู่มือ (Documentation)</span>
                   </a>
                 )}
@@ -1687,10 +1694,10 @@ export default function DeeDevIOTWebsite() {
                     href={activeProjectModal.demoUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-5 py-2 bg-gradient-to-r from-[#E11D48] to-[#EA580C] hover:brightness-105 text-white text-xs font-bold rounded-lg inline-flex items-center gap-1.5 shadow-sm transition-all"
+                    className="w-full sm:w-auto px-5 py-3 bg-gradient-to-r from-[#E11D48] to-[#EA580C] hover:brightness-105 text-white text-xs font-bold rounded-xl inline-flex items-center justify-center gap-2 shadow-sm transition-all min-h-[44px] touch-target"
                   >
                     <span>เปิดดูเนื้อหา (Live Demo)</span>
-                    <ExternalLink size={13} />
+                    <ExternalLink size={15} />
                   </a>
                 )}
               </div>

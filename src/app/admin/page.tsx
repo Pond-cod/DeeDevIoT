@@ -574,7 +574,7 @@ export default function AdminDashboard() {
         fixed lg:sticky top-0 inset-y-0 left-0 z-50 lg:z-30
         h-screen bg-white/95 backdrop-blur-md border-r-2 border-slate-200/90
         flex flex-col shadow-sm transition-all duration-300
-        ${isMobileDrawerOpen ? 'translate-x-0 w-80' : '-translate-x-full lg:translate-x-0'}
+        ${isMobileDrawerOpen ? 'translate-x-0 w-[85vw] max-w-xs' : '-translate-x-full lg:translate-x-0'}
         ${isSidebarOpen ? 'lg:w-72' : 'lg:w-20'}
       `}>
         {/* Brand Header */}
@@ -596,7 +596,7 @@ export default function AdminDashboard() {
             {/* Mobile close button */}
             <button 
               onClick={() => setIsMobileDrawerOpen(false)} 
-              className="lg:hidden p-1.5 text-slate-700 hover:text-slate-950 hover:bg-slate-100 rounded-lg"
+              className="lg:hidden p-2 text-slate-700 hover:text-slate-950 hover:bg-slate-100 rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center touch-target"
               aria-label="Close menu"
             >
               <X size={18} />
@@ -722,7 +722,7 @@ export default function AdminDashboard() {
           <div className="flex items-center gap-3">
             <button 
               onClick={() => setIsMobileDrawerOpen(true)}
-              className="lg:hidden p-2 rounded-xl border-2 border-slate-300 bg-white text-slate-800 hover:text-slate-950 shadow-xs"
+              className="lg:hidden p-2 rounded-xl border-2 border-slate-300 bg-white text-slate-800 hover:text-slate-950 shadow-xs min-h-[44px] min-w-[44px] flex items-center justify-center touch-target"
               aria-label="เปิดเมนู"
             >
               <MenuIcon size={18} />

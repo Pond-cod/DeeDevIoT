@@ -46,9 +46,9 @@ export default function LoginPage() {
         {/* Back Link */}
         <Link 
           href="/" 
-          className="inline-flex items-center gap-2 text-xs font-mono text-[#9CA3AF] hover:text-white mb-6 transition-colors"
+          className="inline-flex items-center gap-2 text-xs font-mono text-[#9CA3AF] hover:text-white mb-6 transition-colors min-h-[40px]"
         >
-          <ArrowLeft size={13} />
+          <ArrowLeft size={14} />
           <span>BACK TO HOME</span>
         </Link>
 
@@ -63,7 +63,7 @@ export default function LoginPage() {
         </div>
 
         {error && (
-          <div className="mb-6 p-3 rounded bg-[#E53935]/10 border border-[#E53935]/30 flex items-start gap-2.5 text-xs text-[#E53935]">
+          <div className="mb-6 p-3 rounded-lg bg-[#E53935]/10 border border-[#E53935]/30 flex items-start gap-2.5 text-xs text-[#E53935]">
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
             <span>{error}</span>
           </div>
@@ -81,7 +81,7 @@ export default function LoginPage() {
                 required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full bg-[#08090D] border border-[#252832] rounded pl-9 pr-3 py-2 text-xs text-white focus:outline-none focus:border-[#E53935] transition-colors placeholder:text-[#6B7280]"
+                className="w-full bg-[#08090D] border border-[#252832] rounded-lg pl-9 pr-3 py-2.5 sm:py-2 text-xs text-white focus:outline-none focus:border-[#E53935] transition-colors placeholder:text-[#6B7280]"
                 placeholder="operator_id"
               />
             </div>
@@ -98,7 +98,7 @@ export default function LoginPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-[#08090D] border border-[#252832] rounded pl-9 pr-3 py-2 text-xs text-white focus:outline-none focus:border-[#E53935] transition-colors placeholder:text-[#6B7280]"
+                className="w-full bg-[#08090D] border border-[#252832] rounded-lg pl-9 pr-3 py-2.5 sm:py-2 text-xs text-white focus:outline-none focus:border-[#E53935] transition-colors placeholder:text-[#6B7280]"
                 placeholder="••••••••••••"
               />
             </div>
@@ -107,13 +107,13 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-2.5 mt-4 bg-[#E53935] hover:bg-[#c62828] text-white rounded font-bold text-xs uppercase tracking-wider transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full py-3 mt-4 bg-gradient-to-r from-[#E11D48] to-[#EA580C] hover:brightness-105 text-white rounded-xl font-bold text-xs uppercase tracking-wider transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 min-h-[46px] touch-target shadow-md"
           >
             {isLoading ? (
               <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
             ) : (
               <>
-                <LogIn size={14} /> <span>AUTHENTICATE</span>
+                <LogIn size={15} /> <span>AUTHENTICATE</span>
               </>
             )}
           </button>
