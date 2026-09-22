@@ -29,8 +29,8 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'DeeDevIOT — Professional Technology Solution Studio',
-  description: 'Turn Ideas Into Real Digital Solutions. IoT Solutions, Web Applications and IT Systems built for real-world use.',
+  title: 'DeeDevIOT | รับพัฒนา Web Application, IoT และระบบ IT',
+  description: 'รับพัฒนา Web Application, IoT, Dashboard และระบบ IT ตามความต้องการ พร้อมช่วยออกแบบระบบให้เหมาะกับการใช้งานจริง',
 }
 
 export default function RootLayout({
