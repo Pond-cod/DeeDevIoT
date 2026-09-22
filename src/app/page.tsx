@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, ComponentType } from 'react';
 import {
   Settings, Monitor, Lightbulb, PhoneCall, CheckCircle,
   Menu, X, ChevronRight, Send, Code, Cpu, Wifi, Zap, RefreshCw, ArrowLeft,
@@ -27,8 +27,9 @@ function useCountUp(target: number, duration = 1800, active = false) {
   const [count, setCount] = useState(0);
   useEffect(() => {
     if (!active) return;
+    setCount(0);
     let start = 0;
-    const step = Math.ceil(target / (duration / 16));
+    const step = Math.max(1, Math.ceil(target / (duration / 16)));
     const timer = setInterval(() => {
       start += step;
       if (start >= target) { setCount(target); clearInterval(timer); }
@@ -37,6 +38,25 @@ function useCountUp(target: number, duration = 1800, active = false) {
     return () => clearInterval(timer);
   }, [target, duration, active]);
   return count;
+}
+
+// Separate component so hook is not called inside .map()
+function StatItem({ value, suffix, label, icon: Icon, active }: {
+  value: number; suffix: string; label: string;
+  icon: ComponentType<{ size?: number }>; active: boolean;
+}) {
+  const count = useCountUp(value, 1800, active);
+  return (
+    <div className="flex flex-col items-center text-center group">
+      <div className="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-400/15 flex items-center justify-center mb-3 text-sky-400 group-hover:scale-110 transition-transform">
+        <Icon size={20} />
+      </div>
+      <div className="font-montserrat text-3xl sm:text-4xl lg:text-5xl font-black text-white tabular-nums">
+        {count}{suffix}
+      </div>
+      <div className="text-slate-400 text-xs sm:text-sm mt-1 font-medium">{label}</div>
+    </div>
+  );
 }
 
 export default function LandingPage() {
@@ -381,21 +401,16 @@ export default function LandingPage() {
             <div className="absolute inset-0 bg-gradient-to-r from-sky-600/5 via-transparent to-blue-600/5 pointer-events-none" />
             <div className="max-w-6xl mx-auto">
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-                {stats.map((stat, i) => {
-                  const StatIcon = stat.icon;
-                  const count = useCountUp(stat.value, 1800, statsVisible);
-                  return (
-                    <div key={i} className="flex flex-col items-center text-center group">
-                      <div className="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-400/15 flex items-center justify-center mb-3 text-sky-400 group-hover:scale-110 transition-transform">
-                        <StatIcon size={20} />
-                      </div>
-                      <div className="font-montserrat text-3xl sm:text-4xl lg:text-5xl font-black text-white tabular-nums">
-                        {count}{stat.suffix}
-                      </div>
-                      <div className="text-slate-400 text-xs sm:text-sm mt-1 font-medium">{stat.label}</div>
-                    </div>
-                  );
-                })}
+                {stats.map((stat, i) => (
+                  <StatItem
+                    key={i}
+                    value={stat.value}
+                    suffix={stat.suffix}
+                    label={stat.label}
+                    icon={stat.icon}
+                    active={statsVisible}
+                  />
+                ))}
               </div>
             </div>
           </section>
