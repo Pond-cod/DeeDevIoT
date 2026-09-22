@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Lock, User, LogIn, AlertCircle, ShieldCheck, ArrowLeft } from 'lucide-react';
+import { Lock, User, LogIn, AlertCircle, Shield, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
 export default function LoginPage() {
@@ -32,7 +32,7 @@ export default function LoginPage() {
       } else {
         setError(data.error || 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
       }
-    } catch (err) {
+    } catch {
       setError('ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้');
     } finally {
       setIsLoading(false);
@@ -40,68 +40,66 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-4 sm:p-6 selection:bg-indigo-500/30 selection:text-white relative overflow-hidden font-kanit">
-      {/* Ambient Glows */}
-      <div className="absolute top-1/4 left-1/4 w-72 sm:w-96 h-72 sm:h-96 bg-indigo-600/15 blur-[120px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-72 sm:w-96 h-72 sm:h-96 bg-violet-600/12 blur-[120px] rounded-full pointer-events-none" />
-      
-      <div className="w-full max-w-md bg-zinc-900/90 backdrop-blur-2xl border border-zinc-800 rounded-3xl p-6 sm:p-8 shadow-2xl shadow-black/70 relative z-10">
+    <div className="min-h-screen bg-[#08090D] flex items-center justify-center p-4 sm:p-6 selection:bg-[#E53935]/20 selection:text-white font-mono text-white relative">
+      <div className="w-full max-w-md bg-[#111318] border border-[#252832] rounded-lg p-6 sm:p-8 shadow-2xl relative z-10">
         
         {/* Back Link */}
         <Link 
           href="/" 
-          className="inline-flex items-center gap-2 text-xs font-semibold text-zinc-400 hover:text-white mb-6 transition-colors"
+          className="inline-flex items-center gap-2 text-xs font-mono text-[#9CA3AF] hover:text-white mb-6 transition-colors"
         >
-          <ArrowLeft size={14} />
-          <span>กลับหน้าหลัก (Home)</span>
+          <ArrowLeft size={13} />
+          <span>BACK TO HOME</span>
         </Link>
 
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-violet-500/20 border border-indigo-500/30 mb-4 shadow-inner text-indigo-400">
-            <ShieldCheck className="w-7 h-7" />
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded bg-[#08090D] border border-[#252832] mb-3 text-[#E53935]">
+            <Shield className="w-6 h-6" />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-white mb-1.5 font-montserrat">Admin SecuriGate</h1>
-          <p className="text-zinc-400 text-xs sm:text-sm">เข้าสู่ระบบเพื่อจัดการเนื้อหาเว็บไซต์ DeeDevIOT</p>
+          <h1 className="text-lg font-bold tracking-tight text-white mb-1 uppercase font-mono">
+            DEEDEV IOT <span className="text-[#6B7280]">/</span> ADMIN
+          </h1>
+          <p className="text-[#9CA3AF] text-xs">AUTHORIZED ACCESS ONLY</p>
         </div>
 
         {error && (
-          <div className="mb-6 p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-start gap-3 animate-in fade-in">
-            <AlertCircle className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
-            <p className="text-xs sm:text-sm font-medium text-rose-300">{error}</p>
+          <div className="mb-6 p-3 rounded bg-[#E53935]/10 border border-[#E53935]/30 flex items-start gap-2.5 text-xs text-[#E53935]">
+            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+            <span>{error}</span>
           </div>
         )}
 
-        <form onSubmit={handleLogin} className="space-y-4 sm:space-y-5">
-          <div className="space-y-1.5">
-            <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Username</label>
+        <form onSubmit={handleLogin} className="space-y-4 font-mono">
+          <div className="space-y-1">
+            <label className="text-[11px] uppercase tracking-wider text-[#9CA3AF]">Username</label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                <User className="h-4 w-4 text-zinc-500" />
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#6B7280]">
+                <User size={14} />
               </div>
               <input
                 type="text"
                 required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-10 pr-4 py-3 text-sm text-zinc-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition-all placeholder:text-zinc-600"
-                placeholder="กรอกชื่อผู้ใช้..."
+                className="w-full bg-[#08090D] border border-[#252832] rounded pl-9 pr-3 py-2 text-xs text-white focus:outline-none focus:border-[#E53935] transition-colors placeholder:text-[#6B7280]"
+                placeholder="operator_id"
               />
             </div>
           </div>
 
-          <div className="space-y-1.5">
-            <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Password</label>
+          <div className="space-y-1">
+            <label className="text-[11px] uppercase tracking-wider text-[#9CA3AF]">Password</label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                <Lock className="h-4 w-4 text-zinc-500" />
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#6B7280]">
+                <Lock size={14} />
               </div>
               <input
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-10 pr-4 py-3 text-sm text-zinc-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition-all placeholder:text-zinc-600"
-                placeholder="••••••••"
+                className="w-full bg-[#08090D] border border-[#252832] rounded pl-9 pr-3 py-2 text-xs text-white focus:outline-none focus:border-[#E53935] transition-colors placeholder:text-[#6B7280]"
+                placeholder="••••••••••••"
               />
             </div>
           </div>
@@ -109,17 +107,21 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3.5 mt-2 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white rounded-xl font-bold text-sm tracking-wide transition-all shadow-lg shadow-indigo-600/30 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full py-2.5 mt-4 bg-[#E53935] hover:bg-[#c62828] text-white rounded font-bold text-xs uppercase tracking-wider transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {isLoading ? (
-              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
             ) : (
               <>
-                <LogIn className="w-4 h-4" /> <span>เข้าระบบจัดการ</span>
+                <LogIn size={14} /> <span>AUTHENTICATE</span>
               </>
             )}
           </button>
         </form>
+
+        <div className="mt-8 pt-4 border-t border-[#252832] text-center font-mono text-[10px] text-[#6B7280]">
+          ENCRYPTED SESSION MANAGEMENT • DEEDEV IOT
+        </div>
       </div>
     </div>
   );

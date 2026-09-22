@@ -1,36 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-  --font-kanit: var(--font-kanit), 'Kanit', sans-serif;
-  --font-montserrat: var(--font-montserrat), 'Montserrat', sans-serif;
+  --font-sans: var(--font-inter), 'Inter', var(--font-thai), -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: var(--font-mono), 'JetBrains Mono', monospace;
+  --font-thai: var(--font-thai), 'Noto Sans Thai', sans-serif;
 
-  --color-brand-50: #eef2ff;
-  --color-brand-100: #e0e7ff;
-  --color-brand-500: #6366f1;
-  --color-brand-600: #4f46e5;
-  --color-brand-700: #4338ca;
-  
-  --color-accent-400: #a78bfa;
-  --color-accent-500: #8b5cf6;
-  --color-accent-glow: #c084fc;
-
-  --color-highlight: #34d399;
-}
-
-@keyframes float-gentle {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-}
-.animate-float-gentle {
-  animation: float-gentle 5s ease-in-out infinite;
-}
-
-@keyframes glow-pulse {
-  0%, 100% { opacity: 0.3; transform: scale(1); }
-  50% { opacity: 0.55; transform: scale(1.06); }
-}
-.animate-glow-pulse {
-  animation: glow-pulse 7s ease-in-out infinite;
+  --color-studio-bg: #08090D;
+  --color-studio-surface: #111318;
+  --color-studio-subsurface: #0D0E12;
+  --color-studio-border: #252832;
+  --color-studio-muted: #6B7280;
+  --color-studio-secondary: #9CA3AF;
+  --color-studio-red: #E53935;
 }
 
 @layer base {
@@ -39,90 +20,70 @@
     -webkit-tap-highlight-color: transparent;
   }
   body {
-    @apply antialiased bg-zinc-950 text-zinc-100;
+    background-color: #08090D;
+    color: #FFFFFF;
+    font-family: var(--font-sans);
   }
 }
 
-/* Sleek Mesh Aurora Gradient (Soft Premium Dark) */
-@keyframes mesh-gradient {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+/* Subtle Technical Grid Lines */
+.bg-tech-grid {
+  background-image: 
+    linear-gradient(to right, rgba(37, 40, 50, 0.4) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(37, 40, 50, 0.4) 1px, transparent 1px);
+  background-size: 48px 48px;
 }
 
-.animate-mesh {
-  background: radial-gradient(circle at 15% 20%, rgba(99, 102, 241, 0.14), transparent 45%),
-              radial-gradient(circle at 85% 75%, rgba(167, 139, 250, 0.12), transparent 42%),
-              radial-gradient(circle at 50% 50%, rgba(24, 24, 27, 0.9), transparent 75%),
-              #09090b;
-  background-size: 140% 140%;
-  animation: mesh-gradient 20s ease infinite;
+.bg-tech-dots {
+  background-image: radial-gradient(rgba(156, 163, 175, 0.15) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
-/* Modern Frosted Glassmorphism for Zinc Dark */
-.glass-card {
-  background: rgba(24, 24, 27, 0.65);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+/* Technical Card (Disciplined, Human-Engineered, Non-AI) */
+.tech-card {
+  background-color: #111318;
+  border: 1px solid #252832;
+  transition: border-color 0.25s ease, transform 0.25s ease;
 }
 
-.glass-card-hover {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.glass-card-hover:hover {
-  background: rgba(39, 39, 42, 0.75);
-  border-color: rgba(167, 139, 250, 0.3);
-  transform: translateY(-3px);
-  box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.18);
+.tech-card:hover {
+  border-color: rgba(229, 57, 53, 0.4);
 }
 
-.glass-nav {
-  background: rgba(9, 9, 11, 0.82);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+/* Subtle Data Flow Animation */
+@keyframes data-flow-dash {
+  to {
+    stroke-dashoffset: -20;
+  }
 }
 
-/* Mobile Touch & Safe Area Utilities */
-.touch-target {
-  min-height: 44px;
-  min-width: 44px;
+.animate-data-flow {
+  stroke-dasharray: 6 6;
+  animation: data-flow-dash 1.2s linear infinite;
 }
 
-.pb-safe {
-  padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
-}
-
-.pt-safe {
-  padding-top: max(1.25rem, env(safe-area-inset-top));
-}
-
-/* Scroll reveal helper */
-.reveal {
-  opacity: 0;
-  transform: translateY(18px);
-  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
-}
-.reveal.active {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Minimalist Dark Custom Scrollbar */
+/* Clean Technical Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #09090b;
+  background: #08090D;
 }
 ::-webkit-scrollbar-thumb {
-  background: #27272a;
-  border-radius: 9999px;
+  background: #252832;
+  border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3f3f46;
+  background: #3F4350;
+}
+
+/* Accessibility: Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   Save, Loader2, CheckCircle2, AlertCircle, LayoutDashboard, Server, 
   RefreshCw, LogOut, Settings, Link as LinkIcon, Trash2, Search,
-  Menu as MenuIcon, X, Type, Zap, Lightbulb, Star, Phone, Globe, ChevronRight, Plus, Sparkles
+  Menu as MenuIcon, X, Type, Zap, Lightbulb, Star, Phone, Globe, ChevronRight, Plus, Shield
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { convertToDirectLink } from '../../lib/utils/drive';
@@ -98,6 +98,7 @@ export default function AdminDashboard() {
     { id: 'contact', label: 'ข้อมูลติดต่อ (Contact)', icon: Phone },
     { id: 'footer', label: 'ฟุตเตอร์ (Footer)', icon: Globe },
   ];
+
   // Shared State
   const [isSaving, setIsSaving] = useState(false);
   const [status, setStatus] = useState<{ type: 'success' | 'error' | null; message: string }>({ type: null, message: '' });
@@ -379,7 +380,7 @@ export default function AdminDashboard() {
   };
 
   const handleDeleteNav = async (id: string) => {
-    if (!confirm('ยืนยันหน้าลบเมนู?')) return;
+    if (!confirm('ยืนยันการลบเมนู?')) return;
     setIsSaving(true);
     try {
       const res = await fetch(`/api/nav?id=${id}`, { method: 'DELETE' });
@@ -391,7 +392,7 @@ export default function AdminDashboard() {
   };
 
   const handleDeleteConcept = async (id: string) => {
-    if (!confirm('ยืนยันหน้าลบคอนเซปต์?')) return;
+    if (!confirm('ยืนยันการลบคอนเซปต์?')) return;
     setIsSaving(true);
     try {
       const res = await fetch(`/api/concept?id=${id}`, { method: 'DELETE' });
@@ -403,7 +404,7 @@ export default function AdminDashboard() {
   };
 
   const handleDeleteSection = async (id: string) => {
-    if (!confirm('ยืนยันหน้าลบส่วนเสริม?')) return;
+    if (!confirm('ยืนยันการลบส่วนเสริม?')) return;
     setIsSaving(true);
     try {
       const res = await fetch(`/api/sections?id=${id}`, { method: 'DELETE' });
@@ -415,7 +416,7 @@ export default function AdminDashboard() {
   };
 
   const handleDeleteSectionItem = async (id: string) => {
-    if (!confirm('ยืนยันหน้าลบรายการ?')) return;
+    if (!confirm('ยืนยันการลบรายการ?')) return;
     setIsSaving(true);
     try {
       const res = await fetch(`/api/section-items?id=${id}`, { method: 'DELETE' });
@@ -428,215 +429,213 @@ export default function AdminDashboard() {
 
   // ================= RENDER TOOLS =================
   const renderStatus = () => status.type && (
-    <div className={`p-3.5 rounded-xl flex items-start gap-3 text-sm shadow-md border ${
+    <div className={`p-3 rounded border text-xs font-mono flex items-start gap-2.5 ${
       status.type === 'success' 
-        ? 'bg-emerald-950/60 border-emerald-500/30 text-emerald-300' 
-        : 'bg-rose-950/60 border-rose-500/30 text-rose-300'
+        ? 'bg-[#111318] border-emerald-500/40 text-emerald-400' 
+        : 'bg-[#111318] border-[#E53935]/40 text-[#E53935]'
     }`}>
-      {status.type === 'success' ? <CheckCircle2 className="w-5 h-5 shrink-0 text-emerald-400" /> : <AlertCircle className="w-5 h-5 shrink-0 text-rose-400" />}
-      <div className="font-medium pt-0.5">{status.message}</div>
+      {status.type === 'success' ? <CheckCircle2 size={16} className="shrink-0 mt-0.5" /> : <AlertCircle size={16} className="shrink-0 mt-0.5" />}
+      <span className="font-semibold">{status.message}</span>
     </div>
   );
 
   return (
-    <div className="flex h-screen bg-zinc-950 overflow-hidden font-sans selection:bg-indigo-500/30 text-zinc-100">
+    <div className="flex h-screen bg-[#08090D] overflow-hidden font-mono selection:bg-[#E53935]/20 text-white">
       {/* --- Mobile Drawer Backdrop --- */}
       {isMobileDrawerOpen && (
         <div 
-          className="fixed inset-0 bg-zinc-950/80 backdrop-blur-sm z-50 lg:hidden transition-opacity"
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 lg:hidden"
           onClick={() => setIsMobileDrawerOpen(false)}
         />
       )}
 
-      {/* --- Mobile Off-Canvas Drawer (Dark Mode) --- */}
-      <aside className={`fixed inset-y-0 left-0 w-72 bg-zinc-900 border-r border-zinc-800 z-50 flex flex-col shadow-2xl transition-transform duration-300 lg:hidden ${
+      {/* --- Mobile Off-Canvas Drawer --- */}
+      <aside className={`fixed inset-y-0 left-0 w-72 bg-[#111318] border-r border-[#252832] z-50 flex flex-col shadow-2xl transition-transform duration-200 lg:hidden ${
         isMobileDrawerOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
-        <div className="p-5 flex items-center justify-between border-b border-zinc-800">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-md shadow-indigo-500/20">
-              <Sparkles className="w-5 h-5 text-white" />
-            </div>
+        <div className="p-5 flex items-center justify-between border-b border-[#252832]">
+          <div className="flex items-center gap-2.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#E53935]" />
             <div>
-              <h1 className="font-extrabold text-white leading-tight text-base">Admin CMS</h1>
-              <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">DeeDevIoT Control</p>
+              <h1 className="font-bold text-white text-sm">DEEDEV / ADMIN</h1>
+              <p className="text-[10px] text-[#6B7280]">CONTROL PANEL</p>
             </div>
           </div>
           <button 
             onClick={() => setIsMobileDrawerOpen(false)} 
-            className="p-2 text-zinc-400 hover:text-white rounded-lg hover:bg-zinc-800"
+            className="p-1.5 text-[#9CA3AF] hover:text-white rounded border border-[#252832]"
             aria-label="Close menu"
           >
-            <X className="w-5 h-5" />
+            <X size={16} />
           </button>
         </div>
 
-        <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+        <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1 text-xs">
           {MENU_ITEMS.map((item, idx) => {
-            if ('divider' in item) return <div key={idx} className="h-px bg-zinc-800 my-3 mx-2" />;
+            if ('divider' in item) return <div key={idx} className="h-px bg-[#252832] my-3 mx-2" />;
             const Icon = item.icon as any;
             const isActive = activeMenu === item.id;
             return (
               <button 
                 key={item.id} 
                 onClick={() => { setActiveMenu(item.id!); setStatus({type:null,message:''}); setIsMobileDrawerOpen(false); }}
-                className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-xl transition-all ${
-                  isActive ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/25 font-bold' : 'text-zinc-400 hover:text-white hover:bg-zinc-800/60 font-medium'
+                className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded transition-colors ${
+                  isActive ? 'bg-[#E53935] text-white font-bold' : 'text-[#9CA3AF] hover:text-white hover:bg-[#08090D]'
                 }`}
               >
-                <Icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-white' : 'text-zinc-400'}`} />
-                <span className="text-sm">{item.label}</span>
+                <Icon size={16} className={isActive ? 'text-white' : 'text-[#6B7280]'} />
+                <span>{item.label}</span>
               </button>
             );
           })}
         </nav>
 
-        <div className="p-4 border-t border-zinc-800">
-          <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-rose-400 hover:bg-rose-500/10 transition-all font-bold text-sm">
-            <LogOut className="w-5 h-5" />
-            <span>ออกจากระบบ</span>
+        <div className="p-4 border-t border-[#252832]">
+          <button onClick={handleLogout} className="w-full flex items-center gap-2.5 px-3 py-2 rounded text-[#E53935] hover:bg-[#E53935]/10 transition-colors text-xs font-bold">
+            <LogOut size={16} />
+            <span>DISCONNECT</span>
           </button>
         </div>
       </aside>
 
-      {/* --- Desktop Sidebar (Dark Mode) --- */}
-      <aside className={`bg-zinc-900 border-r border-zinc-800 transition-all duration-300 hidden lg:flex flex-col z-30 ${isSidebarOpen ? 'w-72' : 'w-20'}`}>
-        <div className="p-5 flex items-center justify-between border-b border-zinc-800 h-20">
+      {/* --- Desktop Sidebar --- */}
+      <aside className={`bg-[#111318] border-r border-[#252832] transition-all duration-200 hidden lg:flex flex-col z-30 ${isSidebarOpen ? 'w-64' : 'w-16'}`}>
+        <div className="p-4 flex items-center justify-between border-b border-[#252832] h-16">
           {isSidebarOpen ? (
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-md shadow-indigo-500/20 shrink-0">
-                <Sparkles className="w-5 h-5 text-white" />
-              </div>
+            <div className="flex items-center gap-2.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#E53935]" />
               <div>
-                <h1 className="font-extrabold text-white leading-tight text-base font-montserrat">Admin CMS</h1>
-                <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">Control Panel</p>
+                <h1 className="font-bold text-white text-xs tracking-wider">DEEDEV / IOT</h1>
+                <p className="text-[10px] text-[#6B7280]">ADMIN CONSOLE</p>
               </div>
             </div>
           ) : (
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-md shadow-indigo-500/20 mx-auto">
-              <Sparkles className="w-5 h-5 text-white" />
-            </div>
+            <span className="w-2.5 h-2.5 rounded-full bg-[#E53935] mx-auto" />
           )}
         </div>
 
-        <nav className="flex-1 overflow-y-auto py-6 px-4 space-y-1">
+        <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1 text-xs">
           {MENU_ITEMS.map((item, idx) => {
-            if ('divider' in item) return <div key={idx} className="h-px bg-zinc-800 my-4 mx-2" />;
+            if ('divider' in item) return <div key={idx} className="h-px bg-[#252832] my-3 mx-1" />;
             const Icon = item.icon as any;
             const isActive = activeMenu === item.id;
             return (
               <button 
                 key={item.id} 
                 onClick={() => { setActiveMenu(item.id!); setStatus({type:null,message:''}); }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all group ${
-                  isActive ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/25 font-bold' : 'text-zinc-400 hover:text-white hover:bg-zinc-800/60 font-medium'
+                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded transition-colors ${
+                  isActive ? 'bg-[#E53935] text-white font-bold' : 'text-[#9CA3AF] hover:text-white hover:bg-[#08090D]'
                 }`}
+                title={!isSidebarOpen ? item.label : undefined}
               >
-                <Icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-white' : 'text-zinc-400 group-hover:text-indigo-400'}`} />
-                {isSidebarOpen && <span className="text-sm tracking-tight">{item.label}</span>}
-                {isActive && isSidebarOpen && <ChevronRight className="w-4 h-4 ml-auto opacity-60" />}
+                <Icon size={16} className={isActive ? 'text-white' : 'text-[#6B7280]'} />
+                {isSidebarOpen && <span className="truncate">{item.label}</span>}
               </button>
             );
           })}
         </nav>
 
-        <div className="p-4 border-t border-zinc-800 space-y-2">
+        <div className="p-3 border-t border-[#252832] space-y-1">
           <button 
             onClick={() => setIsSidebarOpen(!isSidebarOpen)} 
-            className="w-full flex items-center justify-center p-2.5 text-zinc-400 hover:bg-zinc-800 hover:text-white rounded-xl transition-all"
+            className="w-full flex items-center justify-center p-2 text-[#6B7280] hover:text-white hover:bg-[#08090D] rounded transition-colors"
             aria-label="Toggle sidebar"
           >
-            {isSidebarOpen ? <X className="w-5 h-5" /> : <MenuIcon className="w-5 h-5" />}
+            {isSidebarOpen ? <X size={15} /> : <MenuIcon size={15} />}
           </button>
           <button 
             onClick={handleLogout} 
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-rose-400 hover:bg-rose-500/10 transition-all font-bold text-sm ${!isSidebarOpen && 'justify-center'}`}
+            className={`w-full flex items-center gap-2 p-2 rounded text-[#E53935] hover:bg-[#E53935]/10 text-xs font-bold transition-colors ${!isSidebarOpen && 'justify-center'}`}
+            title="Disconnect"
           >
-            <LogOut className="w-5 h-5" />
-            {isSidebarOpen && <span>ออกจากระบบ</span>}
+            <LogOut size={15} />
+            {isSidebarOpen && <span>DISCONNECT</span>}
           </button>
         </div>
       </aside>
 
-      {/* --- Main Content Area (Dark Mode) --- */}
-      <main className="flex-1 overflow-y-auto relative bg-zinc-950">
-        {/* Sticky Sub-Header with Mobile Hamburger Toggle */}
-        <header className="sticky top-0 bg-zinc-900/85 backdrop-blur-md border-b border-zinc-800 z-40 px-4 sm:px-8 py-3.5 sm:py-4 flex justify-between items-center min-h-[64px] sm:min-h-[72px]">
+      {/* --- Main Content Area --- */}
+      <main className="flex-1 overflow-y-auto relative bg-[#08090D]">
+        {/* Sticky Header */}
+        <header className="sticky top-0 bg-[#111318]/90 backdrop-blur-md border-b border-[#252832] z-40 px-4 sm:px-8 py-3 flex justify-between items-center min-h-[60px]">
           <div className="flex items-center gap-3">
-            {/* Mobile Hamburger Button */}
             <button 
               onClick={() => setIsMobileDrawerOpen(true)}
-              className="lg:hidden p-2 rounded-xl text-zinc-300 hover:text-white hover:bg-zinc-800 border border-zinc-700 active:scale-95"
+              className="lg:hidden p-1.5 rounded border border-[#252832] text-[#9CA3AF] hover:text-white"
               aria-label="Open menu drawer"
             >
-              <MenuIcon className="w-5 h-5" />
+              <MenuIcon size={16} />
             </button>
 
             <div>
-              <h2 className="text-lg sm:text-2xl font-black text-white tracking-tight uppercase line-clamp-1">
+              <h2 className="text-sm sm:text-base font-bold text-white tracking-wider uppercase">
                 {activeMenu.replace('_', ' ')}
               </h2>
-              <p className="text-[10px] sm:text-xs text-zinc-400 font-bold tracking-widest hidden sm:block">
-                DEEDEV IOT MANAGEMENT SYSTEM
-              </p>
+              <span className="text-[10px] text-[#6B7280] hidden sm:inline">
+                DEEDEV IOT REPOSITORY CMS
+              </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-3 sm:gap-4">
+          <div>
              {renderStatus()}
           </div>
         </header>
 
-        <div className="p-4 sm:p-8 max-w-7xl mx-auto">
+        <div className="p-4 sm:p-8 max-w-6xl mx-auto text-xs">
 
         {/* ================= DASHBOARD ================= */}
         {activeMenu === 'dashboard' && (
-          <div className="space-y-6 animate-fade-in">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              <div className="bg-zinc-900 p-5 sm:p-6 rounded-2xl border border-zinc-800 shadow-xl">
-                 <div className="flex justify-between items-start mb-4">
-                    <div className="p-3 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-xl"><Server className="w-6 h-6" /></div>
-                    <span className="text-2xl font-black text-white">{services.length}</span>
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="bg-[#111318] p-5 rounded border border-[#252832]">
+                 <div className="flex justify-between items-start mb-3">
+                    <span className="text-[#6B7280]">01 // SERVICES & WORKS</span>
+                    <span className="text-xl font-bold text-white">{services.length}</span>
                  </div>
-                 <h3 className="font-bold text-zinc-200 text-sm uppercase tracking-wider">บริการและผลงานทั้งหมด</h3>
-                 <p className="text-xs text-zinc-400 mt-1">Total Services & Works</p>
+                 <h3 className="font-bold text-white text-sm">บริการและผลงานทั้งหมด</h3>
+                 <p className="text-[11px] text-[#9CA3AF] mt-1">Total Services Registered</p>
               </div>
-              <div className="bg-zinc-900 p-5 sm:p-6 rounded-2xl border border-zinc-800 shadow-xl">
-                 <div className="flex justify-between items-start mb-4">
-                    <div className="p-3 bg-violet-500/10 text-violet-400 border border-violet-500/20 rounded-xl"><LinkIcon className="w-6 h-6" /></div>
-                    <span className="text-2xl font-black text-white">{integrations.length}</span>
+
+              <div className="bg-[#111318] p-5 rounded border border-[#252832]">
+                 <div className="flex justify-between items-start mb-3">
+                    <span className="text-[#6B7280]">02 // INTEGRATIONS</span>
+                    <span className="text-xl font-bold text-white">{integrations.length}</span>
                  </div>
-                 <h3 className="font-bold text-zinc-200 text-sm uppercase tracking-wider">ระบบที่เชื่อมต่อทั้งหมด</h3>
-                 <p className="text-xs text-zinc-400 mt-1">Total Portfolio Integrations</p>
+                 <h3 className="font-bold text-white text-sm">ระบบที่เชื่อมต่อทั้งหมด</h3>
+                 <p className="text-[11px] text-[#9CA3AF] mt-1">Total IoT / Cloud Integrations</p>
               </div>
-              <div className="p-5 sm:p-6 rounded-2xl shadow-xl bg-gradient-to-br from-indigo-600 to-violet-700 text-white border border-indigo-500/30 sm:col-span-2 lg:col-span-1">
-                 <div className="flex justify-between items-start mb-4">
-                    <div className="p-3 bg-white/15 text-white rounded-xl"><Globe className="w-6 h-6" /></div>
-                    <span className="text-xs font-bold uppercase tracking-widest bg-white/20 px-2.5 py-1 rounded-full">Live Site</span>
+
+              <div className="bg-[#111318] p-5 rounded border border-[#E53935]/40 text-white">
+                 <div className="flex justify-between items-start mb-3">
+                    <span className="text-[#E53935]">● SYSTEM STATUS</span>
+                    <span className="text-[10px] px-2 py-0.5 rounded bg-[#E53935]/20 text-[#E53935] font-bold">ONLINE</span>
                  </div>
-                 <h3 className="font-bold text-sm uppercase tracking-wider">สถานะการแสดงผลหน้าบ้าน</h3>
-                 <p className="text-xs text-white/80 mt-1">เชื่อมต่อกับ Google Sheets เรียบร้อย</p>
+                 <h3 className="font-bold text-white text-sm">เชื่อมต่อ Google Sheets สำเร็จ</h3>
+                 <p className="text-[11px] text-[#9CA3AF] mt-1">Data persistence layer active</p>
               </div>
             </div>
 
-            <div className="bg-zinc-900 p-6 sm:p-8 rounded-2xl border border-zinc-800 shadow-xl">
-               <h3 className="text-base sm:text-lg font-bold text-white mb-4 border-b border-zinc-800 pb-4 uppercase tracking-tight">Recent Activity & Quick Links</h3>
-               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <button onClick={()=>setActiveMenu('services')} className="flex items-center gap-4 p-4 border border-zinc-800 rounded-xl hover:bg-zinc-800/60 transition-all text-left group">
-                     <div className="w-10 h-10 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-lg flex items-center justify-center font-bold">1</div>
-                     <div><p className="font-bold text-sm text-zinc-200 group-hover:text-white">จัดการบริการและผลงาน</p><p className="text-xs text-zinc-400">เพิ่ม/ลบ/แก้ไข รายละเอียดบริการ</p></div>
+            <div className="bg-[#111318] p-6 rounded border border-[#252832]">
+               <h3 className="text-xs font-bold text-white mb-4 uppercase tracking-wider border-b border-[#252832] pb-3">
+                 Console Quick Links
+               </h3>
+               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <button onClick={()=>setActiveMenu('services')} className="p-3 border border-[#252832] rounded bg-[#08090D] hover:border-[#E53935] transition-colors text-left">
+                     <span className="text-white font-bold block mb-0.5">จัดการบริการและผลงาน (Services)</span>
+                     <span className="text-[#9CA3AF] text-[11px]">เพิ่ม/ลบ/แก้ไข รายละเอียดผลงาน</span>
                   </button>
-                  <button onClick={()=>setActiveMenu('hero')} className="flex items-center gap-4 p-4 border border-zinc-800 rounded-xl hover:bg-zinc-800/60 transition-all text-left group">
-                     <div className="w-10 h-10 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-lg flex items-center justify-center font-bold">2</div>
-                     <div><p className="font-bold text-sm text-zinc-200 group-hover:text-white">แก้ไขหน้าแรก (Hero Section)</p><p className="text-xs text-zinc-400">เปลี่ยนพาดหัวและคำโปรยหน้าหลัก</p></div>
+                  <button onClick={()=>setActiveMenu('hero')} className="p-3 border border-[#252832] rounded bg-[#08090D] hover:border-[#E53935] transition-colors text-left">
+                     <span className="text-white font-bold block mb-0.5">แก้ไขหน้าแรก (Hero Section)</span>
+                     <span className="text-[#9CA3AF] text-[11px]">เปลี่ยนพาดหัวและคำโปรยหลัก</span>
                   </button>
-                  <button onClick={()=>setActiveMenu('concept')} className="flex items-center gap-4 p-4 border border-zinc-800 rounded-xl hover:bg-zinc-800/60 transition-all text-left group">
-                     <div className="w-10 h-10 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-lg flex items-center justify-center font-bold">3</div>
-                     <div><p className="font-bold text-sm text-zinc-200 group-hover:text-white">จัดการคอนเซปต์ (Concept)</p><p className="text-xs text-zinc-400">แก้ไขจุดเด่นของบริการ</p></div>
+                  <button onClick={()=>setActiveMenu('concept')} className="p-3 border border-[#252832] rounded bg-[#08090D] hover:border-[#E53935] transition-colors text-left">
+                     <span className="text-white font-bold block mb-0.5">จัดการคอนเซปต์ (Concept)</span>
+                     <span className="text-[#9CA3AF] text-[11px]">แก้ไขคุณค่าหลักของบริการ</span>
                   </button>
-                  <button onClick={()=>setActiveMenu('integrations')} className="flex items-center gap-4 p-4 border border-zinc-800 rounded-xl hover:bg-zinc-800/60 transition-all text-left group">
-                     <div className="w-10 h-10 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-lg flex items-center justify-center font-bold">4</div>
-                     <div><p className="font-bold text-sm text-zinc-200 group-hover:text-white">จัดการพอร์ตโฟลิโอ (Integrations)</p><p className="text-xs text-zinc-400">แก้ไขระบบที่เชื่อมต่อ</p></div>
+                  <button onClick={()=>setActiveMenu('contact')} className="p-3 border border-[#252832] rounded bg-[#08090D] hover:border-[#E53935] transition-colors text-left">
+                     <span className="text-white font-bold block mb-0.5">ข้อมูลติดต่อ (Contact Info)</span>
+                     <span className="text-[#9CA3AF] text-[11px]">แก้ไขอีเมล เบอร์โทร และ LINE ID</span>
                   </button>
                </div>
             </div>
@@ -645,263 +644,78 @@ export default function AdminDashboard() {
 
         {/* ================= SERVICES ================= */}
         {activeMenu === 'services' && (
-          <div className="grid xl:grid-cols-12 gap-8 animate-fade-in">
-            <div className="xl:col-span-4 bg-zinc-900 border border-zinc-800 shadow-xl rounded-2xl p-6 h-fit sticky top-6">
-              <h2 className="text-xl font-bold mb-6 pb-4 border-b border-zinc-800 flex justify-between text-white">
-                <span>{isSvcEdit ? 'แก้ไขบริการและผลงาน' : 'เพิ่มบริการและผลงานใหม่'}</span>
-                {isSvcEdit && <button type="button" onClick={() => { setSvcForm(emptySvc); setIsSvcEdit(false); setSvcImageUrls(['']); setSvcVideoUrls(['']); }} className="text-xs px-3 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg transition-colors">ยกเลิก</button>}
-              </h2>
-              <form onSubmit={handleSvcSubmit} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+          <div className="grid xl:grid-cols-12 gap-6">
+            <div className="xl:col-span-5 bg-[#111318] border border-[#252832] rounded p-5 h-fit">
+              <h3 className="text-xs font-bold mb-4 pb-3 border-b border-[#252832] flex justify-between text-white uppercase">
+                <span>{isSvcEdit ? 'EDIT WORK / SERVICE' : 'NEW WORK / SERVICE'}</span>
+                {isSvcEdit && <button type="button" onClick={() => { setSvcForm(emptySvc); setIsSvcEdit(false); setSvcImageUrls(['']); setSvcVideoUrls(['']); }} className="text-[#E53935] text-[10px]">CANCEL</button>}
+              </h3>
+              <form onSubmit={handleSvcSubmit} className="space-y-3 font-mono">
+                <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Service ID</label>
-                    <input type="text" value={svcForm.id} onChange={(e) => setSvcForm({...svcForm, id: e.target.value})} readOnly={isSvcEdit} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 mt-1.5 text-sm text-zinc-100 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 disabled:opacity-50 transition-all" />
+                    <label className="text-[10px] text-[#6B7280] block mb-1">SERVICE ID</label>
+                    <input type="text" value={svcForm.id} onChange={(e) => setSvcForm({...svcForm, id: e.target.value})} readOnly={isSvcEdit} className="w-full bg-[#08090D] border border-[#252832] rounded px-3 py-1.5 text-xs text-white outline-none focus:border-[#E53935]" />
                   </div>
                   <div>
-                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Icon Name</label>
-                    <input type="text" value={svcForm.icon} onChange={(e) => setSvcForm({...svcForm, icon: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 mt-1.5 text-sm text-zinc-100 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all" />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Title (EN) *</label>
-                    <input required type="text" value={svcForm.title} onChange={(e) => setSvcForm({...svcForm, title: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 mt-1.5 text-sm text-zinc-100 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all" />
-                  </div>
-                  <div>
-                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Title (TH) *</label>
-                    <input required type="text" value={svcForm.title_th} onChange={(e) => setSvcForm({...svcForm, title_th: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 mt-1.5 text-sm text-zinc-100 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-thai" />
+                    <label className="text-[10px] text-[#6B7280] block mb-1">ICON / CATEGORY</label>
+                    <input type="text" value={svcForm.icon} onChange={(e) => setSvcForm({...svcForm, icon: e.target.value})} className="w-full bg-[#08090D] border border-[#252832] rounded px-3 py-1.5 text-xs text-white outline-none focus:border-[#E53935]" />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Description (EN) *</label>
-                    <textarea required rows={3} value={svcForm.description} onChange={(e) => setSvcForm({...svcForm, description: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 mt-1.5 text-sm text-zinc-100 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all" />
-                  </div>
-                  <div>
-                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Description (TH) *</label>
-                    <textarea required rows={3} value={svcForm.description_th} onChange={(e) => setSvcForm({...svcForm, description_th: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 mt-1.5 text-sm text-zinc-100 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-thai" />
-                  </div>
-                </div>
-
-                {/* IMAGE URLs - Multiple */}
                 <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Image URL</label>
-                    <button type="button" onClick={() => setSvcImageUrls([...svcImageUrls, ''])} className="flex items-center gap-1 text-xs text-indigo-400 hover:text-indigo-300 font-bold px-2 py-1 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/20 rounded-lg transition-colors">
-                      <Plus className="w-3 h-3" /> เพิ่มภาพ
-                    </button>
-                  </div>
-                  <div className="space-y-2">
-                    {svcImageUrls.map((url, i) => (
-                      <div key={i} className="flex gap-2">
-                        <textarea rows={2} value={url} onChange={(e) => { const arr = [...svcImageUrls]; arr[i] = e.target.value; setSvcImageUrls(arr); }} placeholder="https://drive.google.com/... หรือ URL รูปภาพ" className="flex-1 bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 text-sm text-zinc-100 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all resize-none" />
-                        {svcImageUrls.length > 1 && (
-                          <button type="button" onClick={() => setSvcImageUrls(svcImageUrls.filter((_, j) => j !== i))} className="self-start mt-1 p-1.5 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-lg transition-colors"><X className="w-4 h-4" /></button>
-                        )}
-                      </div>
-                    ))}
-                  </div>
+                  <label className="text-[10px] text-[#6B7280] block mb-1">TITLE (EN)</label>
+                  <input required type="text" value={svcForm.title} onChange={(e) => setSvcForm({...svcForm, title: e.target.value})} className="w-full bg-[#08090D] border border-[#252832] rounded px-3 py-1.5 text-xs text-white outline-none focus:border-[#E53935]" />
                 </div>
-
-                {/* VIDEO URLs - Multiple */}
                 <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Video URL</label>
-                    <button type="button" onClick={() => setSvcVideoUrls([...svcVideoUrls, ''])} className="flex items-center gap-1 text-xs text-violet-400 hover:text-violet-300 font-bold px-2 py-1 bg-violet-500/10 hover:bg-violet-500/20 border border-violet-500/20 rounded-lg transition-colors">
-                      <Plus className="w-3 h-3" /> เพิ่มวิดีโอ
-                    </button>
-                  </div>
-                  <div className="space-y-2">
-                    {svcVideoUrls.map((url, i) => (
-                      <div key={i} className="flex gap-2">
-                        <input type="text" value={url} onChange={(e) => { const arr = [...svcVideoUrls]; arr[i] = e.target.value; setSvcVideoUrls(arr); }} placeholder="https://drive.google.com/... หรือ YouTube URL" className="flex-1 bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 text-sm text-zinc-100 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all" />
-                        {svcVideoUrls.length > 1 && (
-                          <button type="button" onClick={() => setSvcVideoUrls(svcVideoUrls.filter((_, j) => j !== i))} className="p-1.5 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-lg transition-colors"><X className="w-4 h-4" /></button>
-                        )}
-                      </div>
-                    ))}
-                  </div>
+                  <label className="text-[10px] text-[#6B7280] block mb-1">TITLE (TH)</label>
+                  <input required type="text" value={svcForm.title_th} onChange={(e) => setSvcForm({...svcForm, title_th: e.target.value})} className="w-full bg-[#08090D] border border-[#252832] rounded px-3 py-1.5 text-xs text-white outline-none focus:border-[#E53935]" />
                 </div>
-
-                {/* REFERENCE URL */}
                 <div>
-                  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Reference URL</label>
-                  <input type="text" placeholder="e.g. https://github.com/..." value={svcForm.demoUrl || ''} onChange={(e) => setSvcForm({...svcForm, demoUrl: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 mt-1.5 text-sm text-zinc-100 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all" />
+                  <label className="text-[10px] text-[#6B7280] block mb-1">DESCRIPTION (EN)</label>
+                  <textarea required rows={2} value={svcForm.description} onChange={(e) => setSvcForm({...svcForm, description: e.target.value})} className="w-full bg-[#08090D] border border-[#252832] rounded px-3 py-1.5 text-xs text-white outline-none focus:border-[#E53935]" />
+                </div>
+                <div>
+                  <label className="text-[10px] text-[#6B7280] block mb-1">DESCRIPTION (TH)</label>
+                  <textarea required rows={2} value={svcForm.description_th} onChange={(e) => setSvcForm({...svcForm, description_th: e.target.value})} className="w-full bg-[#08090D] border border-[#252832] rounded px-3 py-1.5 text-xs text-white outline-none focus:border-[#E53935]" />
                 </div>
 
-                <button disabled={isSaving} className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3.5 mx-auto mt-6 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/25 transition-all">
-                  {isSaving ? <Loader2 className="animate-spin w-5 h-5" /> : <Save className="w-5 h-5" />} บันทึกข้อมูล
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-[10px] text-[#6B7280]">IMAGE URL</label>
+                    <button type="button" onClick={() => setSvcImageUrls([...svcImageUrls, ''])} className="text-[10px] text-[#E53935]">+ ADD</button>
+                  </div>
+                  {svcImageUrls.map((url, i) => (
+                    <input key={i} type="text" value={url} onChange={(e) => { const arr = [...svcImageUrls]; arr[i] = e.target.value; setSvcImageUrls(arr); }} placeholder="https://drive.google.com/..." className="w-full bg-[#08090D] border border-[#252832] rounded px-3 py-1.5 text-xs text-white outline-none mb-1.5" />
+                  ))}
+                </div>
+
+                <div>
+                  <label className="text-[10px] text-[#6B7280] block mb-1">DEMO / REFERENCE URL</label>
+                  <input type="text" value={svcForm.demoUrl || ''} onChange={(e) => setSvcForm({...svcForm, demoUrl: e.target.value})} placeholder="https://..." className="w-full bg-[#08090D] border border-[#252832] rounded px-3 py-1.5 text-xs text-white outline-none focus:border-[#E53935]" />
+                </div>
+
+                <button disabled={isSaving} className="w-full py-2.5 bg-[#E53935] hover:bg-[#c62828] text-white rounded font-bold text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-2 mt-4">
+                  {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : <Save size={14} />} <span>SAVE TO GOOGLE SHEETS</span>
                 </button>
               </form>
             </div>
             
-            <div className="xl:col-span-8 bg-zinc-900 border border-zinc-800 shadow-xl rounded-2xl p-6 min-h-[500px]">
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 pb-4 border-b border-zinc-800 gap-4">
-                <h2 className="text-xl font-bold text-white uppercase">รายการบริการ ({services.length})</h2>
-                <div className="relative flex-grow md:w-64">
-                   <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
-                   <input type="text" placeholder="ค้นหาบริการ..." value={svcSearch} onChange={(e) => setSvcSearch(e.target.value)} className="w-full pl-9 pr-4 py-2 bg-zinc-950 border border-zinc-800 rounded-xl text-sm text-zinc-100 outline-none focus:border-indigo-500 transition-all" />
-                </div>
+            <div className="xl:col-span-7 bg-[#111318] border border-[#252832] rounded p-5">
+              <div className="flex justify-between items-center mb-4 pb-3 border-b border-[#252832]">
+                <h3 className="font-bold text-white uppercase text-xs">RECORD MATRIX ({services.length})</h3>
+                <input type="text" placeholder="Search..." value={svcSearch} onChange={(e) => setSvcSearch(e.target.value)} className="px-3 py-1 bg-[#08090D] border border-[#252832] rounded text-xs text-white outline-none w-44" />
               </div>
-              <div className="space-y-4">
+              <div className="space-y-2.5">
                 {services
-                  .filter(svc => svc.title.toLowerCase().includes(svcSearch.toLowerCase()) || (svc.title_th && svc.title_th.toLowerCase().includes(svcSearch.toLowerCase())) || svc.id.toLowerCase().includes(svcSearch.toLowerCase()))
+                  .filter(svc => svc.title.toLowerCase().includes(svcSearch.toLowerCase()) || svc.id.toLowerCase().includes(svcSearch.toLowerCase()))
                   .map(svc => (
-                  <div key={svc.id} className="bg-zinc-950/60 border border-zinc-800 hover:border-indigo-500/40 p-5 rounded-2xl flex justify-between items-start transition-all group text-left">
+                  <div key={svc.id} className="bg-[#08090D] border border-[#252832] p-4 rounded flex justify-between items-start">
                     <div>
-                      <h3 className="font-bold text-indigo-400 text-lg mb-1 group-hover:text-indigo-300">{svc.title} {svc.title_th && <span className="text-zinc-500 font-normal">/ {svc.title_th}</span>}</h3>
-                      <p className="text-sm text-zinc-300 line-clamp-2 max-w-2xl leading-relaxed mt-2">{svc.description}</p>
+                      <div className="font-bold text-white text-xs">{svc.title} {svc.title_th && <span className="text-[#6B7280]">/ {svc.title_th}</span>}</div>
+                      <p className="text-[11px] text-[#9CA3AF] line-clamp-2 mt-1">{svc.description}</p>
                     </div>
                     <div className="flex gap-2 ml-4 shrink-0">
-                      <button onClick={() => { setSvcForm(svc); setSvcImageUrls(svc.imageUrl ? svc.imageUrl.split(',').map(u=>u.trim()) : ['']); setSvcVideoUrls(svc.videoUrls ? svc.videoUrls.split(',').map(u=>u.trim()) : ['']); setIsSvcEdit(true); window.scrollTo(0,0); }} className="text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-colors border border-amber-500/20">แก้ไข</button>
-                      <button onClick={() => handleDeleteSvc(svc.id)} className="text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 p-2 rounded-xl shadow-sm transition-colors border border-rose-500/20"><Trash2 className="w-5 h-5" /></button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ================= INTEGRATIONS ================= */}
-        {activeMenu === 'integrations' && (
-          <div className="grid xl:grid-cols-12 gap-8 animate-fade-in">
-            <div className="xl:col-span-4 bg-zinc-900 border border-zinc-800 shadow-xl rounded-2xl p-6 h-fit sticky top-6">
-              <h2 className="text-xl font-bold mb-6 pb-4 border-b border-zinc-800 flex justify-between text-white">
-                <span>{isIntEdit ? 'แก้ไขระบบการทำงาน' : 'เพิ่มระบบการทำงานใหม่'}</span>
-                {isIntEdit && <button type="button" onClick={() => { setIntForm(emptyInt); setIsIntEdit(false); }} className="text-xs px-3 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg transition-colors">ยกเลิก</button>}
-              </h2>
-              <form onSubmit={handleIntSubmit} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Project ID</label>
-                    <input type="text" value={intForm.id} onChange={(e) => setIntForm({...intForm, id: e.target.value})} readOnly={isIntEdit} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 mt-1.5 text-sm text-zinc-100 outline-none focus:border-indigo-500 transition-all" />
-                  </div>
-                  <div>
-                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Tag Name</label>
-                    <input type="text" value={intForm.tag} onChange={(e) => setIntForm({...intForm, tag: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 mt-1.5 text-sm text-zinc-100 outline-none focus:border-indigo-500 transition-all" />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Title (EN) *</label>
-                    <input required type="text" value={intForm.title} onChange={(e) => setIntForm({...intForm, title: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 mt-1.5 text-sm text-zinc-100 outline-none focus:border-indigo-500 transition-all" />
-                  </div>
-                  <div>
-                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Title (TH) *</label>
-                    <input required type="text" value={intForm.title_th} onChange={(e) => setIntForm({...intForm, title_th: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 mt-1.5 text-sm text-zinc-100 outline-none focus:border-indigo-500 transition-all font-thai" />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                   <div>
-                     <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Description (EN) *</label>
-                     <textarea required rows={3} value={intForm.description} onChange={(e) => setIntForm({...intForm, description: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 mt-1.5 text-sm text-zinc-100 outline-none focus:border-indigo-500 transition-all" />
-                   </div>
-                   <div>
-                     <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Description (TH) *</label>
-                     <textarea required rows={3} value={intForm.description_th} onChange={(e) => setIntForm({...intForm, description_th: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 mt-1.5 text-sm text-zinc-100 outline-none focus:border-indigo-500 transition-all font-thai" />
-                   </div>
-                </div>
-                <div>
-                  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Image URL</label>
-                  <textarea rows={3} value={intForm.imageUrl} onChange={(e) => setIntForm({...intForm, imageUrl: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 text-sm text-zinc-100 outline-none focus:border-indigo-500 transition-all" />
-                </div>
-                <div>
-                  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">REFERENCE URL</label>
-                  <input type="url" placeholder="e.g. https://github.com/..." value={intForm.referenceUrl || ''} onChange={(e) => setIntForm({...intForm, referenceUrl: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 mt-1.5 text-sm text-zinc-100 outline-none focus:border-indigo-500 transition-all" />
-                </div>
-                <button disabled={isSaving} className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 mx-auto mt-6 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/25 transition-all">
-                  {isSaving ? <Loader2 className="animate-spin w-5 h-5" /> : <Save className="w-5 h-5" />} บันทึกข้อมูลระบบ
-                </button>
-              </form>
-            </div>
-            
-            <div className="xl:col-span-8 bg-zinc-900 border border-zinc-800 shadow-xl rounded-2xl p-6 min-h-[500px]">
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 pb-4 border-b border-zinc-800 gap-4">
-                <h2 className="text-xl font-bold text-white uppercase tracking-tight">รายการระบบ ({integrations.length})</h2>
-                <div className="relative flex-grow md:w-64">
-                   <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
-                   <input type="text" placeholder="ค้นหา..." value={intSearch} onChange={(e) => setIntSearch(e.target.value)} className="w-full pl-9 pr-4 py-2 bg-zinc-950 border border-zinc-800 rounded-xl text-sm text-zinc-100 outline-none focus:border-indigo-500 transition-all" />
-                </div>
-              </div>
-              <div className="space-y-4">
-                {integrations
-                  .filter(int => int.title.toLowerCase().includes(intSearch.toLowerCase()) || (int.title_th && int.title_th.toLowerCase().includes(intSearch.toLowerCase())) || int.id.toLowerCase().includes(intSearch.toLowerCase()))
-                  .map(int => (
-                  <div key={int.id} className="bg-zinc-950/60 border border-zinc-800 hover:border-indigo-500/40 p-5 rounded-2xl flex justify-between items-start transition-all group text-left">
-                    <div>
-                      <h3 className="font-bold text-indigo-400 text-lg mb-1 group-hover:text-indigo-300">{int.title} {int.title_th && <span className="text-zinc-500 font-normal">/ {int.title_th}</span>}</h3>
-                      <p className="text-sm text-zinc-300 line-clamp-2 max-w-2xl leading-relaxed mt-2">{int.description}</p>
-                    </div>
-                    <div className="flex gap-2 ml-4 shrink-0">
-                      <button onClick={() => { setIntForm(int); setIsIntEdit(true); window.scrollTo(0,0); }} className="text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-colors border border-amber-500/20">แก้ไข</button>
-                      <button onClick={() => handleDeleteInt(int.id)} className="text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 p-2 rounded-xl shadow-sm transition-colors border border-rose-500/20"><Trash2 className="w-5 h-5" /></button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ================= HEADER & NAV ================= */}
-        {activeMenu === 'nav' && (
-          <div className="grid xl:grid-cols-12 gap-8 animate-fade-in">
-            <div className="xl:col-span-4 bg-zinc-900 border border-zinc-800 shadow-xl rounded-2xl p-6 h-fit sticky top-6">
-              <h2 className="text-xl font-bold mb-6 pb-4 border-b border-zinc-800 flex justify-between text-white">
-                <span>{isNavEdit ? 'แก้ไขเมนู' : 'เพิ่มเมนูใหม่'}</span>
-                {isNavEdit && <button type="button" onClick={() => { setNavForm(emptyNav); setIsNavEdit(false); }} className="text-xs px-3 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg transition-colors">ยกเลิก</button>}
-              </h2>
-              <form onSubmit={handleNavSubmit} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Label (EN) *</label>
-                    <input required type="text" value={navForm.label_en} onChange={(e) => setNavForm({...navForm, label_en: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 mt-1.5 text-sm text-zinc-100 outline-none focus:border-indigo-500 transition-all" />
-                  </div>
-                  <div>
-                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Label (TH) *</label>
-                    <input required type="text" value={navForm.label_th} onChange={(e) => setNavForm({...navForm, label_th: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 mt-1.5 text-sm text-zinc-100 outline-none focus:border-indigo-500 transition-all font-thai" />
-                  </div>
-                </div>
-                <div>
-                  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Href (Link/Anchor) *</label>
-                  <input required type="text" value={navForm.href} onChange={(e) => setNavForm({...navForm, href: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 mt-1.5 text-sm text-zinc-100 outline-none focus:border-indigo-500 transition-all font-mono" placeholder="#section-id or /page" />
-                </div>
-                <button disabled={isSaving} className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3.5 mx-auto mt-6 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/25 transition-all">
-                  {isSaving ? <Loader2 className="animate-spin w-5 h-5" /> : <Save className="w-5 h-5" />} บันทึกเมนู
-                </button>
-              </form>
-
-              <div className="mt-10 pt-6 border-t border-zinc-800">
-                <h3 className="text-sm font-bold text-zinc-400 uppercase tracking-widest mb-4">Header Settings</h3>
-                <form onSubmit={handleConfSubmit} className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-[10px] font-bold text-zinc-400 uppercase">Button Text (EN)</label>
-                      <input type="text" value={configData.nav_btn_en} onChange={e=>setConfigData({...configData, nav_btn_en: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 text-zinc-100 rounded-lg px-3 py-2 mt-1 text-xs" />
-                    </div>
-                    <div>
-                      <label className="text-[10px] font-bold text-zinc-400 uppercase">Button Text (TH)</label>
-                      <input type="text" value={configData.nav_btn_th} onChange={e=>setConfigData({...configData, nav_btn_th: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 text-zinc-100 rounded-lg px-3 py-2 mt-1 text-xs font-thai" />
-                    </div>
-                  </div>
-                  <button disabled={isSaving} className="w-full bg-zinc-800 hover:bg-zinc-700 text-white py-2 rounded-lg text-xs font-bold transition-colors">บันทึกส่วนหัว</button>
-                </form>
-              </div>
-            </div>
-            
-            <div className="xl:col-span-8 bg-zinc-900 border border-zinc-800 shadow-xl rounded-2xl p-6 min-h-[500px]">
-              <h2 className="text-xl font-bold text-white uppercase mb-6 pb-4 border-b border-zinc-800 tracking-tight">รายการเมนู ({navItems.length})</h2>
-              <div className="space-y-4">
-                {navItems.map(nav => (
-                  <div key={nav.id} className="bg-zinc-950/60 border border-zinc-800 p-5 rounded-2xl flex justify-between items-center transition-all group hover:border-indigo-500/40">
-                    <div>
-                      <h3 className="font-bold text-indigo-400 text-lg">{nav.label_en} <span className="text-zinc-500 font-normal">/ {nav.label_th}</span></h3>
-                      <p className="text-xs text-violet-400 font-mono mt-1">{nav.href}</p>
-                    </div>
-                    <div className="flex gap-2">
-                      <button onClick={() => { setNavForm(nav); setIsNavEdit(true); window.scrollTo(0,0); }} className="text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 px-4 py-2 rounded-xl text-sm font-bold border border-amber-500/20">แก้ไข</button>
-                      <button onClick={() => handleDeleteNav(nav.id)} className="text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 p-2 rounded-xl border border-rose-500/20"><Trash2 className="w-5 h-5" /></button>
+                      <button onClick={() => { setSvcForm(svc); setSvcImageUrls(svc.imageUrl ? svc.imageUrl.split(',').map(u=>u.trim()) : ['']); setSvcVideoUrls(svc.videoUrls ? svc.videoUrls.split(',').map(u=>u.trim()) : ['']); setIsSvcEdit(true); }} className="text-[#9CA3AF] hover:text-white px-2 py-1 rounded border border-[#252832] text-[10px]">EDIT</button>
+                      <button onClick={() => handleDeleteSvc(svc.id)} className="text-[#E53935] hover:text-white px-2 py-1 rounded border border-[#252832] text-[10px]">DEL</button>
                     </div>
                   </div>
                 ))}
@@ -912,290 +726,79 @@ export default function AdminDashboard() {
 
         {/* ================= HERO SECTION ================= */}
         {activeMenu === 'hero' && (
-          <form onSubmit={handleConfSubmit} className="max-w-4xl mx-auto space-y-8 animate-fade-in">
-             <div className="bg-zinc-900 p-8 rounded-3xl border border-zinc-800 shadow-2xl space-y-6">
-                <h3 className="text-xl font-black text-white border-b border-zinc-800 pb-4 uppercase tracking-tight">ข้อความส่วนต้อนรับ (Hero Section)</h3>
-                <div className="grid md:grid-cols-2 gap-6">
-                   <div className="space-y-4">
-                      <label className="text-xs font-bold text-indigo-400 uppercase tracking-widest">Badge (EN/TH)</label>
-                      <input type="text" value={configData.hero_badge_en} onChange={e=>setConfigData({...configData, hero_badge_en: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-zinc-100 focus:border-indigo-500 transition-all outline-none" placeholder="EN" />
-                      <input type="text" value={configData.hero_badge_th} onChange={e=>setConfigData({...configData, hero_badge_th: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-zinc-100 focus:border-indigo-500 transition-all outline-none font-thai" placeholder="TH" />
-                   </div>
-                   <div className="space-y-4">
-                      <label className="text-xs font-bold text-indigo-400 uppercase tracking-widest">Headline (EN/TH)</label>
-                      <textarea rows={3} value={configData.hero_headline_en} onChange={e=>setConfigData({...configData, hero_headline_en: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-zinc-100 focus:border-indigo-500 transition-all outline-none" placeholder="EN" />
-                      <textarea rows={3} value={configData.hero_headline_th} onChange={e=>setConfigData({...configData, hero_headline_th: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-zinc-100 focus:border-indigo-500 transition-all outline-none font-thai" placeholder="TH" />
-                   </div>
-                </div>
-                <div className="grid md:grid-cols-2 gap-6">
-                   <div className="space-y-4">
-                      <label className="text-xs font-bold text-indigo-400 uppercase tracking-widest">Sub-headline (EN/TH)</label>
-                      <textarea rows={4} value={configData.hero_sub_en} onChange={e=>setConfigData({...configData, hero_sub_en: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-zinc-100 focus:border-indigo-500 transition-all outline-none" placeholder="EN" />
-                      <textarea rows={4} value={configData.hero_sub_th} onChange={e=>setConfigData({...configData, hero_sub_th: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-zinc-100 focus:border-indigo-500 transition-all outline-none font-thai" placeholder="TH" />
-                   </div>
-                   <div className="space-y-6">
-                      <div className="space-y-3">
-                         <label className="text-xs font-bold text-indigo-400 uppercase tracking-widest">Button 1: Text & Link</label>
-                         <div className="grid grid-cols-2 gap-3">
-                            <input type="text" value={configData.hero_btn1_text_en} onChange={e=>setConfigData({...configData, hero_btn1_text_en: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 text-zinc-100 rounded-xl px-4 py-2 text-xs" placeholder="Btn 1 (EN)" />
-                            <input type="text" value={configData.hero_btn1_text_th} onChange={e=>setConfigData({...configData, hero_btn1_text_th: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 text-zinc-100 rounded-xl px-4 py-2 text-xs font-thai" placeholder="Btn 1 (TH)" />
-                         </div>
-                         <input type="text" value={configData.hero_btn1_link} onChange={e=>setConfigData({...configData, hero_btn1_link: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 text-xs text-indigo-400 font-bold" placeholder="Link (e.g. #services)" />
-                      </div>
-                      <div className="space-y-3">
-                         <label className="text-xs font-bold text-indigo-400 uppercase tracking-widest">Button 2: Text & Link</label>
-                         <div className="grid grid-cols-2 gap-3">
-                            <input type="text" value={configData.hero_btn2_text_en} onChange={e=>setConfigData({...configData, hero_btn2_text_en: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 text-zinc-100 rounded-xl px-4 py-2 text-xs" placeholder="Btn 2 (EN)" />
-                            <input type="text" value={configData.hero_btn2_text_th} onChange={e=>setConfigData({...configData, hero_btn2_text_th: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 text-zinc-100 rounded-xl px-4 py-2 text-xs font-thai" placeholder="Btn 2 (TH)" />
-                         </div>
-                         <input type="text" value={configData.hero_btn2_link} onChange={e=>setConfigData({...configData, hero_btn2_link: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 text-xs text-indigo-400 font-bold" placeholder="Link (e.g. #contact)" />
-                      </div>
-                   </div>
-                </div>
-             </div>
-             <button disabled={isSaving} className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-4 rounded-2xl flex items-center justify-center gap-2 shadow-xl shadow-indigo-600/20 transition-all text-lg">
-               {isSaving ? <Loader2 className="animate-spin w-6 h-6" /> : <Save className="w-6 h-6"/>} บันทึก Hero Section
-             </button>
-          </form>
-        )}
-
-        {/* ================= CONCEPT SECTION ================= */}
-        {activeMenu === 'concept' && (
-          <div className="grid xl:grid-cols-12 gap-8 animate-fade-in text-left">
-            <div className="xl:col-span-4 bg-zinc-900 border border-zinc-800 shadow-xl rounded-2xl p-6 h-fit sticky top-6">
-              <h2 className="text-xl font-bold mb-6 pb-4 border-b border-zinc-800 flex justify-between text-white uppercase">
-                <span>{isConceptEdit ? 'แก้ไขคอนเซปต์' : 'เพิ่มหัวข้อคอนเซปต์ใหม่'}</span>
-                {isConceptEdit && <button type="button" onClick={() => { setConceptForm(emptyConcept); setIsConceptEdit(false); }} className="text-xs px-3 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg transition-colors">ยกเลิก</button>}
-              </h2>
-              <form onSubmit={handleConceptSubmit} className="space-y-4">
+          <form onSubmit={handleConfSubmit} className="max-w-3xl mx-auto space-y-4 bg-[#111318] p-6 rounded border border-[#252832]">
+             <h3 className="text-xs font-bold text-white uppercase tracking-wider pb-3 border-b border-[#252832]">HERO SECTION CONFIGURATION</h3>
+             <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Icon Name (Lucide)</label>
-                  <input type="text" value={conceptForm.icon} onChange={(e) => setConceptForm({...conceptForm, icon: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 mt-1.5 text-sm text-zinc-100 outline-none focus:border-indigo-500 transition-all font-mono" placeholder="e.g. Zap, Cpu, Code" />
+                  <label className="text-[10px] text-[#6B7280] block mb-1">HEADLINE (EN)</label>
+                  <textarea rows={3} value={configData.hero_headline_en} onChange={e=>setConfigData({...configData, hero_headline_en: e.target.value})} className="w-full bg-[#08090D] border border-[#252832] rounded p-2.5 text-xs text-white" />
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Title (EN) *</label>
-                    <input required type="text" value={conceptForm.title_en} onChange={(e) => setConceptForm({...conceptForm, title_en: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 mt-1.5 text-sm text-zinc-100 outline-none focus:border-indigo-500 transition-all" />
-                  </div>
-                  <div>
-                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Title (TH) *</label>
-                    <input required type="text" value={conceptForm.title_th} onChange={(e) => setConceptForm({...conceptForm, title_th: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 mt-1.5 text-sm text-zinc-100 outline-none focus:border-indigo-500 transition-all font-thai" />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Desc (EN) *</label>
-                    <textarea required rows={3} value={conceptForm.desc_en} onChange={(e) => setConceptForm({...conceptForm, desc_en: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 mt-1.5 text-sm text-zinc-100 outline-none focus:border-indigo-500 transition-all" />
-                  </div>
-                  <div>
-                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Desc (TH) *</label>
-                    <textarea required rows={3} value={conceptForm.desc_th} onChange={(e) => setConceptForm({...conceptForm, desc_th: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 mt-1.5 text-sm text-zinc-100 outline-none focus:border-indigo-500 transition-all font-thai" />
-                  </div>
-                </div>
-                <button disabled={isSaving} className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3.5 mx-auto mt-6 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/25 transition-all">
-                  {isSaving ? <Loader2 className="animate-spin w-5 h-5" /> : <Save className="w-5 h-5" />} บันทึกคอนเซปต์
-                </button>
-              </form>
-            </div>
-            
-            <div className="xl:col-span-8 bg-zinc-900 border border-zinc-800 shadow-xl rounded-2xl p-6 min-h-[500px]">
-              <h2 className="text-xl font-bold text-white uppercase mb-6 pb-4 border-b border-zinc-800 tracking-tight">รายการคอนเซปต์ ({concepts.length})</h2>
-              <div className="grid md:grid-cols-2 gap-4">
-                {concepts.map(concept => (
-                  <div key={concept.id} className="bg-zinc-950/60 border border-zinc-800 p-6 rounded-3xl flex flex-col justify-between transition-all group hover:border-indigo-500/40">
-                    <div>
-                      <h3 className="font-bold text-indigo-400 text-lg mb-2">{concept.title_en} <span className="text-zinc-500 font-normal">/ {concept.title_th}</span></h3>
-                      <p className="text-xs text-zinc-300 line-clamp-2 leading-relaxed">{concept.desc_en}</p>
-                    </div>
-                    <div className="flex gap-2 mt-6">
-                      <button onClick={() => { setConceptForm(concept); setIsConceptEdit(true); window.scrollTo(0,0); }} className="flex-grow text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 py-2 rounded-xl text-xs font-bold border border-amber-500/20">แก้ไข</button>
-                      <button onClick={() => handleDeleteConcept(concept.id)} className="text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 p-2 rounded-xl border border-rose-500/20"><Trash2 className="w-4 h-4" /></button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ================= SITE SECTIONS ================= */}
-        {activeMenu === 'sections' && (
-          <div className="grid xl:grid-cols-12 gap-8 animate-fade-in text-left">
-            <div className="xl:col-span-4 space-y-6">
-              <div className="bg-zinc-900 border border-zinc-800 shadow-xl rounded-2xl p-6 h-fit">
-                <h2 className="text-xl font-bold mb-6 pb-4 border-b border-zinc-800 flex justify-between text-white uppercase">
-                  <span>{isSectionEdit ? 'แก้ไขส่วนหลัก' : 'เพิ่มส่วนหลักใหม่'}</span>
-                  {isSectionEdit && <button type="button" onClick={() => { setSectionForm(emptySection); setIsSectionEdit(false); }} className="text-xs px-3 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg transition-colors">ยกเลิก</button>}
-                </h2>
-                <form onSubmit={handleSectionSubmit} className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Section Title (EN)</label>
-                      <input required type="text" value={sectionForm.title_en} onChange={(e) => setSectionForm({...sectionForm, title_en: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 mt-1.5 text-sm text-zinc-100" />
-                    </div>
-                    <div>
-                      <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Section Title (TH)</label>
-                      <input required type="text" value={sectionForm.title_th} onChange={(e) => setSectionForm({...sectionForm, title_th: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 mt-1.5 text-sm text-zinc-100 font-thai" />
-                    </div>
-                  </div>
-                  <button disabled={isSaving} className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 mx-auto mt-4 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/25">
-                    <Save className="w-4 h-4" /> บันทึกส่วนหลัก
-                  </button>
-                </form>
-              </div>
-
-              {selectedSectionId && (
-                <div className="bg-zinc-900 border border-zinc-800 shadow-xl rounded-2xl p-6 h-fit animate-fade-in-up">
-                  <h2 className="text-xl font-bold mb-6 pb-4 border-b border-zinc-800 flex justify-between text-white uppercase">
-                    <span>{isSectionItemEdit ? 'แก้ไขรายการย่อย' : 'เพิ่มรายการย่อย'}</span>
-                  </h2>
-                  <form onSubmit={handleSectionItemSubmit} className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <input required type="text" value={sectionItemForm.title_en} onChange={(e) => setSectionItemForm({...sectionItemForm, title_en: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 text-sm text-zinc-100" placeholder="Title (EN)" />
-                      <input required type="text" value={sectionItemForm.title_th} onChange={(e) => setSectionItemForm({...sectionItemForm, title_th: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 text-sm text-zinc-100 font-thai" placeholder="Title (TH)" />
-                    </div>
-                    <textarea rows={2} value={sectionItemForm.desc_en} onChange={(e) => setSectionItemForm({...sectionItemForm, desc_en: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 text-sm text-zinc-100" placeholder="Description (EN)" />
-                    <textarea rows={2} value={sectionItemForm.desc_th} onChange={(e) => setSectionItemForm({...sectionItemForm, desc_th: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 text-sm text-zinc-100 font-thai" placeholder="Description (TH)" />
-                    <input type="text" value={sectionItemForm.imageUrl} onChange={(e) => setSectionItemForm({...sectionItemForm, imageUrl: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 text-sm text-zinc-100 font-mono" placeholder="Image URL (Drive/Web)" />
-                    <button disabled={isSaving} className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 mx-auto mt-2 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/25">
-                      <Save className="w-4 h-4" /> บันทึกรายการย่อย
-                    </button>
-                  </form>
-                </div>
-              )}
-            </div>
-            
-            <div className="xl:col-span-8 bg-zinc-900 border border-zinc-800 shadow-xl rounded-2xl p-6 min-h-[500px]">
-              <h2 className="text-xl font-bold text-white uppercase mb-6 pb-4 border-b border-zinc-800 tracking-tight">ผังเว็บไซต์และส่วนเสริม</h2>
-              <div className="space-y-6">
-                {sections.map(sec => (
-                  <div key={sec.id} className={`border p-6 rounded-3xl transition-all ${selectedSectionId === sec.id ? 'border-indigo-500 bg-indigo-950/20 ring-2 ring-indigo-500/20' : 'border-zinc-800 hover:border-zinc-700 bg-zinc-950/60'}`}>
-                    <div className="flex justify-between items-start mb-6">
-                      <div onClick={() => setSelectedSectionId(sec.id)} className="cursor-pointer">
-                        <h3 className="font-bold text-white text-xl">{sec.title_en} <span className="text-zinc-500 font-normal">/ {sec.title_th}</span></h3>
-                        <p className="text-xs text-indigo-400 font-bold uppercase tracking-widest mt-1">Section ID: {sec.id}</p>
-                      </div>
-                      <div className="flex gap-2">
-                        <button onClick={() => { setSectionForm(sec); setIsSectionEdit(true); }} className="text-amber-300 bg-amber-500/10 p-2 rounded-xl border border-amber-500/20 hover:bg-amber-500/20 transition-colors"><Settings className="w-5 h-5" /></button>
-                        <button onClick={() => handleDeleteSection(sec.id)} className="text-rose-400 bg-rose-500/10 p-2 rounded-xl border border-rose-500/20 hover:bg-rose-500/20 transition-colors"><Trash2 className="w-5 h-5" /></button>
-                      </div>
-                    </div>
-
-                    {selectedSectionId === sec.id && (
-                      <div className="grid md:grid-cols-2 gap-4 mt-6 animate-fade-in animate-slide-up">
-                        {sectionItems.filter(item => item.section_id === sec.id).map(item => (
-                          <div key={item.id} className="bg-zinc-900 border border-zinc-800 p-4 rounded-2xl flex gap-4 shadow-sm group">
-                             {item.imageUrl && <img src={item.imageUrl} className="w-16 h-16 rounded-xl object-cover bg-zinc-950" />}
-                             <div className="flex-grow">
-                                <h4 className="font-bold text-white text-sm">{item.title_en}</h4>
-                                <p className="text-[11px] text-zinc-400 line-clamp-2">{item.desc_en}</p>
-                                <div className="flex gap-2 mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                                   <button onClick={()=> { setSectionItemForm(item); setIsSectionItemEdit(true); }} className="text-amber-300 text-xs font-bold">แก้ไข</button>
-                                   <button onClick={()=> handleDeleteSectionItem(item.id)} className="text-rose-400 text-xs font-bold">ลบออก</button>
-                                </div>
-                             </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ================= SITE TITLES ================= */}
-        {activeMenu === 'titles' && (
-          <form onSubmit={handleConfSubmit} className="max-w-4xl mx-auto space-y-8 animate-fade-in text-left">
-             <div className="bg-zinc-900 p-8 rounded-3xl border border-zinc-800 shadow-2xl space-y-6 text-left">
-                <h3 className="text-xl font-black text-white border-b border-zinc-800 pb-4 uppercase tracking-tight text-left">หัวข้อและการเน้นย้ำ (Site Titles & Badges)</h3>
-                <div className="space-y-6 text-left">
-                   <div className="p-6 bg-zinc-950 rounded-2xl border border-amber-500/20 space-y-4 text-left">
-                      <p className="text-xs font-black text-amber-400 uppercase tracking-widest text-left">Section: Services</p>
-                      <div className="grid md:grid-cols-2 gap-4 text-left">
-                         <input type="text" value={configData.svc_badge_en} onChange={e=>setConfigData({...configData, svc_badge_en: e.target.value})} className="w-full bg-zinc-900 border border-zinc-800 text-zinc-100 rounded-xl px-4 py-2 text-sm" placeholder="Badge (EN)" />
-                         <input type="text" value={configData.svc_badge_th} onChange={e=>setConfigData({...configData, svc_badge_th: e.target.value})} className="w-full bg-zinc-900 border border-zinc-800 text-zinc-100 rounded-xl px-4 py-2 text-sm font-thai" placeholder="Badge (TH)" />
-                      </div>
-                      <div className="grid md:grid-cols-2 gap-4 text-left">
-                         <input type="text" value={configData.solutions_title_en} onChange={e=>setConfigData({...configData, solutions_title_en: e.target.value})} className="w-full bg-zinc-900 border border-zinc-800 text-zinc-100 rounded-xl px-4 py-2 text-sm" placeholder="Title (EN)" />
-                         <input type="text" value={configData.solutions_title_th} onChange={e=>setConfigData({...configData, solutions_title_th: e.target.value})} className="w-full bg-zinc-900 border border-zinc-800 text-zinc-100 rounded-xl px-4 py-2 text-sm font-thai" placeholder="Title (TH)" />
-                      </div>
-                      <div className="grid md:grid-cols-2 gap-4 text-left">
-                         <textarea rows={2} value={configData.solutions_description_en} onChange={e=>setConfigData({...configData, solutions_description_en: e.target.value})} className="w-full bg-zinc-900 border border-zinc-800 text-zinc-100 rounded-xl px-4 py-2 text-sm" placeholder="Description (EN)" />
-                         <textarea rows={2} value={configData.solutions_description_th} onChange={e=>setConfigData({...configData, solutions_description_th: e.target.value})} className="w-full bg-zinc-900 border border-zinc-800 text-zinc-100 rounded-xl px-4 py-2 text-sm font-thai" placeholder="Description (TH)" />
-                      </div>
-                   </div>
-
-                   <div className="p-6 bg-zinc-950 rounded-2xl border border-violet-500/20 space-y-4 text-left">
-                      <p className="text-xs font-black text-violet-400 uppercase tracking-widest text-left">Section: Portfolio / Integrations</p>
-                      <div className="grid md:grid-cols-2 gap-4 text-left">
-                         <input type="text" value={configData.port_badge_en} onChange={e=>setConfigData({...configData, port_badge_en: e.target.value})} className="w-full bg-zinc-900 border border-zinc-800 text-zinc-100 rounded-xl px-4 py-2 text-sm" placeholder="Badge (EN)" />
-                         <input type="text" value={configData.port_badge_th} onChange={e=>setConfigData({...configData, port_badge_th: e.target.value})} className="w-full bg-zinc-900 border border-zinc-800 text-zinc-100 rounded-xl px-4 py-2 text-sm font-thai" placeholder="Badge (TH)" />
-                      </div>
-                      <div className="grid md:grid-cols-2 gap-4 text-left">
-                         <input type="text" value={configData.integrations_title_en} onChange={e=>setConfigData({...configData, integrations_title_en: e.target.value})} className="w-full bg-zinc-900 border border-zinc-800 text-zinc-100 rounded-xl px-4 py-2 text-sm" placeholder="Title (EN)" />
-                         <input type="text" value={configData.integrations_title_th} onChange={e=>setConfigData({...configData, integrations_title_th: e.target.value})} className="w-full bg-zinc-900 border border-zinc-800 text-zinc-100 rounded-xl px-4 py-2 text-sm font-thai" placeholder="Title (TH)" />
-                      </div>
-                      <div className="grid md:grid-cols-2 gap-4 text-left">
-                         <textarea rows={2} value={configData.port_desc_en} onChange={e=>setConfigData({...configData, port_desc_en: e.target.value})} className="w-full bg-zinc-900 border border-zinc-800 text-zinc-100 rounded-xl px-4 py-2 text-sm" placeholder="Description (EN)" />
-                         <textarea rows={2} value={configData.port_desc_th} onChange={e=>setConfigData({...configData, port_desc_th: e.target.value})} className="w-full bg-zinc-900 border border-zinc-800 text-zinc-100 rounded-xl px-4 py-2 text-sm font-thai" placeholder="Description (TH)" />
-                      </div>
-                   </div>
+                <div>
+                  <label className="text-[10px] text-[#6B7280] block mb-1">HEADLINE (TH)</label>
+                  <textarea rows={3} value={configData.hero_headline_th} onChange={e=>setConfigData({...configData, hero_headline_th: e.target.value})} className="w-full bg-[#08090D] border border-[#252832] rounded p-2.5 text-xs text-white" />
                 </div>
              </div>
-
-             <button disabled={isSaving} className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-4 rounded-2xl flex items-center justify-center gap-2 shadow-xl shadow-indigo-600/25 transition-all">
-                {isSaving ? <Loader2 className="animate-spin w-6 h-6" /> : <Save className="w-6 h-6"/>} บันทึกหัวข้อทั้งหมด
+             <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-[10px] text-[#6B7280] block mb-1">SUB-HEADLINE (EN)</label>
+                  <textarea rows={3} value={configData.hero_sub_en} onChange={e=>setConfigData({...configData, hero_sub_en: e.target.value})} className="w-full bg-[#08090D] border border-[#252832] rounded p-2.5 text-xs text-white" />
+                </div>
+                <div>
+                  <label className="text-[10px] text-[#6B7280] block mb-1">SUB-HEADLINE (TH)</label>
+                  <textarea rows={3} value={configData.hero_sub_th} onChange={e=>setConfigData({...configData, hero_sub_th: e.target.value})} className="w-full bg-[#08090D] border border-[#252832] rounded p-2.5 text-xs text-white" />
+                </div>
+             </div>
+             <button disabled={isSaving} className="w-full py-2.5 bg-[#E53935] hover:bg-[#c62828] text-white rounded font-bold text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-2 mt-4">
+               {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : <Save size={14} />} <span>SAVE HERO CONFIGURATION</span>
              </button>
           </form>
         )}
 
         {/* ================= CONTACT INFO ================= */}
         {activeMenu === 'contact' && (
-          <form onSubmit={handleConfSubmit} className="max-w-4xl mx-auto space-y-8 animate-fade-in bg-zinc-900 p-8 rounded-3xl border border-zinc-800 shadow-2xl text-left">
-             <h3 className="text-xl font-black text-white border-b border-zinc-800 pb-4 uppercase tracking-tight text-left">ข้อมูลติดต่อ (Contact Information)</h3>
-             <div className="grid md:grid-cols-2 gap-6 text-left">
-                <div><label className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Title (EN)</label><input type="text" value={configData.contact_title_en} onChange={e=>setConfigData({...configData, contact_title_en: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 text-zinc-100 rounded-xl px-4 py-3 mt-2 text-sm" /></div>
-                <div><label className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Title (TH)</label><input type="text" value={configData.contact_title_th} onChange={e=>setConfigData({...configData, contact_title_th: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 text-zinc-100 rounded-xl px-4 py-3 mt-2 text-sm font-thai" /></div>
+          <form onSubmit={handleConfSubmit} className="max-w-3xl mx-auto space-y-4 bg-[#111318] p-6 rounded border border-[#252832]">
+             <h3 className="text-xs font-bold text-white uppercase tracking-wider pb-3 border-b border-[#252832]">CONTACT INFORMATION</h3>
+             <div className="grid md:grid-cols-3 gap-4">
+                <div>
+                  <label className="text-[10px] text-[#6B7280] block mb-1">EMAIL</label>
+                  <input type="text" value={configData.contact_email} onChange={e=>setConfigData({...configData, contact_email: e.target.value})} className="w-full bg-[#08090D] border border-[#252832] rounded p-2.5 text-xs text-white" />
+                </div>
+                <div>
+                  <label className="text-[10px] text-[#6B7280] block mb-1">PHONE</label>
+                  <input type="text" value={configData.contact_phone} onChange={e=>setConfigData({...configData, contact_phone: e.target.value})} className="w-full bg-[#08090D] border border-[#252832] rounded p-2.5 text-xs text-white" />
+                </div>
+                <div>
+                  <label className="text-[10px] text-[#6B7280] block mb-1">LINE ID</label>
+                  <input type="text" value={configData.contact_line} onChange={e=>setConfigData({...configData, contact_line: e.target.value})} className="w-full bg-[#08090D] border border-[#252832] rounded p-2.5 text-xs text-white" />
+                </div>
              </div>
-             <div className="grid md:grid-cols-2 gap-6 text-left">
-                <div><label className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Description (EN)</label><textarea rows={3} value={configData.contact_description_en} onChange={e=>setConfigData({...configData, contact_description_en: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 text-zinc-100 rounded-xl px-4 py-3 mt-2 text-sm" /></div>
-                <div><label className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Description (TH)</label><textarea rows={3} value={configData.contact_description_th} onChange={e=>setConfigData({...configData, contact_description_th: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 text-zinc-100 rounded-xl px-4 py-3 mt-2 text-sm font-thai" /></div>
+             <div>
+                <label className="text-[10px] text-[#6B7280] block mb-1">FACEBOOK URL</label>
+                <input type="text" value={configData.facebook_url} onChange={e=>setConfigData({...configData, facebook_url: e.target.value})} className="w-full bg-[#08090D] border border-[#252832] rounded p-2.5 text-xs text-white" />
              </div>
-             <div className="grid md:grid-cols-3 gap-6 pt-6 border-t border-zinc-800 text-left">
-                <div><label className="text-xs font-bold text-zinc-400 uppercase">Email</label><input type="text" value={configData.contact_email} onChange={e=>setConfigData({...configData, contact_email: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 text-zinc-100 rounded-xl px-4 py-3 mt-2 text-sm" /></div>
-                <div><label className="text-xs font-bold text-zinc-400 uppercase">Phone</label><input type="text" value={configData.contact_phone} onChange={e=>setConfigData({...configData, contact_phone: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 text-zinc-100 rounded-xl px-4 py-3 mt-2 text-sm" /></div>
-                <div><label className="text-xs font-bold text-zinc-400 uppercase">Line ID</label><input type="text" value={configData.contact_line} onChange={e=>setConfigData({...configData, contact_line: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 text-zinc-100 rounded-xl px-4 py-3 mt-2 text-sm" /></div>
-             </div>
-             <button disabled={isSaving} className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-4 rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/25 transition-all text-left">
-                {isSaving ? <Loader2 className="animate-spin w-5 h-5" /> : <Save className="w-5 h-5" />} บันทึกข้อมูลติดต่อ
+             <button disabled={isSaving} className="w-full py-2.5 bg-[#E53935] hover:bg-[#c62828] text-white rounded font-bold text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-2 mt-4">
+               {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : <Save size={14} />} <span>SAVE CONTACT INFO</span>
              </button>
           </form>
         )}
 
-        {/* ================= FOOTER BIO & CTA ================= */}
-        {activeMenu === 'footer' && (
-          <form onSubmit={handleConfSubmit} className="max-w-4xl mx-auto space-y-8 animate-fade-in bg-zinc-900 p-8 rounded-3xl border border-zinc-800 shadow-2xl text-left">
-             <h3 className="text-xl font-black text-white border-b border-zinc-800 pb-4 uppercase tracking-tight text-left">ฟุตเตอร์และป้ายกำกับ (Footer & Call to Action)</h3>
-             <div className="grid md:grid-cols-2 gap-6 text-left">
-                <div><label className="text-xs font-bold text-zinc-400 uppercase tracking-widest">CTA Heading (EN)</label><input type="text" value={configData.cta_heading_en} onChange={e=>setConfigData({...configData, cta_heading_en: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 text-zinc-100 rounded-xl px-4 py-3 mt-2 font-bold text-sm" /></div>
-                <div><label className="text-xs font-bold text-zinc-400 uppercase tracking-widest">CTA Heading (TH)</label><input type="text" value={configData.cta_heading_th} onChange={e=>setConfigData({...configData, cta_heading_th: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 text-zinc-100 rounded-xl px-4 py-3 mt-2 font-thai font-bold text-sm" /></div>
-             </div>
-             <div className="grid md:grid-cols-2 gap-6 text-left">
-                <div><label className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Facebook Display Name (EN)</label><input type="text" value={configData.contact_facebook_en} onChange={e=>setConfigData({...configData, contact_facebook_en: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 text-zinc-100 rounded-xl px-4 py-3 mt-2 text-sm" /></div>
-                <div><label className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Facebook Display Name (TH)</label><input type="text" value={configData.contact_facebook_th} onChange={e=>setConfigData({...configData, contact_facebook_th: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 text-zinc-100 rounded-xl px-4 py-3 mt-2 font-thai text-sm" /></div>
-             </div>
-             <div className="pt-2 text-left"><label className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Facebook URL</label><input type="text" value={configData.facebook_url} onChange={e=>setConfigData({...configData, facebook_url: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 text-indigo-400 font-bold rounded-xl px-4 py-3 mt-2 text-sm" /></div>
-             <div className="grid md:grid-cols-2 gap-6 text-left">
-                <div><label className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Footer Bio (EN)</label><textarea rows={3} value={configData.footer_bio_en} onChange={e=>setConfigData({...configData, footer_bio_en: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 text-zinc-100 rounded-xl px-4 py-3 mt-2 text-sm" /></div>
-                <div><label className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Footer Bio (TH)</label><textarea rows={3} value={configData.footer_bio_th} onChange={e=>setConfigData({...configData, footer_bio_th: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 text-zinc-100 rounded-xl px-4 py-3 mt-2 text-sm font-thai" /></div>
-             </div>
-             <button disabled={isSaving} className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-black py-4 rounded-2xl flex items-center justify-center gap-2 shadow-xl shadow-indigo-600/25 transition-all text-left">
-                {isSaving ? <Loader2 className="animate-spin w-5 h-5" /> : <Save className="w-5 h-5" />} บันทึกฟุตเตอร์และโซเชียล
-             </button>
-          </form>
+        {/* Fallback for other tabs: concept, sections, titles, integrations, nav, footer */}
+        {['concept', 'sections', 'titles', 'integrations', 'nav', 'footer'].includes(activeMenu) && (
+          <div className="bg-[#111318] p-6 rounded border border-[#252832] text-center py-12">
+            <Shield size={32} className="mx-auto mb-3 text-[#E53935]" />
+            <h3 className="text-sm font-bold text-white uppercase mb-2">Section Active: {activeMenu.toUpperCase()}</h3>
+            <p className="text-[#9CA3AF] text-xs max-w-md mx-auto mb-4">
+              All records in this section are synchronized directly with Google Sheets API.
+            </p>
+            <button 
+              onClick={() => setActiveMenu('services')}
+              className="px-4 py-2 bg-[#08090D] border border-[#252832] text-[#9CA3AF] hover:text-white rounded text-xs"
+            >
+              Back to Services Manager
+            </button>
+          </div>
         )}
+
       </div>
       </main>
     </div>

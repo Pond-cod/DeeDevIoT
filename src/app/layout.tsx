@@ -1,18 +1,23 @@
 import type { Metadata, Viewport } from 'next'
-import { Kanit, Montserrat } from 'next/font/google'
+import { Inter, Noto_Sans_Thai, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 
-const kanit = Kanit({
-  subsets: ['latin', 'thai'],
-  weight: ['200', '300', '400', '500', '600', '700', '800'],
-  variable: '--font-kanit',
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
   display: 'swap',
 })
 
-const montserrat = Montserrat({
+const notoSansThai = Noto_Sans_Thai({
+  subsets: ['thai'],
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-thai',
+  display: 'swap',
+})
+
+const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800', '900'],
-  variable: '--font-montserrat',
+  variable: '--font-mono',
   display: 'swap',
 })
 
@@ -20,12 +25,12 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
-  themeColor: '#09090b',
+  themeColor: '#08090D',
 }
 
 export const metadata: Metadata = {
-  title: 'DeeDevIOT | Modern Web App & Smart IoT Solutions',
-  description: 'ขับเคลื่อนธุรกิจสู่อนาคตด้วย Web Application และระบบ IoT อัจฉริยะที่ออกแบบเฉพาะเพื่อคุณ',
+  title: 'DeeDevIOT — Professional Technology Solution Studio',
+  description: 'Turn Ideas Into Real Digital Solutions. IoT Solutions, Web Applications and IT Systems built for real-world use.',
 }
 
 export default function RootLayout({
@@ -34,8 +39,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="th" className={`${kanit.variable} ${montserrat.variable} scroll-smooth`}>
-      <body className="font-kanit antialiased bg-zinc-950 text-zinc-100 min-h-screen selection:bg-indigo-500/30 selection:text-white overflow-x-hidden">
+    <html lang="th" className={`${inter.variable} ${notoSansThai.variable} ${jetbrainsMono.variable} scroll-smooth`}>
+      <body className="font-sans antialiased bg-[#08090D] text-[#FFFFFF] min-h-screen selection:bg-[#E53935]/20 selection:text-white overflow-x-hidden">
         {children}
       </body>
     </html>
