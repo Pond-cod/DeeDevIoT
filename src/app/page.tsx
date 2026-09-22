@@ -359,7 +359,7 @@ export default function DeeDevIOTWebsite() {
             </div>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-7 text-xs font-mono tracking-wider font-bold text-slate-800">
+          <nav className="hidden md:flex items-center gap-6 lg:gap-7 text-xs font-mono tracking-wider font-bold text-slate-800">
             <a href="#hero" className="hover:text-[#E11D48] transition-colors py-1">Home</a>
             <a href="#works" className="hover:text-[#E11D48] transition-colors py-1">Works</a>
             <a href="#services" className="hover:text-[#0284C7] transition-colors py-1">Services</a>
@@ -369,6 +369,16 @@ export default function DeeDevIOTWebsite() {
             </a>
             <a href="#contact" className="hover:text-[#EA580C] transition-colors py-1">Contact</a>
             <a href="#about" className="hover:text-purple-600 transition-colors py-1">About</a>
+            <a 
+              href="https://html-show.vercel.app" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-[#EA580C] hover:text-[#E11D48] transition-colors flex items-center gap-1 py-1"
+              title="เว็บแนะนำรวมตัวอย่าง HTML (html-show.vercel.app)"
+            >
+              <span>HTML Show</span>
+              <ExternalLink size={11} />
+            </a>
           </nav>
 
           <div className="flex items-center gap-3">
@@ -457,6 +467,20 @@ export default function DeeDevIOTWebsite() {
               >
                 <span>เกี่ยวกับเรา (About)</span>
                 <ChevronRight size={16} className="text-purple-600" />
+              </a>
+              <a 
+                href="https://html-show.vercel.app" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                onClick={() => setMobileMenuOpen(false)} 
+                className="py-3 px-3.5 min-h-[46px] rounded-xl border-2 border-amber-300 bg-gradient-to-r from-amber-50 to-orange-50 hover:from-amber-100 hover:to-orange-100 flex items-center justify-between font-bold text-amber-950 shadow-2xs"
+              >
+                <div className="flex items-center gap-2">
+                  <Sparkles size={16} className="text-[#EA580C]" />
+                  <span>เว็บแนะนำรวมตัวอย่าง HTML</span>
+                  <span className="text-[10px] bg-[#EA580C] text-white px-2 py-0.5 rounded-full font-bold">PORTAL</span>
+                </div>
+                <ExternalLink size={15} className="text-amber-700" />
               </a>
             </nav>
           </div>
@@ -549,6 +573,44 @@ export default function DeeDevIOTWebsite() {
                   <CheckCircle2 size={14} className="text-amber-700 shrink-0" />
                   <span>ปรึกษาแนวทางเทคนิคฟรี</span>
                 </span>
+              </div>
+
+              {/* Web Recommend HTML Examples Banner (html-show.vercel.app) */}
+              <div className="mt-5 pt-2">
+                <a
+                  href="https://html-show.vercel.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-3.5 sm:p-4 rounded-2xl bg-white/95 backdrop-blur-md border-2 border-amber-300/90 hover:border-[#E11D48] transition-all shadow-sm hover:shadow-lg group flex flex-col sm:flex-row sm:items-center justify-between gap-3 transform hover:-translate-y-0.5 touch-target"
+                  title="เปิดดูเว็บแนะนำรวมตัวอย่าง HTML (html-show.vercel.app)"
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 via-orange-500 to-[#E11D48] text-white flex items-center justify-center shrink-0 shadow-sm group-hover:scale-110 transition-transform">
+                      <Sparkles size={18} />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                        <span className="text-[10px] font-mono font-black uppercase px-2 py-0.5 rounded-md bg-amber-100 text-amber-950 border border-amber-300 flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping" />
+                          <span>SHOWCASE PORTAL</span>
+                        </span>
+                        <span className="text-slate-500 text-[10px] font-mono hidden sm:inline">30+ ตัวอย่างผลงานพร้อมใช้งาน</span>
+                      </div>
+                      <div className="font-extrabold text-xs sm:text-sm text-slate-950 group-hover:text-[#E11D48] transition-colors flex items-center gap-1.5 flex-wrap">
+                        <span>เว็บแนะนำรวมตัวอย่าง HTML</span>
+                        <span className="text-[#EA580C] font-mono font-bold">→</span>
+                        <span className="font-mono text-xs sm:text-sm font-bold text-[#E11D48] underline decoration-amber-400 decoration-2 underline-offset-2 break-all">
+                          html-show.vercel.app
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-1.5 self-end sm:self-center shrink-0 bg-slate-950 text-white group-hover:bg-[#E11D48] px-3.5 py-1.5 rounded-xl font-mono text-xs font-bold transition-all shadow-xs">
+                    <span>เข้าชมตัวอย่าง</span>
+                    <ExternalLink size={13} className="group-hover:translate-x-0.5 transition-transform" />
+                  </div>
+                </a>
               </div>
             </div>
 
@@ -1556,6 +1618,7 @@ export default function DeeDevIOTWebsite() {
                 <li><a href="#services" className="hover:text-sky-400 transition-colors">Web Applications</a></li>
                 <li><a href="#services" className="hover:text-orange-400 transition-colors">Custom IT Systems</a></li>
                 <li><a href="#solutions" className="hover:text-[#E11D48] transition-colors">Live IoT Solutions</a></li>
+                <li className="pt-1"><a href="https://html-show.vercel.app" target="_blank" rel="noopener noreferrer" className="text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1 font-bold"><span>เว็บรวมตัวอย่าง HTML ↗</span></a></li>
               </ul>
             </div>
 
