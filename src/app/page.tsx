@@ -1,15 +1,17 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import {
   Server, Cpu, Wifi, Globe, ArrowRight, ExternalLink,
-  Database, Check, Phone, Mail, MessageCircle, Facebook,
+  Database, Phone, Mail, MessageCircle,
   X, Menu, Lock, Activity, ArrowDown, Power,
-  Clock, ShieldAlert, CheckCircle2, ChevronRight
+  Clock, CheckCircle2, ChevronRight, Layers, Sliders, RefreshCw
 } from 'lucide-react';
-import Link from 'next/link';
+import {
+  ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip
+} from 'recharts';
 
-// ================= TYPES & INTERFACES =================
 interface ProjectItem {
   id: string;
   name: string;
@@ -17,6 +19,7 @@ interface ProjectItem {
   categoryKey: 'web' | 'iot' | 'interactive';
   description: string;
   technologies: string[];
+  imageUrl: string;
   demoUrl?: string;
   architectureDetails: string[];
 }
@@ -33,7 +36,7 @@ interface IoTDeviceState {
   wifiSignalDbm: number;
   connectionLatencyMs: number | null;
   lastSeenTimestamp: string;
-  isToggling?: boolean;
+  telemetryHistory: { time: string; temp: number; humidity: number; latency: number }[];
 }
 
 interface DeviceTelemetryEvent {
@@ -44,20 +47,20 @@ interface DeviceTelemetryEvent {
   severity: 'info' | 'warning' | 'normal';
 }
 
-// 5 Verified Real Projects Associated with DeeDevIOT Portfolio
 const REAL_PROJECTS_PORTFOLIO: ProjectItem[] = [
   {
     id: 'smart-wallet',
     name: 'Smart Wallet',
     category: 'Web Application',
     categoryKey: 'web',
-    description: 'เว็บแอปพลิเคชันจัดการรายรับ-รายจ่ายส่วนบุคคล วิเคราะห์หมวดหมู่การใช้จ่าย พร้อมแดชบอร์ดสรุปยอดแบบเรียลไทม์ ช่วยให้การบริหารการเงินส่วนบุคคลและธุรกิจขนาดเล็กเป็นระบบ',
+    description: 'เว็บแอปพลิเคชันจัดการรายรับ-รายจ่ายส่วนบุคคล วิเคราะห์หมวดหมู่การเงินแบบเรียลไทม์ พร้อมแดชบอร์ดสรุปงบประมาณ ช่วยให้ธุรกิจขนาดเล็กและบุคคลบริหารสภาพคล่องได้อย่างแม่นยำ',
     technologies: ['Next.js', 'TypeScript', 'Tailwind CSS', 'PostgreSQL', 'Chart.js'],
+    imageUrl: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80',
     demoUrl: 'https://smart-wallet.vercel.app',
     architectureDetails: [
       'Frontend: Next.js Responsive Web Dashboard',
-      'Backend API: RESTful Endpoints with Input Validation',
-      'Database: PostgreSQL Relational Persistence Layer'
+      'Backend API: RESTful Endpoints พร้อม Validation รัดกุม',
+      'Database: PostgreSQL Relational Database Schema'
     ]
   },
   {
@@ -65,13 +68,14 @@ const REAL_PROJECTS_PORTFOLIO: ProjectItem[] = [
     name: 'Minimal Weather Station',
     category: 'IoT & Telemetry',
     categoryKey: 'iot',
-    description: 'ระบบตรวจวัดสภาพแวดล้อมและสภาพอากาศแบบเรียลไทม์ เชื่อมต่อเซนเซอร์ตรวจวัดอุณหภูมิ ความชื้น และความกดอากาศ ส่งข้อมูลขึ้น Web Dashboard อัตโนมัติ',
+    description: 'ระบบตรวจวัดสภาพแวดล้อมและสภาพอากาศ เชื่อมต่อเซนเซอร์ตรวจวัดอุณหภูมิ ความชื้น และความกดอากาศ ส่งข้อมูลขึ้น Web Dashboard ผ่านโปรโตคอลความเร็วสูงตลอด 24 ชม.',
     technologies: ['ESP32', 'React', 'MQTT Protocol', 'REST API', 'BME280 Sensor'],
+    imageUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80',
     demoUrl: 'https://minimal-weather.vercel.app',
     architectureDetails: [
-      'Hardware: ESP32 Microcontroller + BME280 Sensor Module',
+      'Hardware: บอร์ดไมโครคอนโทรลเลอร์ ESP32 + BME280',
       'Protocol: Lightweight MQTT Telemetry Pipeline',
-      'Visualizer: Real-time React Telemetry Chart'
+      'Interface: React Real-time Telemetry Dashboard'
     ]
   },
   {
@@ -80,11 +84,12 @@ const REAL_PROJECTS_PORTFOLIO: ProjectItem[] = [
     category: 'Web Application',
     categoryKey: 'web',
     description: 'เว็บแอปพลิเคชันคำนวณและแก้โจทย์ซูโดกุด้วย Recursive Backtracking Algorithm พร้อมระบบสร้างตารางตามระดับความยาก และประวัติการย้อนกลับสถานะการเดินเกม',
-    technologies: ['TypeScript', 'React', 'Tailwind CSS', 'State Engine Algorithm'],
+    technologies: ['TypeScript', 'React', 'Tailwind CSS', 'Algorithm Engine'],
+    imageUrl: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80',
     demoUrl: 'https://sudoku.vercel.app',
     architectureDetails: [
       'Logic Engine: Recursive Backtracking Solver',
-      'State Management: Immutable History Stack',
+      'State Management: Immutable Undo/Redo Stack',
       'Responsive Grid: Mobile-first Interactive Board'
     ]
   },
@@ -93,8 +98,9 @@ const REAL_PROJECTS_PORTFOLIO: ProjectItem[] = [
     name: 'Duck Hunt Arcade Canvas',
     category: 'Interactive Systems',
     categoryKey: 'interactive',
-    description: 'ระบบเกมเชิงตอบสนองบนเบราว์เซอร์ พัฒนาด้วย HTML5 Canvas และ Web Audio API จำลองการคำนวณการชน (Collision Detection) แบบ 60 FPS ไร้ความหน่วง',
+    description: 'ระบบเกมเชิงโต้ตอบบนเว็บเบราว์เซอร์ พัฒนาด้วย HTML5 Canvas และ Web Audio API จำลองการคำนวณการชน (Collision Detection) แบบ 60 FPS ไร้ความหน่วง',
     technologies: ['HTML5 Canvas', 'JavaScript (ES6)', 'Web Audio API', 'Game Physics'],
+    imageUrl: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80',
     demoUrl: 'https://duck-hunt.vercel.app',
     architectureDetails: [
       'Render Loop: RequestAnimationFrame 60 FPS Cycle',
@@ -107,8 +113,9 @@ const REAL_PROJECTS_PORTFOLIO: ProjectItem[] = [
     name: 'Cookie Runner Engine',
     category: 'Interactive Systems',
     categoryKey: 'interactive',
-    description: 'เกมวิ่ง 2 มิติจำลองการเคลื่อนที่และแรงโน้มถ่วงบนเว็บ พร้อมการคำนวณคะแนนแบบต่อเนื่องและการจัดเก็บสถิติผู้เล่นผ่าน LocalStorage API',
+    description: 'เกมวิ่ง 2 มิติจำลองการเคลื่อนที่และแรงโน้มถ่วงบนเว็บ พร้อมการคำนวณคะแนนแบบเรียลไทม์และการจัดเก็บสถิติผู้เล่นผ่าน LocalStorage API',
     technologies: ['JavaScript', 'HTML5', 'CSS Grid', 'LocalStorage API'],
+    imageUrl: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80',
     demoUrl: 'https://cookie-runner.vercel.app',
     architectureDetails: [
       'Physics: Gravity Acceleration & Jumping Vector',
@@ -118,97 +125,124 @@ const REAL_PROJECTS_PORTFOLIO: ProjectItem[] = [
   }
 ];
 
-// Realistic Imperfect IoT Mock Data
 const INITIAL_IOT_DEVICES: IoTDeviceState[] = [
+  {
+    id: 'conference-room',
+    name: 'ห้องประชุม',
+    locationName: 'ห้องประชุมใหญ่ ชั้น 1',
+    hardwareModel: 'ESP32-C3 Smart Switch v2',
+    connectionStatus: 'Online',
+    relayStatus: true,
+    temperatureCelsius: 24.8,
+    humidityPercentage: 58,
+    wifiSignalDbm: -63,
+    connectionLatencyMs: 42,
+    lastSeenTimestamp: '10:01:43',
+    telemetryHistory: [
+      { time: '09:41', temp: 24.2, humidity: 55, latency: 40 },
+      { time: '09:43', temp: 24.4, humidity: 57, latency: 45 },
+      { time: '09:47', temp: 24.6, humidity: 58, latency: 43 },
+      { time: '09:48', temp: 24.7, humidity: 59, latency: 41 },
+      { time: '09:52', temp: 24.9, humidity: 58, latency: 44 },
+      { time: '10:01', temp: 24.8, humidity: 58, latency: 42 }
+    ]
+  },
   {
     id: 'server-room',
     name: 'ห้อง Server',
-    locationName: 'อาคารสำนักงาน ชั้น 2',
-    hardwareModel: 'ESP32-C3 Smart Switch v2',
+    locationName: 'ศูนย์ปฏิบัติการข้อมูล ชั้น 2',
+    hardwareModel: 'ESP32-C3 Environmental Unit',
     connectionStatus: 'Online',
     relayStatus: false,
-    temperatureCelsius: 24.7,
-    humidityPercentage: 58,
-    wifiSignalDbm: -61,
-    connectionLatencyMs: 46,
-    lastSeenTimestamp: '10:01:43'
+    temperatureCelsius: 22.4,
+    humidityPercentage: 52,
+    wifiSignalDbm: -58,
+    connectionLatencyMs: 38,
+    lastSeenTimestamp: '10:01:25',
+    telemetryHistory: [
+      { time: '09:41', temp: 22.1, humidity: 51, latency: 36 },
+      { time: '09:43', temp: 22.2, humidity: 52, latency: 37 },
+      { time: '09:47', temp: 22.3, humidity: 52, latency: 39 },
+      { time: '09:48', temp: 22.4, humidity: 53, latency: 38 },
+      { time: '09:52', temp: 22.3, humidity: 52, latency: 37 },
+      { time: '10:01', temp: 22.4, humidity: 52, latency: 38 }
+    ]
   },
   {
     id: 'office-room',
     name: 'ห้องทำงาน',
-    locationName: 'พื้นที่ปฏิบัติการ IT',
-    hardwareModel: 'ESP32-C3 Relay Node',
-    connectionStatus: 'Warning',
-    relayStatus: true,
-    temperatureCelsius: 25.1,
-    humidityPercentage: 63,
-    wifiSignalDbm: -71,
-    connectionLatencyMs: 118,
-    lastSeenTimestamp: '09:52:18'
-  },
-  {
-    id: 'conference-room',
-    name: 'ห้องประชุม',
-    locationName: 'ห้องประชุมใหญ่ A',
-    hardwareModel: 'ESP32-C3 Sensor Unit',
+    locationName: 'โซนวิศวกรรมและพัฒนา',
+    hardwareModel: 'ESP32-C3 Node Controller',
     connectionStatus: 'Offline',
     relayStatus: false,
     temperatureCelsius: 24.3,
     humidityPercentage: 56,
-    wifiSignalDbm: -62,
+    wifiSignalDbm: -76,
     connectionLatencyMs: null,
-    lastSeenTimestamp: '09:48:12 (8 นาทีที่แล้ว)'
+    lastSeenTimestamp: '09:48:12 (8 นาทีที่แล้ว)',
+    telemetryHistory: [
+      { time: '09:41', temp: 24.1, humidity: 54, latency: 85 },
+      { time: '09:43', temp: 24.2, humidity: 55, latency: 112 },
+      { time: '09:47', temp: 24.3, humidity: 56, latency: 195 },
+      { time: '09:48', temp: 24.3, humidity: 56, latency: 250 },
+      { time: '09:52', temp: 24.3, humidity: 56, latency: 0 },
+      { time: '10:01', temp: 24.3, humidity: 56, latency: 0 }
+    ]
   },
   {
     id: 'storefront-lighting',
     name: 'ระบบไฟหน้าร้าน',
-    locationName: 'ซุ้มแสดงสินค้าและป้ายหน้าร้าน',
-    hardwareModel: 'ESP32-C3 Quad Relay',
+    locationName: 'พื้นที่จัดแสดงสินค้าและป้ายหน้าร้าน',
+    hardwareModel: 'ESP32-C3 Quad Relay Box',
     connectionStatus: 'Online',
     relayStatus: true,
-    temperatureCelsius: 24.9,
-    humidityPercentage: 61,
-    wifiSignalDbm: -68,
-    connectionLatencyMs: 54,
-    lastSeenTimestamp: '10:01:15'
+    temperatureCelsius: 26.2,
+    humidityPercentage: 62,
+    wifiSignalDbm: -67,
+    connectionLatencyMs: 51,
+    lastSeenTimestamp: '10:01:10',
+    telemetryHistory: [
+      { time: '09:41', temp: 25.8, humidity: 60, latency: 48 },
+      { time: '09:43', temp: 25.9, humidity: 61, latency: 52 },
+      { time: '09:47', temp: 26.0, humidity: 62, latency: 50 },
+      { time: '09:48', temp: 26.1, humidity: 63, latency: 53 },
+      { time: '09:52', temp: 26.3, humidity: 62, latency: 49 },
+      { time: '10:01', temp: 26.2, humidity: 62, latency: 51 }
+    ]
   }
 ];
 
-// Irregular Timestamps for Telemetry Events
 const INITIAL_TELEMETRY_LOGS: DeviceTelemetryEvent[] = [
-  { eventId: 'evt-1', timestamp: '10:01', deviceName: 'ห้อง Server', eventDescription: 'Telemetry Ping สำเร็จ (Latency 46ms, 24.7°C)', severity: 'normal' },
-  { eventId: 'evt-2', timestamp: '09:52', deviceName: 'ห้องทำงาน', eventDescription: 'สัญญาณ Wi-Fi อ่อนลง (-71 dBm) ค่า Latency พุ่งสูง', severity: 'warning' },
-  { eventId: 'evt-3', timestamp: '09:48', deviceName: 'ห้องประชุม', eventDescription: 'Heartbeat ขาดหาย เข้าสู่สถานะ Offline', severity: 'warning' },
-  { eventId: 'evt-4', timestamp: '09:47', deviceName: 'ระบบไฟหน้าร้าน', eventDescription: 'คำสั่ง Relay ON ทำงานตามตารางเวลา', severity: 'info' },
-  { eventId: 'evt-5', timestamp: '09:43', deviceName: 'ห้อง Server', eventDescription: 'อุณหภูมิปกติ 24.5°C การระบายอากาศสมบูรณ์', severity: 'normal' },
-  { eventId: 'evt-6', timestamp: '09:41', deviceName: 'ระบบไฟหน้าร้าน', eventDescription: 'ESP32-C3 เชื่อมต่อ Wi-Fi และ Sync เวลา NTP สำเร็จ', severity: 'info' }
+  { eventId: 'evt-1', timestamp: '10:01', deviceName: 'ห้อง Server', eventDescription: 'Telemetry Ping สำเร็จ (Latency 38ms, อุณหภูมิ 22.4°C)', severity: 'normal' },
+  { eventId: 'evt-2', timestamp: '09:52', deviceName: 'ห้องประชุม', eventDescription: 'ส่งข้อมูลสถานะสำเร็จ (อุณหภูมิ 24.9°C, รีเลย์: เปิด)', severity: 'normal' },
+  { eventId: 'evt-3', timestamp: '09:48', deviceName: 'ห้องทำงาน', eventDescription: 'Heartbeat ขาดหาย เข้าสู่สถานะ Offline (Last seen: 8 นาทีที่แล้ว)', severity: 'warning' },
+  { eventId: 'evt-4', timestamp: '09:47', deviceName: 'ระบบไฟหน้าร้าน', eventDescription: 'คำสั่ง Relay ON ทำงานตามคำสั่งควบคุม', severity: 'info' },
+  { eventId: 'evt-5', timestamp: '09:43', deviceName: 'ห้อง Server', eventDescription: 'ระบบปรับอากาศทำงานปกติ การระบายความร้อนสมบูรณ์', severity: 'normal' },
+  { eventId: 'evt-6', timestamp: '09:41', deviceName: 'ระบบไฟหน้าร้าน', eventDescription: 'บอร์ด ESP32-C3 เชื่อมต่อ Wi-Fi และ Sync เวลา NTP สำเร็จ', severity: 'info' }
 ];
 
-export default function DeeDevIOTLandingPage() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+export default function DeeDevIOTWebsite() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isClientMounted, setIsClientMounted] = useState(false);
   const [activeProjectModal, setActiveProjectModal] = useState<ProjectItem | null>(null);
   const [selectedWorkCategory, setSelectedWorkCategory] = useState<string>('all');
-
-  // Dynamic CMS data support (if available in Google Sheets)
   const [cmsServices, setCmsServices] = useState<any[]>([]);
   const [siteConfig, setSiteConfig] = useState<any>({});
 
-  // IoT Dashboard Interactive State
   const [iotDevices, setIotDevices] = useState<IoTDeviceState[]>(INITIAL_IOT_DEVICES);
+  const [selectedDashboardDeviceId, setSelectedDashboardDeviceId] = useState<string>('conference-room');
   const [telemetryLogs, setTelemetryLogs] = useState<DeviceTelemetryEvent[]>(INITIAL_TELEMETRY_LOGS);
-  const [selectedDashboardDevice, setSelectedDashboardDevice] = useState<string>('server-room');
 
-  // Scroll detection
   useEffect(() => {
-    const handleWindowScroll = () => {
-      setIsScrolled(window.scrollY > 24);
+    setIsClientMounted(true);
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
     };
-    window.addEventListener('scroll', handleWindowScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleWindowScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Body overflow control for modal and drawer
   useEffect(() => {
     if (mobileMenuOpen || activeProjectModal) {
       document.body.style.overflow = 'hidden';
@@ -217,72 +251,69 @@ export default function DeeDevIOTLandingPage() {
     }
   }, [mobileMenuOpen, activeProjectModal]);
 
-  // Fetch live CMS data silently to supplement baseline verified projects
   useEffect(() => {
-    const fetchLiveCmsData = async () => {
+    const fetchCmsData = async () => {
       try {
-        const [servicesResponse, configResponse] = await Promise.all([
+        const [servicesRes, configRes] = await Promise.all([
           fetch('/api/services', { cache: 'no-store' }),
           fetch('/api/config', { cache: 'no-store' })
         ]);
-        const [servicesResult, configResult] = await Promise.all([
-          servicesResponse.json(),
-          configResponse.json()
+        const [servicesData, configData] = await Promise.all([
+          servicesRes.json(),
+          configRes.json()
         ]);
-        if (servicesResult.success && Array.isArray(servicesResult.data) && servicesResult.data.length > 0) {
-          setCmsServices(servicesResult.data);
+        if (servicesData.success && Array.isArray(servicesData.data) && servicesData.data.length > 0) {
+          setCmsServices(servicesData.data);
         }
-        if (configResult.success && configResult.data) {
-          setSiteConfig(configResult.data);
+        if (configData.success && configData.data) {
+          setSiteConfig(configData.data);
         }
       } catch {
         // Fallback maintained seamlessly
       }
     };
-    fetchLiveCmsData();
+    fetchCmsData();
   }, []);
 
-  // Relay toggle handler with realistic latency simulation
   const handleToggleRelay = (deviceId: string) => {
     setIotDevices(prevDevices =>
-      prevDevices.map(device => {
-        if (device.id === deviceId) {
-          const newRelayState = !device.relayStatus;
-          const currentTimestamp = new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+      prevDevices.map(dev => {
+        if (dev.id === deviceId) {
+          const nextState = !dev.relayStatus;
+          const currentTime = new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
           
-          // Add telemetry event to recent events log
           setTelemetryLogs(prevLogs => [
             {
               eventId: `evt-${Date.now()}`,
-              timestamp: currentTimestamp,
-              deviceName: device.name,
-              eventDescription: `ผู้ใช้งานกดเปลี่ยนสถานะ Relay เป็น ${newRelayState ? 'เปิด (ON)' : 'ปิด (OFF)'}`,
+              timestamp: currentTime,
+              deviceName: dev.name,
+              eventDescription: `ผู้ใช้งานกดสลับสถานะ Relay เป็น ${nextState ? 'เปิด (ON)' : 'ปิด (OFF)'}`,
               severity: 'info'
             },
             ...prevLogs.slice(0, 5)
           ]);
 
           return {
-            ...device,
-            relayStatus: newRelayState,
+            ...dev,
+            relayStatus: nextState,
             lastSeenTimestamp: 'เมื่อสักครู่'
           };
         }
-        return device;
+        return dev;
       })
     );
   };
 
-  // Combine real baseline projects with any dynamic items from CMS
   const allProjects: ProjectItem[] = [
     ...REAL_PROJECTS_PORTFOLIO,
-    ...cmsServices.map((cmsItem, index) => ({
-      id: cmsItem.id || `cms-${index}`,
+    ...cmsServices.map((cmsItem, idx) => ({
+      id: cmsItem.id || `cms-${idx}`,
       name: cmsItem.title,
       category: cmsItem.icon || 'Custom Solution',
       categoryKey: 'web' as const,
       description: cmsItem.description_th || cmsItem.description,
       technologies: ['Custom Software', 'Database', 'Integration'],
+      imageUrl: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80',
       demoUrl: cmsItem.demoUrl || undefined,
       architectureDetails: ['ออกแบบระบบเฉพาะตามข้อกำหนดของงาน']
     }))
@@ -292,20 +323,18 @@ export default function DeeDevIOTLandingPage() {
     ? allProjects
     : allProjects.filter(item => item.categoryKey === selectedWorkCategory);
 
-  const activeDeviceDetail = iotDevices.find(dev => dev.id === selectedDashboardDevice) || iotDevices[0];
+  const selectedDevice = iotDevices.find(d => d.id === selectedDashboardDeviceId) || iotDevices[0];
 
   return (
-    <div className="min-h-screen bg-[#08090D] text-white selection:bg-[#E53935]/20 selection:text-white font-sans antialiased">
-
-      {/* ================= 07. NAVIGATION ================= */}
+    <div className="min-h-screen bg-[#08090D] text-white selection:bg-[#E53935]/25 selection:text-white font-sans antialiased">
+      
+      {/* ================= 04.A NAVIGATION ================= */}
       <header className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-200 ${
         isScrolled 
           ? 'bg-[#08090D]/95 border-b border-[#252832] py-3.5 shadow-sm' 
           : 'bg-transparent border-b border-transparent py-5'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          
-          {/* Logo */}
           <Link href="#hero" className="flex items-center gap-2.5 group focus:outline-none">
             <span className="w-2.5 h-2.5 rounded-full bg-[#E53935]" />
             <div className="font-mono text-sm tracking-wider font-bold">
@@ -315,7 +344,6 @@ export default function DeeDevIOTLandingPage() {
             </div>
           </Link>
 
-          {/* Desktop Menu */}
           <nav className="hidden md:flex items-center gap-7 text-xs font-mono tracking-wider text-[#9CA3AF]">
             <a href="#hero" className="hover:text-white transition-colors">Home</a>
             <a href="#services" className="hover:text-white transition-colors">Services</a>
@@ -328,7 +356,6 @@ export default function DeeDevIOTLandingPage() {
             <a href="#contact" className="hover:text-white transition-colors">Contact</a>
           </nav>
 
-          {/* Right Action */}
           <div className="flex items-center gap-3">
             <a
               href="#contact"
@@ -338,7 +365,6 @@ export default function DeeDevIOTLandingPage() {
               <ArrowRight size={13} className="text-[#E53935]" />
             </a>
 
-            {/* Mobile Hamburger Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="md:hidden p-2 rounded border border-[#252832] bg-[#111318] text-[#9CA3AF] hover:text-white"
@@ -350,7 +376,7 @@ export default function DeeDevIOTLandingPage() {
         </div>
       </header>
 
-      {/* Mobile Drawer Navigation */}
+      {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-40 md:hidden bg-[#08090D]/98 pt-20 px-6 pb-8 flex flex-col justify-between">
           <nav className="flex flex-col space-y-4 font-mono text-sm tracking-wider text-[#9CA3AF]">
@@ -358,10 +384,10 @@ export default function DeeDevIOTLandingPage() {
             <a href="#services" onClick={() => setMobileMenuOpen(false)} className="py-2.5 border-b border-[#252832] hover:text-white">บริการที่รับทำ (Services)</a>
             <a href="#works" onClick={() => setMobileMenuOpen(false)} className="py-2.5 border-b border-[#252832] hover:text-white">ผลงานจริง (Works)</a>
             <a href="#iot-dashboard" onClick={() => setMobileMenuOpen(false)} className="py-2.5 border-b border-[#252832] hover:text-white text-white flex items-center justify-between">
-              <span>ตัวอย่างระบบ IoT Dashboard</span>
+              <span>ระบบ IoT Dashboard</span>
               <span className="text-xs text-[#E53935] font-bold">LIVE</span>
             </a>
-            <a href="#about" onClick={() => setMobileMenuOpen(false)} className="py-2.5 border-b border-[#252832] hover:text-white">เกี่ยวกับ DeeDevIOT</a>
+            <a href="#about" onClick={() => setMobileMenuOpen(false)} className="py-2.5 border-b border-[#252832] hover:text-white">เกี่ยวกับเรา (About)</a>
             <a href="#contact" onClick={() => setMobileMenuOpen(false)} className="py-2.5 border-b border-[#252832] hover:text-white">ช่องทางติดต่อ (Contact)</a>
           </nav>
           <div>
@@ -377,11 +403,10 @@ export default function DeeDevIOTLandingPage() {
         </div>
       )}
 
-      {/* ================= 08. HERO SECTION ================= */}
+      {/* ================= 04.B HERO SECTION ================= */}
       <section id="hero" className="relative pt-32 sm:pt-40 pb-20 border-b border-[#252832]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          {/* Badge */}
           <div className="flex items-center gap-2 mb-6">
             <span className="px-2.5 py-1 rounded bg-[#111318] border border-[#252832] text-xs font-mono text-[#9CA3AF] flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[#E53935]" />
@@ -393,21 +418,20 @@ export default function DeeDevIOTLandingPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             
-            {/* Left Column: Thai Messaging */}
+            {/* Left Content */}
             <div className="lg:col-span-7">
               <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.18] mb-6">
                 มีไอเดีย แต่ยังไม่รู้จะทำระบบอย่างไร?
               </h1>
 
               <h2 className="text-lg sm:text-2xl font-medium text-white mb-4 leading-snug">
-                DeeDevIOT ช่วยเปลี่ยนไอเดียของคุณให้กลายเป็น Web Application, IoT และระบบ IT ที่ใช้งานได้จริง
+                DeeDevIOT ช่วยเปลี่ยนไอเดียของคุณให้กลายเป็น Web Application, IoT และระบบ IT ที่ใช้งานได้จริงโดยทีมงานคนไทย
               </h2>
 
               <p className="text-sm sm:text-base text-[#9CA3AF] max-w-2xl leading-relaxed mb-8 font-light">
-                ตั้งแต่การออกแบบระบบ พัฒนาโปรแกรม เชื่อมต่ออุปกรณ์ ไปจนถึงนำระบบไปใช้งานจริง ไม่ว่าคุณจะเป็นเจ้าของธุรกิจ SME โรงงาน หรือผู้ที่มีไอเดียแต่ยังไม่มีทีม Developer ประจำ
+                ตั้งแต่การออกแบบระบบ พัฒนาโปรแกรม เชื่อมต่ออุปกรณ์ ไปจนถึงนำระบบไปใช้งานจริง สำหรับเจ้าของธุรกิจ SME โรงงาน และผู้ที่ต้องการลดงาน Manual ด้วยระบบดิจิทัล
               </p>
 
-              {/* CTAs */}
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-6">
                 <a
                   href="#contact"
@@ -427,21 +451,20 @@ export default function DeeDevIOTLandingPage() {
               </div>
 
               <div className="text-xs font-mono text-[#6B7280]">
-                • รับพัฒนาโปรเจกต์ตามความต้องการ • พร้อมให้คำปรึกษาแนวทางเทคนิคเบื้องต้นฟรี
+                • รับพัฒนาโปรเจกต์ตามความต้องการ • มอบ Source Code ครบถ้วน • ให้คำปรึกษาทางเทคนิคเบื้องต้นฟรี
               </div>
             </div>
 
-            {/* Right Column: Real Technology Ecosystem Flow (Non-AI, Authentic Diagram) */}
+            {/* Right: Data Flow Ecosystem (ESP32 -> MQTT -> Web Dashboard -> Business) */}
             <div className="lg:col-span-5 bg-[#111318] border border-[#252832] rounded-lg p-6">
               <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#252832] font-mono text-[11px] text-[#9CA3AF]">
                 <div className="flex items-center gap-2">
                   <Activity size={14} className="text-[#E53935]" />
                   <span className="text-white font-bold">REAL SYSTEM PIPELINE</span>
                 </div>
-                <span className="text-[#6B7280]">END-TO-END</span>
+                <span className="text-[#6B7280]">DATA FLOW</span>
               </div>
 
-              {/* Connected Flow Diagram */}
               <div className="space-y-3 font-mono text-xs">
                 
                 <div className="p-3 bg-[#08090D] border border-[#252832] rounded flex items-center justify-between">
@@ -455,7 +478,7 @@ export default function DeeDevIOTLandingPage() {
                   <span className="text-[10px] text-emerald-400 font-bold">GPIO / I2C</span>
                 </div>
 
-                <div className="flex justify-center my-1 text-[#6B7280]">↓</div>
+                <div className="flex justify-center my-0.5 text-[#6B7280]">↓</div>
 
                 <div className="p-3 bg-[#08090D] border border-[#252832] rounded flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
@@ -468,36 +491,23 @@ export default function DeeDevIOTLandingPage() {
                   <span className="text-[10px] text-[#9CA3AF]">TLS / JSON</span>
                 </div>
 
-                <div className="flex justify-center my-1 text-[#6B7280]">↓</div>
-
-                <div className="p-3 bg-[#08090D] border border-[#252832] rounded flex items-center justify-between">
-                  <div className="flex items-center gap-2.5">
-                    <Database size={16} className="text-[#E53935]" />
-                    <div>
-                      <div className="text-white font-bold text-xs">03 // Database / Cloud</div>
-                      <div className="text-[10px] text-[#9CA3AF]">PostgreSQL, MySQL, ระบบสำรองข้อมูลบนคลาวด์</div>
-                    </div>
-                  </div>
-                  <span className="text-[10px] text-[#9CA3AF]">Storage</span>
-                </div>
-
-                <div className="flex justify-center my-1 text-[#6B7280]">↓</div>
+                <div className="flex justify-center my-0.5 text-[#6B7280]">↓</div>
 
                 <div className="p-3 bg-[#08090D] border border-[#252832] rounded flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
                     <Globe size={16} className="text-[#E53935]" />
                     <div>
-                      <div className="text-white font-bold text-xs">04 // Web Dashboard</div>
+                      <div className="text-white font-bold text-xs">03 // Web Dashboard</div>
                       <div className="text-[10px] text-[#9CA3AF]">หน้าจอควบคุม สั่งการ และติดตามข้อมูลจากทุกอุปกรณ์</div>
                     </div>
                   </div>
                   <span className="text-[10px] text-[#E53935] font-bold">Responsive</span>
                 </div>
 
-                <div className="flex justify-center my-1 text-[#6B7280]">↓</div>
+                <div className="flex justify-center my-0.5 text-[#6B7280]">↓</div>
 
                 <div className="p-3 bg-[#111318] border border-[#E53935]/40 rounded text-center">
-                  <span className="text-white font-bold text-xs block">05 // Business Value</span>
+                  <span className="text-white font-bold text-xs block">04 // Business Value</span>
                   <span className="text-[11px] text-[#9CA3AF]">ลดงาน Manual • ลดความผิดพลาด • ข้อมูลพร้อมตัดสินใจทันที</span>
                 </div>
 
@@ -508,7 +518,7 @@ export default function DeeDevIOTLandingPage() {
         </div>
       </section>
 
-      {/* ================= 09. TRUST / QUICK VALUE SECTION ================= */}
+      {/* ================= 04.C QUICK VALUE / TRUST SECTION ================= */}
       <section className="py-14 border-b border-[#252832] bg-[#0D0E12]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
@@ -517,11 +527,10 @@ export default function DeeDevIOTLandingPage() {
               ทำระบบให้เหมาะกับงาน ไม่ใช่เอางานไปยัดใส่ Template
             </h2>
             <p className="text-xs sm:text-sm text-[#9CA3AF] leading-relaxed">
-              เราออกแบบโครงสร้างซอฟต์แวร์และฮาร์ดแวร์ตามขั้นตอนการทำงานจริงของคุณ เพื่อให้ระบบทำงานตอบโจทย์ที่สุดและขยายต่อได้ในอนาคต
+              เราออกแบบโครงสร้างซอฟต์แวร์และฮาร์ดแวร์ตามขั้นตอนการทำงานจริงของคุณ เพื่อให้ระบบตอบสนองได้ตรงจุดที่สุดและสามารถต่อยอดในอนาคตได้
             </p>
           </div>
 
-          {/* Capabilities Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 font-mono text-center text-xs">
             {[
               { title: 'Web Application', desc: 'ระบบเว็บองค์กร' },
@@ -543,7 +552,7 @@ export default function DeeDevIOTLandingPage() {
         </div>
       </section>
 
-      {/* ================= 10. SERVICES ================= */}
+      {/* ================= 04.D SERVICES (3 Main Pillars) ================= */}
       <section id="services" className="py-20 sm:py-28 border-b border-[#252832]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
@@ -555,7 +564,7 @@ export default function DeeDevIOTLandingPage() {
               </h2>
             </div>
             <p className="text-xs font-mono text-[#9CA3AF] mt-3 sm:mt-0">
-              3 ด้านความเชี่ยวชาญเพื่อธุรกิจไทย
+              3 ด้านความเชี่ยวชาญหลักเพื่อธุรกิจไทย
             </p>
           </div>
 
@@ -676,7 +685,7 @@ export default function DeeDevIOTLandingPage() {
         </div>
       </section>
 
-      {/* ================= 13 & 14 & 16. REALISTIC IOT DASHBOARD SHOWCASE (Interactive Section) ================= */}
+      {/* ================= 05. REALISTIC IOT DASHBOARD SHOWCASE (Interactive Section) ================= */}
       <section id="iot-dashboard" className="py-20 sm:py-28 border-b border-[#252832] bg-[#0D0E12]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
@@ -701,26 +710,25 @@ export default function DeeDevIOTLandingPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
-            {/* Left: Device Selection & Real-Time Cards */}
-            <div className="lg:col-span-8 space-y-4">
+            {/* Left Column: 4 Realistic Nodes */}
+            <div className="lg:col-span-8 space-y-6">
+              
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {iotDevices.map((device) => {
-                  const isSelected = selectedDashboardDevice === device.id;
+                  const isSelected = selectedDashboardDeviceId === device.id;
                   const isOnline = device.connectionStatus === 'Online';
                   const isWarning = device.connectionStatus === 'Warning';
-                  const isOffline = device.connectionStatus === 'Offline';
 
                   return (
                     <div
                       key={device.id}
-                      onClick={() => setSelectedDashboardDevice(device.id)}
+                      onClick={() => setSelectedDashboardDeviceId(device.id)}
                       className={`p-5 rounded border transition-all cursor-pointer ${
                         isSelected 
                           ? 'bg-[#111318] border-[#E53935] shadow-sm' 
                           : 'bg-[#111318] border-[#252832] hover:border-[#3F4350]'
                       }`}
                     >
-                      {/* Card Header */}
                       <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#252832]">
                         <div>
                           <h4 className="text-sm font-bold text-white flex items-center gap-2">
@@ -729,7 +737,6 @@ export default function DeeDevIOTLandingPage() {
                           <span className="text-[10px] font-mono text-[#6B7280]">{device.locationName}</span>
                         </div>
 
-                        {/* Status Badge */}
                         <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold flex items-center gap-1.5 ${
                           isOnline ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
                           isWarning ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
@@ -740,7 +747,6 @@ export default function DeeDevIOTLandingPage() {
                         </span>
                       </div>
 
-                      {/* Sensor Summary */}
                       <div className="grid grid-cols-2 gap-3 mb-4 font-mono text-xs">
                         <div className="bg-[#08090D] p-2.5 rounded border border-[#252832]">
                           <span className="text-[#6B7280] block text-[10px]">อุณหภูมิ</span>
@@ -752,7 +758,6 @@ export default function DeeDevIOTLandingPage() {
                         </div>
                       </div>
 
-                      {/* Relay Control Action */}
                       <div className="flex items-center justify-between pt-2 border-t border-[#252832] font-mono text-xs">
                         <div className="flex items-center gap-1.5">
                           <span className="text-[#6B7280] text-[11px]">สถานะรีเลย์:</span>
@@ -783,26 +788,56 @@ export default function DeeDevIOTLandingPage() {
                 })}
               </div>
 
-              {/* Hardware Specification Box */}
-              <div className="p-4 bg-[#111318] border border-[#252832] rounded flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-mono text-xs">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded bg-[#08090D] border border-[#252832] flex items-center justify-center text-[#E53935]">
-                    <Cpu size={16} />
+              {/* Real-time Recharts Area Visualization for Selected Node */}
+              <div className="p-5 bg-[#111318] border border-[#252832] rounded">
+                <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#252832] font-mono text-xs">
+                  <div className="flex items-center gap-2">
+                    <Activity size={14} className="text-[#E53935]" />
+                    <span className="text-white font-bold">
+                      กราฟแนวโน้มอุณหภูมิและความชื้น: {selectedDevice.name} ({selectedDevice.hardwareModel})
+                    </span>
                   </div>
-                  <div>
-                    <span className="text-white font-bold block">{activeDeviceDetail.hardwareModel}</span>
-                    <span className="text-[11px] text-[#9CA3AF]">Microcontroller: ESP32-C3 32-bit RISC-V @ 160MHz</span>
-                  </div>
+                  <span className="text-[10px] text-[#6B7280]">TIMESTAMPS: 09:41 - 10:01</span>
                 </div>
 
-                <div className="flex items-center gap-4 text-[11px] text-[#9CA3AF]">
-                  <div>สัญญาณ: <strong className="text-white">{activeDeviceDetail.wifiSignalDbm} dBm</strong></div>
-                  <div>Latency: <strong className="text-white">{activeDeviceDetail.connectionLatencyMs ? `${activeDeviceDetail.connectionLatencyMs} ms` : 'N/A'}</strong></div>
+                <div className="h-48 w-full">
+                  {isClientMounted ? (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={selectedDevice.telemetryHistory} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
+                        <defs>
+                          <linearGradient id="tempGradient" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#E53935" stopOpacity={0.4}/>
+                            <stop offset="95%" stopColor="#E53935" stopOpacity={0.0}/>
+                          </linearGradient>
+                        </defs>
+                        <XAxis dataKey="time" stroke="#6B7280" fontSize={10} tickLine={false} />
+                        <YAxis stroke="#6B7280" fontSize={10} domain={['dataMin - 1', 'dataMax + 1']} tickLine={false} />
+                        <Tooltip
+                          contentStyle={{ backgroundColor: '#08090D', borderColor: '#252832', borderRadius: '4px', fontSize: '11px', fontFamily: 'monospace' }}
+                          labelStyle={{ color: '#E53935', fontWeight: 'bold' }}
+                        />
+                        <Area type="monotone" dataKey="temp" name="อุณหภูมิ (°C)" stroke="#E53935" strokeWidth={2} fillOpacity={1} fill="url(#tempGradient)" />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="h-full flex items-center justify-center text-xs font-mono text-[#6B7280]">
+                      กำลังโหลดข้อมูลการวัด...
+                    </div>
+                  )}
+                </div>
+
+                <div className="mt-4 pt-3 border-t border-[#252832] flex flex-wrap items-center justify-between font-mono text-[11px] text-[#9CA3AF]">
+                  <div className="flex items-center gap-4">
+                    <span>สัญญาณ: <strong className="text-white">{selectedDevice.wifiSignalDbm} dBm</strong></span>
+                    <span>Latency: <strong className="text-white">{selectedDevice.connectionLatencyMs ? `${selectedDevice.connectionLatencyMs} ms` : 'N/A'}</strong></span>
+                  </div>
+                  <span>Last Seen: <strong className="text-white">{selectedDevice.lastSeenTimestamp}</strong></span>
                 </div>
               </div>
+
             </div>
 
-            {/* Right: Real-time Telemetry Event History (Irregular Timestamps) */}
+            {/* Right Column: Event History (Irregular Timestamps) */}
             <div className="lg:col-span-4 bg-[#111318] border border-[#252832] rounded p-6">
               <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#252832] font-mono text-xs">
                 <span className="text-white font-bold flex items-center gap-2">
@@ -828,7 +863,7 @@ export default function DeeDevIOTLandingPage() {
 
               <div className="mt-6 pt-4 border-t border-[#252832] text-center">
                 <span className="text-[11px] font-mono text-[#6B7280] block mb-2">
-                  ต้องการระบบควบคุมฮาร์ดแวร์แบบนี้ในธุรกิจของคุณ?
+                  ต้องการสร้างระบบมอนิเตอร์และควบคุมแบบนี้ในธุรกิจของคุณ?
                 </span>
                 <a
                   href="#contact"
@@ -844,7 +879,7 @@ export default function DeeDevIOTLandingPage() {
         </div>
       </section>
 
-      {/* ================= 11. REAL PROJECT SHOWCASE ================= */}
+      {/* ================= 04.E REAL PROJECT SHOWCASE ================= */}
       <section id="works" className="py-20 sm:py-28 border-b border-[#252832]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
@@ -859,7 +894,6 @@ export default function DeeDevIOTLandingPage() {
               </p>
             </div>
 
-            {/* Category Filter Pills */}
             <div className="flex flex-wrap items-center gap-2 font-mono text-xs">
               {[
                 { key: 'all', label: 'ทั้งหมด (ALL)' },
@@ -883,21 +917,23 @@ export default function DeeDevIOTLandingPage() {
             </div>
           </div>
 
-          {/* Project Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredProjects.map((project) => (
               <article
                 key={project.id}
-                className="bg-[#111318] border border-[#252832] hover:border-[#E53935]/60 transition-colors rounded flex flex-col justify-between overflow-hidden"
+                className="bg-[#111318] border border-[#252832] hover:border-[#E53935]/60 transition-colors rounded flex flex-col justify-between overflow-hidden group"
               >
-                {/* Visual Header */}
-                <div className="p-4 bg-[#08090D] border-b border-[#252832] flex items-center justify-between font-mono text-[11px]">
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-[#252832]" />
-                    <span className="w-2 h-2 rounded-full bg-[#252832]" />
-                    <span className="w-2 h-2 rounded-full bg-[#252832]" />
+                {/* Project Image Preview */}
+                <div className="relative h-44 w-full overflow-hidden bg-[#08090D] border-b border-[#252832]">
+                  <img
+                    src={project.imageUrl}
+                    alt={project.name}
+                    className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300"
+                    loading="lazy"
+                  />
+                  <div className="absolute top-3 right-3 px-2 py-0.5 rounded bg-[#08090D]/90 border border-[#252832] text-[10px] font-mono text-[#9CA3AF]">
+                    {project.category}
                   </div>
-                  <span className="text-[#6B7280]">{project.category}</span>
                 </div>
 
                 {/* Content */}
@@ -911,7 +947,6 @@ export default function DeeDevIOTLandingPage() {
                       {project.description}
                     </p>
 
-                    {/* Tech Badges */}
                     <div className="flex flex-wrap gap-1.5 mb-6 font-mono text-[10px]">
                       {project.technologies.map((techItem) => (
                         <span
@@ -924,14 +959,13 @@ export default function DeeDevIOTLandingPage() {
                     </div>
                   </div>
 
-                  {/* Actions */}
                   <div className="pt-4 border-t border-[#252832] flex items-center justify-between font-mono text-xs">
                     <button
                       type="button"
                       onClick={() => setActiveProjectModal(project)}
                       className="text-[#9CA3AF] hover:text-white transition-colors flex items-center gap-1"
                     >
-                      <span>สถาปัตยกรรมระบบ</span>
+                      <span>สถาปัตยกรรม</span>
                       <ChevronRight size={13} />
                     </button>
 
@@ -957,192 +991,8 @@ export default function DeeDevIOTLandingPage() {
         </div>
       </section>
 
-      {/* ================= 12. CASE STUDY ================= */}
-      <section className="py-20 sm:py-28 border-b border-[#252832] bg-[#0D0E12]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="mb-14 pb-6 border-b border-[#252832]">
-            <span className="font-mono text-xs text-[#E53935] uppercase tracking-wider block mb-2">[ REAL-WORLD CASE STUDY ]</span>
-            <h2 className="text-2xl sm:text-4xl font-bold uppercase tracking-tight text-white">
-              ตัวอย่างการแก้ปัญหาในงานจริง
-            </h2>
-            <p className="text-xs sm:text-sm text-[#9CA3AF] mt-2">
-              กรณีศึกษา: ระบบมอนิเตอร์และแจ้งเตือนสภาพแวดล้อมห้อง Server / ฟาร์มปิด
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            
-            {/* Steps & Solution */}
-            <div className="lg:col-span-7 space-y-6">
-              
-              <div className="bg-[#111318] border border-[#252832] p-6 rounded">
-                <div className="font-mono text-xs text-[#E53935] font-bold mb-2 uppercase">[ 01 PROBLEM: ปัญหาของลูกค้า ]</div>
-                <h4 className="text-base font-bold text-white mb-2">ขาดระบบมอนิเตอร์อุณหภูมิที่แจ้งเตือนได้ทันท่วงที</h4>
-                <p className="text-xs sm:text-sm text-[#9CA3AF] leading-relaxed font-light">
-                  ลูกค้าต้องการตรวจสอบอุณหภูมิและความชื้นในพื้นที่ควบคุมตลอด 24 ชั่วโมง แต่ระบบสำเร็จรูปในท้องตลาดมีราคาอุปกรณ์สูง และต้องจ่ายค่าบริการคลาวด์รายเดือนอย่างต่อเนื่อง อีกทั้งไม่สามารถปรับแต่งการส่งข้อความแจ้งเตือนผ่านกลุ่ม LINE ของทีมงานได้
-                </p>
-              </div>
-
-              <div className="bg-[#111318] border border-[#252832] p-6 rounded">
-                <div className="font-mono text-xs text-white font-bold mb-2 uppercase flex items-center gap-1.5">
-                  <span className="text-[#E53935]">•</span>
-                  <span>[ 02 SOLUTION: สิ่งที่ DeeDevIOT พัฒนาขึ้น ]</span>
-                </div>
-                <h4 className="text-base font-bold text-white mb-2">ชุดฮาร์ดแวร์เฉพาะทาง + Web Dashboard ที่เป็นเจ้าของเอง 100%</h4>
-                <p className="text-xs sm:text-sm text-[#9CA3AF] leading-relaxed font-light">
-                  เราออกแบบและประกอบกล่องคอนโทรลเลอร์ด้วย ESP32-C3 พร้อมเซนเซอร์มาตรฐานความแม่นยำสูง เขียนโปรแกรม Firmware เชื่อมต่อ Wi-Fi ในพื้นที่ ส่งข้อมูลเข้าสู่ระบบ Database และสร้าง Web Application เพื่อให้เจ้าหน้าที่เปิดดูข้อมูลสดจากมือถือได้ตลอดเวลา พร้อมตั้งค่าเงื่อนไขให้ส่งแจ้งเตือนผ่าน LINE อัตโนมัติเมื่อค่าเกินเกณฑ์
-                </p>
-              </div>
-
-              <div className="bg-[#111318] border border-[#252832] p-6 rounded">
-                <div className="font-mono text-xs text-[#9CA3AF] font-bold mb-2 uppercase flex items-center gap-1.5">
-                  <span className="text-[#E53935]">✓</span>
-                  <span>[ 03 RESULT: ผลลัพธ์จริงที่ได้รับ ]</span>
-                </div>
-                <h4 className="text-base font-bold text-white mb-2">ลดความเสี่ยงอุปกรณ์เสียหาย และประหยัดค่าใช้จ่ายระยะยาว</h4>
-                <p className="text-xs sm:text-sm text-[#9CA3AF] leading-relaxed font-light">
-                  ระบบทำงานต่อเนื่องได้จริง เจ้าหน้าที่ไม่ต้องเดินตรวจวัดด้วยตนเอง ลดเวลาการทำงาน Manual และที่สำคัญที่สุดคือลูกค้าเป็นเจ้าของระบบอย่างแท้จริง ไม่ต้องจ่ายค่าธรรมเนียมซอฟต์แวร์รายเดือน
-                </p>
-              </div>
-
-            </div>
-
-            {/* Right: Technical Architecture Box */}
-            <div className="lg:col-span-5 bg-[#111318] border border-[#252832] p-6 sm:p-7 rounded">
-              <div className="pb-4 mb-5 border-b border-[#252832] font-mono text-xs text-white font-bold flex justify-between">
-                <span>TECHNOLOGY USED</span>
-                <span className="text-[#E53935]">PROVEN IN PRODUCTION</span>
-              </div>
-
-              <div className="space-y-4 font-mono text-xs">
-                <div>
-                  <span className="text-[10px] text-[#6B7280] block">HARDWARE</span>
-                  <span className="text-white font-bold">ESP32-C3 Microcontroller + High-precision Sensors</span>
-                </div>
-                <div>
-                  <span className="text-[10px] text-[#6B7280] block">TELEMETRY PROTOCOL</span>
-                  <span className="text-white font-bold">MQTT over TLS & Lightweight JSON Payload</span>
-                </div>
-                <div>
-                  <span className="text-[10px] text-[#6B7280] block">BACKEND & API</span>
-                  <span className="text-white font-bold">Node.js Express Service + Automation Triggers</span>
-                </div>
-                <div>
-                  <span className="text-[10px] text-[#6B7280] block">NOTIFICATION</span>
-                  <span className="text-white font-bold">LINE Messaging API / Custom Webhook</span>
-                </div>
-                <div>
-                  <span className="text-[10px] text-[#6B7280] block">WEB INTERFACE</span>
-                  <span className="text-white font-bold">Next.js Responsive Mobile-first Dashboard</span>
-                </div>
-              </div>
-
-              <div className="mt-8 pt-5 border-t border-[#252832]">
-                <a
-                  href="#contact"
-                  className="w-full py-3 bg-[#08090D] border border-[#252832] hover:border-[#E53935] text-white rounded font-mono text-xs font-bold flex items-center justify-center gap-2 transition-colors"
-                >
-                  <span>ต้องการทำระบบคล้ายกันนี้ ปรึกษาเรา →</span>
-                </a>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* ================= 10. WORKFLOW ================= */}
-      <section className="py-20 sm:py-28 border-b border-[#252832]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="mb-14 pb-6 border-b border-[#252832]">
-            <span className="font-mono text-xs text-[#E53935] uppercase tracking-wider block mb-2">[ HOW WE WORK ]</span>
-            <h2 className="text-2xl sm:text-4xl font-bold uppercase tracking-tight text-white">
-              ขั้นตอนการทำงานกับ DeeDevIOT
-            </h2>
-            <p className="text-xs sm:text-sm text-[#9CA3AF] mt-2">
-              กระบวนการที่ชัดเจน โปร่งใส และมีขั้นตอนการตรวจรับงานอย่างมีระบบ
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 font-mono">
-            {[
-              { phase: '01', title: 'รับฟังโจทย์', desc: 'พูดคุยเพื่อเข้าใจปัญหา ข้อจำกัด และความต้องการที่แท้จริงของธุรกิจ' },
-              { phase: '02', title: 'วางแผนระบบ', desc: 'ออกแบบสถาปัตยกรรม ซอฟต์แวร์ ฮาร์ดแวร์ พร้อมประเมินงบประมาณ' },
-              { phase: '03', title: 'ออกแบบ UI & Flow', desc: 'วางโครงสร้างหน้าจอจำลอง (Mockup) และเส้นทางการไหลของข้อมูล' },
-              { phase: '04', title: 'พัฒนาโปรแกรม', desc: 'เขียนโค้ดตามมาตรฐาน เชื่อมต่อวงจร และอัปเดตความคืบหน้าสม่ำเสมอ' },
-              { phase: '05', title: 'ทดสอบระบบ', desc: 'ทดสอบ End-to-End ตรวจสอบความปลอดภัย และทดสอบการใช้งานจริง' },
-              { phase: '06', title: 'ส่งมอบ & ดูแล', desc: 'นำระบบขึ้น Production มอบคู่มือการใช้งาน และดูแลต่อเนื่อง' }
-            ].map((step) => (
-              <div key={step.phase} className="p-5 bg-[#111318] border border-[#252832] rounded flex flex-col justify-between">
-                <div>
-                  <span className="text-[#E53935] font-bold text-sm block mb-2">{step.phase}</span>
-                  <h4 className="font-bold text-white text-sm mb-2">{step.title}</h4>
-                  <p className="text-xs text-[#9CA3AF] leading-relaxed font-sans">{step.desc}</p>
-                </div>
-                <div className="mt-6 pt-3 border-t border-[#252832] text-[10px] text-[#6B7280]">
-                  PHASE {step.phase}
-                </div>
-              </div>
-            ))}
-          </div>
-
-        </div>
-      </section>
-
-      {/* ================= 11. ABOUT DEEDEVIOT ================= */}
-      <section id="about" className="py-20 sm:py-28 border-b border-[#252832] bg-[#0D0E12]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-            
-            <div className="lg:col-span-5">
-              <span className="font-mono text-xs text-[#E53935] uppercase tracking-wider block mb-2">[ ABOUT DEEDEVIOT ]</span>
-              <h2 className="text-2xl sm:text-4xl font-bold uppercase tracking-tight text-white leading-tight mb-6">
-                "We don't just build websites. <br />
-                <span className="text-[#9CA3AF]">We build systems that solve real problems."</span>
-              </h2>
-
-              <div className="p-4 bg-[#111318] border border-[#252832] rounded font-mono text-xs text-[#9CA3AF] space-y-1.5">
-                <div>ที่ตั้ง: กรุงเทพมหานคร, ประเทศไทย</div>
-                <div>ความเชี่ยวชาญ: Custom Software & IoT Engineering</div>
-                <div>หลักการ: เน้นความเรียบง่าย เสถียรภาพ และใช้งานได้จริง</div>
-              </div>
-            </div>
-
-            <div className="lg:col-span-7 space-y-5 text-sm text-[#9CA3AF] leading-relaxed font-light">
-              <p>
-                DeeDevIOT เป็นสตูดิโอพัฒนาซอฟต์แวร์และฮาร์ดแวร์ดิจิทัลสัญชาติไทย เราเข้าใจดีว่าธุรกิจในไทยจำนวนมากมีโจทย์การทำงานเฉพาะตัวที่ไม่สามารถแก้ได้ด้วยซอฟต์แวร์สำเร็จรูปทั่วไป และมักเจอปัญหากับระบบที่มีค่าบริการรายเดือนสูงเกินความจำเป็น
-              </p>
-              <p>
-                เราจึงมุ่งเน้นการช่วยธุรกิจ SME, เจ้าของกิจการ และฝ่าย IT ในการเปลี่ยนงานที่เคยทำด้วยมือ (Manual) ให้กลายเป็นระบบดิจิทัลอัตโนมัติ ไม่ว่าจะเป็นเว็บแอปพลิเคชันที่ออกแบบตามกระบวนการทำงานของคุณ หรือระบบ IoT ที่เชื่อมต่อเซนเซอร์ฮาร์ดแวร์เพื่อมอนิเตอร์และแจ้งเตือน
-              </p>
-              <p className="text-white font-normal">
-                พูดคุยกับทีมพัฒนาโดยตรง ไม่ผ่านคนกลาง เพื่อให้มั่นใจได้ว่าระบบที่คุณได้รับจะตรงตามเป้าหมายของงานอย่างแท้จริง
-              </p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4 border-t border-[#252832] font-mono text-xs">
-                <div className="p-3 bg-[#111318] border border-[#252832] rounded">
-                  <span className="text-white font-bold block mb-0.5">ตรงไปตรงมา</span>
-                  <span className="text-[11px] text-[#6B7280]">ประเมินตามเนื้องานจริง</span>
-                </div>
-                <div className="p-3 bg-[#111318] border border-[#252832] rounded">
-                  <span className="text-white font-bold block mb-0.5">มอบ Source Code</span>
-                  <span className="text-[11px] text-[#6B7280]">ลูกค้าเป็นเจ้าของ 100%</span>
-                </div>
-                <div className="p-3 bg-[#111318] border border-[#252832] rounded">
-                  <span className="text-white font-bold block mb-0.5">ดูแลต่อเนื่อง</span>
-                  <span className="text-[11px] text-[#6B7280]">พร้อมเป็นพาร์ทเนอร์ระยะยาว</span>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* ================= 19 & 20. THAI BUSINESS CTA & CONTACT ================= */}
-      <section id="contact" className="py-20 sm:py-28 border-b border-[#252832]">
+      {/* ================= 04.F THAI BUSINESS CTA & CONTACT ================= */}
+      <section id="contact" className="py-20 sm:py-28 border-b border-[#252832] bg-[#0D0E12]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           
           <span className="font-mono text-xs text-[#E53935] uppercase tracking-wider block mb-3">
@@ -1161,10 +1011,7 @@ export default function DeeDevIOTLandingPage() {
             เราช่วยวิเคราะห์ ออกแบบ และพัฒนาระบบให้เหมาะกับการใช้งานจริง ไม่ว่าจะเป็นระบบขนาดเล็กหรือระบบเฉพาะทางขององค์กร ทักมาคุยกันได้โดยไม่มีข้อผูกมัด
           </p>
 
-          {/* Primary Quick Contact Buttons for Thai Users */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-            
-            {/* LINE Official */}
             <a
               href={`https://line.me/ti/p/~${(siteConfig.contact_line || '@DEEDEVIOT').replace('@', '')}`}
               target="_blank"
@@ -1175,7 +1022,6 @@ export default function DeeDevIOTLandingPage() {
               <span>คุยกับเราใน LINE →</span>
             </a>
 
-            {/* Email */}
             <a
               href={`mailto:${siteConfig.contact_email || 'hello@deedeviot.com'}`}
               className="w-full sm:w-auto px-8 py-4 bg-[#111318] text-white border border-[#252832] hover:border-white font-mono text-xs uppercase tracking-wider font-semibold rounded transition-colors flex items-center justify-center gap-2"
@@ -1185,7 +1031,6 @@ export default function DeeDevIOTLandingPage() {
             </a>
           </div>
 
-          {/* Direct Channels Information Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 text-left font-mono text-xs">
             <div className="p-4 bg-[#111318] border border-[#252832] rounded">
               <span className="text-[10px] text-[#6B7280] block mb-1">LINE OFFICIAL</span>
@@ -1223,13 +1068,12 @@ export default function DeeDevIOTLandingPage() {
         </div>
       </section>
 
-      {/* ================= 20. FOOTER ================= */}
-      <footer className="py-14 bg-[#08090D] border-t border-[#252832]">
+      {/* ================= FOOTER ================= */}
+      <footer id="about" className="py-14 bg-[#08090D] border-t border-[#252832]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-10 border-b border-[#252832]">
             
-            {/* Brand Col */}
             <div className="md:col-span-2">
               <div className="flex items-center gap-2.5 font-mono text-sm tracking-wider font-bold mb-3">
                 <span className="w-2.5 h-2.5 rounded-full bg-[#E53935]" />
@@ -1238,14 +1082,13 @@ export default function DeeDevIOTLandingPage() {
                 <span className="text-[#9CA3AF]">IOT</span>
               </div>
               <p className="text-xs text-[#9CA3AF] max-w-md leading-relaxed font-light mb-3">
-                รับพัฒนา Web Application, IoT, Dashboard และระบบ IT ตามความต้องการ พร้อมช่วยออกแบบระบบให้เหมาะกับการใช้งานจริงของธุรกิจไทย
+                ทีม Developer คนไทยที่ทำระบบจริง และเข้าใจปัญหาของธุรกิจไทย รับพัฒนา Web Application, IoT, Dashboard และระบบ IT ตามความต้องการ
               </p>
               <div className="font-mono text-[11px] text-[#6B7280]">
                 "เปลี่ยนไอเดียให้เป็นระบบที่ใช้งานได้จริง" • Turn Ideas Into Real Digital Solutions.
               </div>
             </div>
 
-            {/* Services Index */}
             <div>
               <h4 className="font-mono text-xs uppercase text-white font-bold mb-3 tracking-wider">บริการที่รับทำ</h4>
               <ul className="space-y-1.5 font-mono text-xs text-[#9CA3AF]">
@@ -1256,20 +1099,17 @@ export default function DeeDevIOTLandingPage() {
               </ul>
             </div>
 
-            {/* Navigation & Admin Link */}
             <div>
               <h4 className="font-mono text-xs uppercase text-white font-bold mb-3 tracking-wider">เมนูเว็บไซต์</h4>
               <ul className="space-y-1.5 font-mono text-xs text-[#9CA3AF]">
                 <li><a href="#hero" className="hover:text-white transition-colors">หน้าแรก (Home)</a></li>
                 <li><a href="#works" className="hover:text-white transition-colors">ผลงานจริง (Works)</a></li>
-                <li><a href="#about" className="hover:text-white transition-colors">เกี่ยวกับเรา (About)</a></li>
                 <li><a href="#contact" className="hover:text-white transition-colors">ติดต่อเรา (Contact)</a></li>
               </ul>
             </div>
 
           </div>
 
-          {/* Bottom Copyright & Admin Entrance */}
           <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-[#6B7280]">
             <div>
               © 2026 DEEDEV IOT. ALL RIGHTS RESERVED.
@@ -1324,7 +1164,7 @@ export default function DeeDevIOTLandingPage() {
 
             {activeProjectModal.architectureDetails && (
               <div className="mb-6 p-4 rounded bg-[#08090D] border border-[#252832]">
-                <div className="font-mono text-xs text-white font-bold uppercase mb-2">โครงสร้างสถาปัตยกรรม (ARCHITECTURE DETAILS):</div>
+                <div className="font-mono text-xs text-white font-bold uppercase mb-2">โครงสร้างสถาปัตยกรรม:</div>
                 <ul className="space-y-1.5 font-mono text-xs text-[#9CA3AF]">
                   {activeProjectModal.architectureDetails.map((detail, idx) => (
                     <li key={idx} className="flex items-center gap-2">

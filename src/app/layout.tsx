@@ -1,25 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter, Noto_Sans_Thai, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
-
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
-})
-
-const notoSansThai = Noto_Sans_Thai({
-  subsets: ['thai'],
-  weight: ['300', '400', '500', '600', '700'],
-  variable: '--font-thai',
-  display: 'swap',
-})
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  variable: '--font-mono',
-  display: 'swap',
-})
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -39,7 +19,15 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="th" className={`${inter.variable} ${notoSansThai.variable} ${jetbrainsMono.variable} scroll-smooth`}>
+    <html lang="th" className="scroll-smooth">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body className="font-sans antialiased bg-[#08090D] text-[#FFFFFF] min-h-screen selection:bg-[#E53935]/20 selection:text-white overflow-x-hidden">
         {children}
       </body>
