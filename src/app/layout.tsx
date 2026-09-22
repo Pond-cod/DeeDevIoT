@@ -20,12 +20,12 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
-  themeColor: '#090d1a',
+  themeColor: '#09090b',
 }
 
 export const metadata: Metadata = {
-  title: 'DeeDevIOT | Next-Gen Web App & IoT Accelerator',
-  description: 'Gearing up for the future with smart IoT Ecosystems and modern software solutions.',
+  title: 'DeeDevIOT | Modern Web App & Smart IoT Solutions',
+  description: 'ขับเคลื่อนธุรกิจสู่อนาคตด้วย Web Application และระบบ IoT อัจฉริยะที่ออกแบบเฉพาะเพื่อคุณ',
 }
 
 export default function RootLayout({
@@ -35,7 +35,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="th" className={`${kanit.variable} ${montserrat.variable} scroll-smooth`}>
-      <body className="font-kanit antialiased bg-slate-950 text-slate-100 min-h-screen selection:bg-brand-500/30 selection:text-white overflow-x-hidden">
+      <body className="font-kanit antialiased bg-zinc-950 text-zinc-100 min-h-screen selection:bg-indigo-500/30 selection:text-white overflow-x-hidden">
         {children}
       </body>
     </html>
