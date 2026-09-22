@@ -9,8 +9,16 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'DeeDevIOT | รับพัฒนา Web Application, IoT และระบบ IT',
-  description: 'รับพัฒนา Web Application, IoT, Dashboard และระบบ IT ตามความต้องการ พร้อมช่วยออกแบบระบบให้เหมาะกับการใช้งานจริง',
+  title: 'DeeDevIOT | Connecting Devices. Developing Futures. | รับพัฒนา Web Application, IoT และระบบ IT',
+  description: 'DeeDevIOT สตูดิโอพัฒนา Web Application, IoT, Dashboard และระบบ IT เชื่อมต่ออุปกรณ์ฮาร์ดแวร์โดยทีมงานคนไทย',
+  icons: {
+    icon: [
+      { url: '/icon.png', type: 'image/png' },
+      { url: '/favicon.ico' }
+    ],
+    shortcut: '/icon.png',
+    apple: '/icon.png',
+  },
 }
 
 export default function RootLayout({
@@ -21,6 +29,9 @@ export default function RootLayout({
   return (
     <html lang="th" className="scroll-smooth">
       <head>
+        <link rel="icon" type="image/png" href="/icon.png" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/icon.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link

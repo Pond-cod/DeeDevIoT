@@ -579,15 +579,14 @@ export default function AdminDashboard() {
       `}>
         {/* Brand Header */}
         <div className="p-4 sm:p-5 flex items-center justify-between border-b-2 border-slate-200/90 h-18 shrink-0">
-          <Link href="/" className="flex items-center gap-3 group focus:outline-none overflow-hidden">
-            <span className="relative flex h-3.5 w-3.5 shrink-0">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E11D48] opacity-75" />
-              <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-[#E11D48]" />
-            </span>
+          <Link href="/" className="flex items-center gap-2.5 group focus:outline-none overflow-hidden">
+            <div className="w-8 h-8 rounded-xl overflow-hidden border border-slate-200 bg-white p-0.5 shadow-2xs flex items-center justify-center shrink-0 group-hover:border-[#E11D48] transition-colors">
+              <img src="/logo.jpg" alt="DeeDevIoT" className="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform" />
+            </div>
             {(isSidebarOpen || isMobileDrawerOpen) && (
               <div className="font-mono text-base tracking-wider font-bold truncate">
                 <span className="text-slate-950 group-hover:text-[#E11D48] transition-colors font-extrabold">DEEDEV</span>
-                <span className="text-[#EA580C] mx-1">/</span>
+                <span className="text-[#EA580C] mx-0.5 font-black">/</span>
                 <span className="bg-gradient-to-r from-[#E11D48] to-[#EA580C] bg-clip-text text-transparent font-black">ADMIN</span>
               </div>
             )}

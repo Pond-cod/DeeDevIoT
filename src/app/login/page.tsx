@@ -53,11 +53,11 @@ export default function LoginPage() {
         </Link>
 
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded bg-[#08090D] border border-[#252832] mb-3 text-[#E53935]">
-            <Shield className="w-6 h-6" />
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#08090D] border-2 border-[#252832] mb-3 overflow-hidden shadow-lg p-1">
+            <img src="/logo.jpg" alt="DeeDevIoT" className="w-full h-full object-cover rounded-xl" />
           </div>
           <h1 className="text-lg font-bold tracking-tight text-white mb-1 uppercase font-mono">
-            DEEDEV IOT <span className="text-[#6B7280]">/</span> ADMIN
+            DEEDEV IOT <span className="text-[#E11D48]">/</span> ADMIN
           </h1>
           <p className="text-[#9CA3AF] text-xs">AUTHORIZED ACCESS ONLY</p>
         </div>
