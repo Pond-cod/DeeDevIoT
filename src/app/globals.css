@@ -1,17 +1,20 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: var(--font-inter), 'Inter', var(--font-thai), -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: var(--font-mono), 'JetBrains Mono', monospace;
-  --font-thai: var(--font-thai), 'Noto Sans Thai', sans-serif;
+  --font-sans: 'Noto Sans Thai', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-thai: 'Noto Sans Thai', sans-serif;
 
-  --color-studio-bg: #08090D;
-  --color-studio-surface: #111318;
-  --color-studio-subsurface: #0D0E12;
-  --color-studio-border: #252832;
-  --color-studio-muted: #6B7280;
-  --color-studio-secondary: #9CA3AF;
-  --color-studio-red: #E53935;
+  --color-studio-bg: #0A0B10;
+  --color-studio-surface: #12151E;
+  --color-studio-subsurface: #0E1017;
+  --color-studio-border: #262B38;
+  --color-studio-muted: #7A8499;
+  --color-studio-secondary: #A6B0C3;
+  --color-studio-red: #FF334B;
+  --color-studio-orange: #FF6B00;
+  --color-studio-cyan: #00D2FF;
+  --color-studio-emerald: #10B981;
 }
 
 @layer base {
@@ -20,62 +23,42 @@
     -webkit-tap-highlight-color: transparent;
   }
   body {
-    background-color: #08090D;
+    background-color: #0A0B10;
     color: #FFFFFF;
     font-family: var(--font-sans);
   }
 }
 
-/* Subtle Technical Grid Lines */
+/* Vibrant Grid Background */
 .bg-tech-grid {
   background-image: 
-    linear-gradient(to right, rgba(37, 40, 50, 0.4) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(37, 40, 50, 0.4) 1px, transparent 1px);
-  background-size: 48px 48px;
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
 }
 
-.bg-tech-dots {
-  background-image: radial-gradient(rgba(156, 163, 175, 0.15) 1px, transparent 1px);
-  background-size: 24px 24px;
+.bg-radial-hero {
+  background: radial-gradient(circle at 50% -20%, rgba(255, 51, 75, 0.18), rgba(255, 107, 0, 0.08) 35%, rgba(10, 11, 16, 0) 70%);
 }
 
-/* Technical Card (Disciplined, Human-Engineered, Non-AI) */
-.tech-card {
-  background-color: #111318;
-  border: 1px solid #252832;
-  transition: border-color 0.25s ease, transform 0.25s ease;
-}
-
-.tech-card:hover {
-  border-color: rgba(229, 57, 53, 0.4);
-}
-
-/* Subtle Data Flow Animation */
-@keyframes data-flow-dash {
-  to {
-    stroke-dashoffset: -20;
-  }
-}
-
-.animate-data-flow {
-  stroke-dasharray: 6 6;
-  animation: data-flow-dash 1.2s linear infinite;
+.bg-radial-glow {
+  background: radial-gradient(circle at 50% 50%, rgba(255, 51, 75, 0.12), rgba(0, 210, 255, 0.04) 45%, rgba(10, 11, 16, 0) 70%);
 }
 
 /* Clean Technical Scrollbar */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #08090D;
+  background: #0A0B10;
 }
 ::-webkit-scrollbar-thumb {
-  background: #252832;
-  border-radius: 2px;
+  background: #262B38;
+  border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3F4350;
+  background: #FF334B;
 }
 
 /* Accessibility: Reduced Motion */
