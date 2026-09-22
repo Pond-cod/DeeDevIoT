@@ -5,7 +5,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
-  themeColor: '#08090D',
+  themeColor: '#FFFFFF',
 }
 
 export const metadata: Metadata = {
@@ -28,7 +28,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="font-sans antialiased bg-[#08090D] text-[#FFFFFF] min-h-screen selection:bg-[#E53935]/20 selection:text-white overflow-x-hidden">
+      <body className="font-sans antialiased bg-[#FAFAFC] text-[#0F172A] min-h-screen selection:bg-[#E11D48]/15 selection:text-[#E11D48] overflow-x-hidden">
         {children}
       </body>
     </html>
