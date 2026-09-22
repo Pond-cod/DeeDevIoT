@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getSheetValues, appendSheetValues, updateSheetRow, deleteSheetRow } from '../../../lib/google';
 
-// กำหนด Interface โครงสร้างของข้อมูล Service
+// กำหนด Interface โครงสร้างของข้อมูล Service / Works
 export interface ServiceData {
   id: string;
   title: string;
@@ -9,18 +9,19 @@ export interface ServiceData {
   title_th?: string;
   description_th?: string;
   icon: string;
-  imageUrl: string;   // comma-separated image URLs (col E)
-  demoUrl?: string;   // reference URL (col F)
-  videoUrls?: string; // comma-separated video URLs (col I)
+  imageUrl: string;   // ลิงก์ภาพปก (col E)
+  demoUrl?: string;   // ลิงก์เปิดดูเนื้อหา / Live Demo (col F)
+  videoUrls?: string; // ลิงก์วิดีโอ (col I)
+  manualUrl?: string; // ลิงก์เปิดดูคู่มือ / Manual Documentation (col J)
 }
 
 export async function GET() {
   try {
-    // ดึงข้อมูลจากแท็บ 'Services' ช่วงเซลล์ 'A2:I'
-    const range = 'Services!A2:I';
+    // ดึงข้อมูลจากแท็บ 'Services' ช่วงเซลล์ 'A2:J'
+    const range = 'Services!A2:J';
     const rows = await getSheetValues(range);
 
-    // จัดระเบียบข้อมูล (Map) ให้ตรงกับ Interface ที่กำหนดไว้
+    // จัดระเบียบข้อมูล (Map) ให้ตรงกับ Interface
     const services: ServiceData[] = rows.map((row) => {
       let imageUrlsStr = row[4] || '';
       let videoUrlsStr = row[8] || '';
@@ -61,6 +62,7 @@ export async function GET() {
         title_th: row[6] || '',
         description_th: row[7] || '',
         videoUrls: videoUrls,
+        manualUrl: row[9] || '',
       };
     });
 
@@ -82,17 +84,14 @@ export async function GET() {
   }
 }
 
-// ปิดแคชสำหรับ API เพื่อให้ดึงข้อมูลล่าสุดเสมอ (ป้องกันตารางไม่อัปเดต)
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export async function POST(request: Request) {
   try {
-    // รับข้อมูล JSON จาก Body ของ Request
     const body = await request.json();
-    const { id, title, description, icon, imageUrl, demoUrl, videoUrls, isEdit } = body;
+    const { id, title, description, icon, imageUrl, demoUrl, videoUrls, manualUrl, isEdit } = body;
 
-    // ตรวจสอบว่ามีข้อมูลอย่างน้อย title และ description ก่อนบันทึก
     if (!title || !description) {
       return NextResponse.json(
         { success: false, error: 'Title and description are required' },
@@ -100,8 +99,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // แปลง Object เป็น Array แถวเดียว ให้ตรงกับลำดับคอลัมน์ [id, title, description, icon, imageUrl, demoUrl, title_th, description_th, videoUrls] 
-    // หากค่าไหนไม่มีให้เป็น string ว่าง ""
+    // ลำดับคอลัมน์: [id, title, description, icon, imageUrl, demoUrl, title_th, description_th, videoUrls, manualUrl]
     const rowData = [
       id || Date.now().toString(),
       title || "",
@@ -111,7 +109,8 @@ export async function POST(request: Request) {
       demoUrl || "",
       body.title_th || "",
       body.description_th || "",
-      videoUrls || ""
+      videoUrls || "",
+      manualUrl || ""
     ];
 
     if (isEdit) {
@@ -121,18 +120,15 @@ export async function POST(request: Request) {
           { status: 400 }
         );
       }
-      const result = await updateSheetRow('Services', id, rowData, 'A:I');
+      const result = await updateSheetRow('Services', id, rowData, 'A:J');
       return NextResponse.json({
         success: true,
         message: 'Service updated successfully in Google Sheets',
         data: result,
       });
     } else {
-      // แปลงเป็น Array 2 มิติ (มี 1 แถว)
       const newRow = [rowData];
-
-      // กำหนด Range เป็นทั้งตาราง เพี่อให้ Google Sheets หาบรรทัดว่างต่อท้ายให้อัตโนมัติ
-      const range = 'Services!A:I';
+      const range = 'Services!A:J';
       const result = await appendSheetValues(range, newRow);
 
       return NextResponse.json({

@@ -7,7 +7,8 @@ import {
   Database, Phone, Mail, MessageCircle,
   X, Menu, Lock, Activity, ArrowDown, Power,
   Clock, CheckCircle2, ChevronRight, Layers, Sliders, RefreshCw,
-  Sparkles, ShieldCheck, Check, Radio, Gauge, Zap
+  Sparkles, ShieldCheck, Check, Radio, Gauge, Zap,
+  FileText, BookOpen
 } from 'lucide-react';
 import {
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid
@@ -17,12 +18,15 @@ interface ProjectItem {
   id: string;
   name: string;
   category: string;
-  categoryKey: 'web' | 'iot' | 'interactive';
+  categoryKey: string;
   description: string;
   technologies: string[];
   imageUrl: string;
-  demoUrl?: string;
+  demoUrl?: string; // Content link / Live demo
+  manualUrl?: string; // Documentation / Manual link
+  videoUrls?: string[];
   architectureDetails: string[];
+  sourceType: 'portfolio' | 'service';
 }
 
 interface IoTDeviceState {
@@ -47,84 +51,6 @@ interface DeviceTelemetryEvent {
   eventDescription: string;
   severity: 'info' | 'warning' | 'normal';
 }
-
-const REAL_PROJECTS_PORTFOLIO: ProjectItem[] = [
-  {
-    id: 'smart-wallet',
-    name: 'Smart Wallet',
-    category: 'Web Application',
-    categoryKey: 'web',
-    description: 'เว็บแอปพลิเคชันจัดการรายรับ-รายจ่ายส่วนบุคคล วิเคราะห์หมวดหมู่การเงินแบบเรียลไทม์ พร้อมแดชบอร์ดสรุปงบประมาณ ช่วยให้ธุรกิจขนาดเล็กและบุคคลบริหารสภาพคล่องได้อย่างแม่นยำ',
-    technologies: ['Next.js', 'TypeScript', 'Tailwind CSS', 'PostgreSQL', 'Chart.js'],
-    imageUrl: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80',
-    demoUrl: 'https://smart-wallet.vercel.app',
-    architectureDetails: [
-      'Frontend: Next.js Responsive Web Dashboard',
-      'Backend API: RESTful Endpoints พร้อม Validation รัดกุม',
-      'Database: PostgreSQL Relational Database Schema'
-    ]
-  },
-  {
-    id: 'minimal-weather',
-    name: 'Minimal Weather Station',
-    category: 'IoT & Telemetry',
-    categoryKey: 'iot',
-    description: 'ระบบตรวจวัดสภาพแวดล้อมและสภาพอากาศ เชื่อมต่อเซนเซอร์ตรวจวัดอุณหภูมิ ความชื้น และความกดอากาศ ส่งข้อมูลขึ้น Web Dashboard ผ่านโปรโตคอลความเร็วสูงตลอด 24 ชม.',
-    technologies: ['ESP32', 'React', 'MQTT Protocol', 'REST API', 'BME280 Sensor'],
-    imageUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80',
-    demoUrl: 'https://minimal-weather.vercel.app',
-    architectureDetails: [
-      'Hardware: บอร์ดไมโครคอนโทรลเลอร์ ESP32 + BME280',
-      'Protocol: Lightweight MQTT Telemetry Pipeline',
-      'Interface: React Real-time Telemetry Dashboard'
-    ]
-  },
-  {
-    id: 'sudoku-engine',
-    name: 'Sudoku Algorithm Engine',
-    category: 'Web Application',
-    categoryKey: 'web',
-    description: 'เว็บแอปพลิเคชันคำนวณและแก้โจทย์ซูโดกุด้วย Recursive Backtracking Algorithm พร้อมระบบสร้างตารางตามระดับความยาก และประวัติการย้อนกลับสถานะการเดินเกม',
-    technologies: ['TypeScript', 'React', 'Tailwind CSS', 'Algorithm Engine'],
-    imageUrl: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80',
-    demoUrl: 'https://sudoku.vercel.app',
-    architectureDetails: [
-      'Logic Engine: Recursive Backtracking Solver',
-      'State Management: Immutable Undo/Redo Stack',
-      'Responsive Grid: Mobile-first Interactive Board'
-    ]
-  },
-  {
-    id: 'duck-hunt-arcade',
-    name: 'Duck Hunt Arcade Canvas',
-    category: 'Interactive Systems',
-    categoryKey: 'interactive',
-    description: 'ระบบเกมเชิงโต้ตอบบนเว็บเบราว์เซอร์ พัฒนาด้วย HTML5 Canvas และ Web Audio API จำลองการคำนวณการชน (Collision Detection) แบบ 60 FPS ไร้ความหน่วง',
-    technologies: ['HTML5 Canvas', 'JavaScript (ES6)', 'Web Audio API', 'Game Physics'],
-    imageUrl: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80',
-    demoUrl: 'https://duck-hunt.vercel.app',
-    architectureDetails: [
-      'Render Loop: RequestAnimationFrame 60 FPS Cycle',
-      'Physics Engine: 2D Bounding Box Collision Detection',
-      'Audio: Web Audio Synthesizer Engine'
-    ]
-  },
-  {
-    id: 'cookie-runner',
-    name: 'Cookie Runner Engine',
-    category: 'Interactive Systems',
-    categoryKey: 'interactive',
-    description: 'เกมวิ่ง 2 มิติจำลองการเคลื่อนที่และแรงโน้มถ่วงบนเว็บ พร้อมการคำนวณคะแนนแบบเรียลไทม์และการจัดเก็บสถิติผู้เล่นผ่าน LocalStorage API',
-    technologies: ['JavaScript', 'HTML5', 'CSS Grid', 'LocalStorage API'],
-    imageUrl: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80',
-    demoUrl: 'https://cookie-runner.vercel.app',
-    architectureDetails: [
-      'Physics: Gravity Acceleration & Jumping Vector',
-      'Storage: Client-side Persistent High Scores',
-      'Asset Pipeline: Optimized Sprite Maps'
-    ]
-  }
-];
 
 const INITIAL_IOT_DEVICES: IoTDeviceState[] = [
   {
@@ -229,6 +155,7 @@ export default function DeeDevIOTWebsite() {
   const [activeProjectModal, setActiveProjectModal] = useState<ProjectItem | null>(null);
   const [selectedWorkCategory, setSelectedWorkCategory] = useState<string>('all');
   const [cmsServices, setCmsServices] = useState<any[]>([]);
+  const [cmsIntegrations, setCmsIntegrations] = useState<any[]>([]);
   const [siteConfig, setSiteConfig] = useState<any>({});
 
   const [iotDevices, setIotDevices] = useState<IoTDeviceState[]>(INITIAL_IOT_DEVICES);
@@ -255,16 +182,21 @@ export default function DeeDevIOTWebsite() {
   useEffect(() => {
     const fetchCmsData = async () => {
       try {
-        const [servicesRes, configRes] = await Promise.all([
+        const [servicesRes, integrationsRes, configRes] = await Promise.all([
           fetch('/api/services', { cache: 'no-store' }),
+          fetch('/api/integrations', { cache: 'no-store' }),
           fetch('/api/config', { cache: 'no-store' })
         ]);
-        const [servicesData, configData] = await Promise.all([
+        const [servicesData, integrationsData, configData] = await Promise.all([
           servicesRes.json(),
+          integrationsRes.json(),
           configRes.json()
         ]);
-        if (servicesData.success && Array.isArray(servicesData.data) && servicesData.data.length > 0) {
+        if (servicesData.success && Array.isArray(servicesData.data)) {
           setCmsServices(servicesData.data);
+        }
+        if (integrationsData.success && Array.isArray(integrationsData.data)) {
+          setCmsIntegrations(integrationsData.data);
         }
         if (configData.success && configData.data) {
           setSiteConfig(configData.data);
@@ -305,24 +237,51 @@ export default function DeeDevIOTWebsite() {
     );
   };
 
+  // Only real projects and services from Google Sheets CMS (zero mock items)
   const allProjects: ProjectItem[] = [
-    ...REAL_PROJECTS_PORTFOLIO,
+    ...cmsIntegrations.map((item, idx) => ({
+      id: item.id || `portfolio-${idx}`,
+      name: item.title_th || item.title || 'โปรเจกต์ระบบ',
+      category: item.tag || 'Portfolio',
+      categoryKey: (item.tag || 'portfolio').trim().toLowerCase(),
+      description: item.description_th || item.description || 'ระบบเชื่อมต่อและพัฒนาเฉพาะทางสำหรับธุรกิจ',
+      technologies: item.tag ? [item.tag, 'System Architecture', 'Integration'] : ['Full-Stack Solution'],
+      imageUrl: item.imageUrl || '',
+      demoUrl: item.referenceUrl || undefined,
+      manualUrl: item.manualUrl || undefined,
+      architectureDetails: [
+        'ออกแบบสถาปัตยกรรมระบบตามข้อกำหนดของธุรกิจ',
+        'โครงสร้างระบบปลอดภัย รองรับการขยายและเชื่อมต่อ API'
+      ],
+      sourceType: 'portfolio' as const
+    })),
     ...cmsServices.map((cmsItem, idx) => ({
-      id: cmsItem.id || `cms-${idx}`,
-      name: cmsItem.title,
-      category: cmsItem.icon || 'Custom Solution',
-      categoryKey: 'web' as const,
-      description: cmsItem.description_th || cmsItem.description,
-      technologies: ['Custom Software', 'Database', 'Integration'],
-      imageUrl: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80',
+      id: cmsItem.id || `service-${idx}`,
+      name: cmsItem.title_th || cmsItem.title || 'บริการโซลูชัน',
+      category: cmsItem.icon || 'Service Solution',
+      categoryKey: (cmsItem.icon || 'service').trim().toLowerCase(),
+      description: cmsItem.description_th || cmsItem.description || '',
+      technologies: ['Custom Solution', 'Production Architecture', 'Integration'],
+      imageUrl: cmsItem.imageUrl || '',
       demoUrl: cmsItem.demoUrl || undefined,
-      architectureDetails: ['ออกแบบระบบเฉพาะตามข้อกำหนดของงาน']
+      manualUrl: cmsItem.manualUrl || undefined,
+      videoUrls: cmsItem.videoUrls ? cmsItem.videoUrls.split(',').map((v: string) => v.trim()).filter(Boolean) : undefined,
+      architectureDetails: ['ออกแบบและพัฒนาเฉพาะสำหรับโจทย์ทางธุรกิจและองค์กร'],
+      sourceType: 'service' as const
     }))
   ];
 
+  // Dynamic categories from real project items
+  const availableCategories = Array.from(
+    new Set(allProjects.map(p => p.category).filter(Boolean))
+  );
+
   const filteredProjects = selectedWorkCategory === 'all'
     ? allProjects
-    : allProjects.filter(item => item.categoryKey === selectedWorkCategory);
+    : allProjects.filter(item => 
+        item.category.toLowerCase() === selectedWorkCategory.toLowerCase() ||
+        item.categoryKey === selectedWorkCategory.toLowerCase()
+      );
 
   const selectedDevice = iotDevices.find(d => d.id === selectedDashboardDeviceId) || iotDevices[0];
 
@@ -988,39 +947,45 @@ export default function DeeDevIOTWebsite() {
       {/* ================= 04.E REAL PROJECT SHOWCASE ================= */}
       <section id="works" className="py-20 sm:py-28 border-b border-slate-200/80 bg-[#FAFAFC] relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 pb-6 border-b border-slate-200/80 gap-4">
             <div>
               <span className="font-mono text-xs text-emerald-600 uppercase tracking-wider block mb-2 font-bold flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                <span>[ REAL PORTFOLIO ]</span>
+                <span>[ REAL PORTFOLIO & WORKS ]</span>
               </span>
               <h2 className="text-2xl sm:text-4xl font-extrabold uppercase tracking-tight text-slate-900">
                 ผลงานและโปรเจกต์จริง
               </h2>
               <p className="text-xs sm:text-sm text-slate-600 mt-2">
-                โปรเจกต์ซอฟต์แวร์และฮาร์ดแวร์ที่พัฒนาและทดสอบการทำงานจริง
+                โปรเจกต์ซอฟต์แวร์และฮาร์ดแวร์ที่พัฒนาและทดสอบการทำงานจริง จากฐานข้อมูล Google Sheets
               </p>
             </div>
 
+            {/* Dynamic Category Filter */}
             <div className="flex flex-wrap items-center gap-2 font-mono text-xs">
-              {[
-                { key: 'all', label: 'ทั้งหมด (ALL)' },
-                { key: 'web', label: 'WEB APPS' },
-                { key: 'iot', label: 'IoT & SENSORS' },
-                { key: 'interactive', label: 'INTERACTIVE' },
-              ].map((categoryItem) => (
+              <button
+                type="button"
+                onClick={() => setSelectedWorkCategory('all')}
+                className={`px-3.5 py-1.5 rounded-xl border transition-all ${
+                  selectedWorkCategory === 'all'
+                    ? 'bg-slate-900 text-white border-slate-900 font-bold shadow-xs'
+                    : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400 hover:text-slate-900'
+                }`}
+              >
+                ทั้งหมด (ALL)
+              </button>
+              {availableCategories.map((cat) => (
                 <button
-                  key={categoryItem.key}
+                  key={cat}
                   type="button"
-                  onClick={() => setSelectedWorkCategory(categoryItem.key)}
-                  className={`px-3.5 py-1.5 rounded-xl border transition-all ${
-                    selectedWorkCategory === categoryItem.key
+                  onClick={() => setSelectedWorkCategory(cat)}
+                  className={`px-3.5 py-1.5 rounded-xl border transition-all uppercase ${
+                    selectedWorkCategory.toLowerCase() === cat.toLowerCase()
                       ? 'bg-slate-900 text-white border-slate-900 font-bold shadow-xs'
                       : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400 hover:text-slate-900'
                   }`}
                 >
-                  {categoryItem.label}
+                  {cat}
                 </button>
               ))}
             </div>
@@ -1032,14 +997,20 @@ export default function DeeDevIOTWebsite() {
                 key={project.id}
                 className="bg-white border border-slate-200/90 hover:border-[#E11D48] transition-all rounded-2xl flex flex-col justify-between overflow-hidden group shadow-xs hover:shadow-xl transform hover:-translate-y-1"
               >
-                {/* Project Image Preview */}
+                {/* Project Cover Image */}
                 <div className="relative h-48 w-full overflow-hidden bg-slate-100 border-b border-slate-100">
-                  <img
-                    src={project.imageUrl}
-                    alt={project.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
-                    loading="lazy"
-                  />
+                  {project.imageUrl ? (
+                    <img
+                      src={project.imageUrl}
+                      alt={project.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-slate-50 via-rose-50/40 to-orange-50/40 flex items-center justify-center">
+                      <Layers size={36} className="text-slate-300 group-hover:text-[#E11D48] transition-colors" />
+                    </div>
+                  )}
                   <div className="absolute top-3 right-3 px-2.5 py-0.5 rounded-full bg-white/95 backdrop-blur-sm border border-slate-200 text-[10px] font-mono text-slate-800 font-bold shadow-xs">
                     {project.category}
                   </div>
@@ -1056,7 +1027,7 @@ export default function DeeDevIOTWebsite() {
                       {project.description}
                     </p>
 
-                    {/* Colorful Technology Pills */}
+                    {/* Technology Tags */}
                     <div className="flex flex-wrap gap-1.5 mb-6 font-mono text-[10px]">
                       {project.technologies.map((techItem) => (
                         <span
@@ -1069,33 +1040,73 @@ export default function DeeDevIOTWebsite() {
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-slate-100 flex items-center justify-between font-mono text-xs">
+                  {/* Actions: Details, Content Link, Manual Link */}
+                  <div className="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 font-mono text-xs">
                     <button
                       type="button"
                       onClick={() => setActiveProjectModal(project)}
                       className="text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-1 font-semibold"
                     >
-                      <span>ดูสถาปัตยกรรม</span>
+                      <span>ดูรายละเอียด</span>
                       <ChevronRight size={14} className="text-[#0284C7]" />
                     </button>
 
-                    {project.demoUrl ? (
-                      <a
-                        href={project.demoUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-[#E11D48] hover:text-[#BE123C] transition-colors inline-flex items-center gap-1 font-bold"
-                      >
-                        <span>เปิด Live Demo</span>
-                        <ExternalLink size={12} />
-                      </a>
-                    ) : (
-                      <span className="text-slate-400 text-[11px]">Production Code</span>
-                    )}
+                    <div className="flex items-center gap-1.5">
+                      {project.manualUrl && (
+                        <a
+                          href={project.manualUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sky-700 hover:text-sky-900 bg-sky-50 hover:bg-sky-100 border border-sky-200 px-2.5 py-1 rounded-lg text-[11px] font-bold transition-colors inline-flex items-center gap-1"
+                          title="เปิดดูคู่มือการใช้งาน"
+                        >
+                          <FileText size={12} />
+                          <span>คู่มือ</span>
+                        </a>
+                      )}
+
+                      {project.demoUrl ? (
+                        <a
+                          href={project.demoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[#E11D48] hover:text-[#BE123C] bg-rose-50 hover:bg-rose-100 border border-rose-200 px-2.5 py-1 rounded-lg text-[11px] font-bold transition-colors inline-flex items-center gap-1"
+                          title="เปิดดูเนื้อหา / Live Demo"
+                        >
+                          <span>เปิดดูเนื้อหา</span>
+                          <ExternalLink size={12} />
+                        </a>
+                      ) : (
+                        <span className="text-slate-400 text-[11px] px-1.5">Production</span>
+                      )}
+                    </div>
                   </div>
                 </div>
               </article>
             ))}
+
+            {/* Clean Empty State when no real projects exist */}
+            {filteredProjects.length === 0 && (
+              <div className="col-span-full py-16 px-6 text-center bg-white border border-slate-200/90 rounded-2xl shadow-xs">
+                <div className="w-16 h-16 rounded-2xl bg-rose-50 border border-rose-200/80 flex items-center justify-center mx-auto mb-4 text-[#E11D48]">
+                  <Layers size={28} />
+                </div>
+                <h3 className="text-lg font-bold text-slate-900 mb-2">
+                  {selectedWorkCategory === 'all'
+                    ? 'อยู่ระหว่างอัปเดตข้อมูลผลงานจริง'
+                    : `ไม่พบผลงานในหมวดหมู่ "${selectedWorkCategory}"`}
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-500 max-w-md mx-auto mb-5 leading-relaxed">
+                  {selectedWorkCategory === 'all'
+                    ? 'ข้อมูลผลงานและโปรเจกต์ที่เสร็จสมบูรณ์จะแสดงที่นี่โดยตรงจากระบบหลังบ้าน (Admin Console)'
+                    : 'สามารถเลือกหมวดหมู่อื่นเพื่อดูผลงานเพิ่มเติม หรือเพิ่มผลงานใหม่ใน Admin Console'}
+                </p>
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-700 font-mono text-xs font-semibold">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>ข้อมูลจริงแบบ Real-time จาก Google Sheets CMS</span>
+                </div>
+              </div>
+            )}
           </div>
 
         </div>
@@ -1247,14 +1258,28 @@ export default function DeeDevIOTWebsite() {
         </div>
       </footer>
 
-      {/* ================= ARCHITECTURE MODAL ================= */}
+      {/* ================= ARCHITECTURE / PROJECT MODAL ================= */}
       {activeProjectModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm">
           <div 
-            className="w-full max-w-2xl bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 relative shadow-2xl"
+            className="w-full max-w-2xl bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 relative shadow-2xl max-h-[90vh] overflow-y-auto"
             role="dialog"
             aria-modal="true"
           >
+            {/* Modal Cover Image if available */}
+            {activeProjectModal.imageUrl && (
+              <div className="relative h-48 sm:h-56 -mx-6 sm:-mx-8 -mt-6 sm:-mt-8 mb-6 overflow-hidden rounded-t-2xl bg-slate-100 border-b border-slate-200">
+                <img
+                  src={activeProjectModal.imageUrl}
+                  alt={activeProjectModal.name}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-white/95 backdrop-blur-sm border border-slate-200 text-xs font-mono text-slate-800 font-bold shadow-xs">
+                  {activeProjectModal.category}
+                </div>
+              </div>
+            )}
+
             <div className="flex items-start justify-between pb-4 border-b border-slate-100 mb-5">
               <div>
                 <span className="font-mono text-xs text-sky-600 uppercase tracking-wider block mb-1 font-bold">
@@ -1267,7 +1292,7 @@ export default function DeeDevIOTWebsite() {
               <button
                 type="button"
                 onClick={() => setActiveProjectModal(null)}
-                className="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg border border-slate-200 bg-slate-50"
+                className="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg border border-slate-200 bg-slate-50 transition-colors"
                 aria-label="ปิดหน้าต่าง"
               >
                 <X size={18} />
@@ -1303,26 +1328,40 @@ export default function DeeDevIOTWebsite() {
               </div>
             </div>
 
-            <div className="pt-4 border-t border-slate-100 flex items-center justify-between font-mono">
+            <div className="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 font-mono">
               <button
                 type="button"
                 onClick={() => setActiveProjectModal(null)}
-                className="px-4 py-2 border border-slate-200 text-xs text-slate-600 hover:text-slate-900 rounded-lg"
+                className="px-4 py-2 border border-slate-200 text-xs text-slate-600 hover:text-slate-900 rounded-lg transition-colors"
               >
                 ปิดหน้าต่าง
               </button>
 
-              {activeProjectModal.demoUrl && (
-                <a
-                  href={activeProjectModal.demoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-5 py-2 bg-gradient-to-r from-[#E11D48] to-[#EA580C] hover:brightness-105 text-white text-xs font-bold rounded-lg inline-flex items-center gap-1.5 shadow-sm"
-                >
-                  <span>เปิด Live Demo</span>
-                  <ExternalLink size={12} />
-                </a>
-              )}
+              <div className="flex items-center gap-2">
+                {activeProjectModal.manualUrl && (
+                  <a
+                    href={activeProjectModal.manualUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-4 py-2 bg-sky-50 hover:bg-sky-100 border border-sky-200 text-sky-700 hover:text-sky-900 text-xs font-bold rounded-lg inline-flex items-center gap-1.5 transition-colors shadow-2xs"
+                  >
+                    <FileText size={13} />
+                    <span>เปิดดูคู่มือ (Documentation)</span>
+                  </a>
+                )}
+
+                {activeProjectModal.demoUrl && (
+                  <a
+                    href={activeProjectModal.demoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-5 py-2 bg-gradient-to-r from-[#E11D48] to-[#EA580C] hover:brightness-105 text-white text-xs font-bold rounded-lg inline-flex items-center gap-1.5 shadow-sm transition-all"
+                  >
+                    <span>เปิดดูเนื้อหา (Live Demo)</span>
+                    <ExternalLink size={13} />
+                  </a>
+                )}
+              </div>
             </div>
           </div>
         </div>
