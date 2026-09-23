@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getSheetValues, appendSheetValues, updateSheetRow, deleteSheetRow } from '../../../lib/google';
+import { getSheetValues, appendSheetValues, updateSheetRow, deleteSheetRow, deleteSheetRowsByColumn } from '../../../lib/google';
 
 export interface SectionData {
   id: string;
@@ -75,10 +75,20 @@ export async function DELETE(request: Request) {
     const id = searchParams.get('id');
     if (!id) return NextResponse.json({ success: false, error: 'ID required' }, { status: 400 });
 
+    // Cascade delete: In 'section_items', column B (index 1) is 'section_id'
+    // First, delete all child items belonging to this section to prevent orphaned data (BUG-06)
+    try {
+      await deleteSheetRowsByColumn('section_items', 1, id);
+    } catch (cascadeError) {
+      console.warn(`Warning: Cascade delete for section items of section ${id} encountered an issue:`, cascadeError);
+    }
+
+    // Now delete the section itself
     await deleteSheetRow('sections', id);
-    return NextResponse.json({ success: true, message: 'Section deleted' });
+    return NextResponse.json({ success: true, message: 'Section and its associated items deleted successfully' });
   } catch (error: any) {
     console.error('Error in /api/sections DELETE:', error);
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 }
+

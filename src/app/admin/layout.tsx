@@ -178,10 +178,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
             <button
               onClick={handleLogout}
-              className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-rose-50 hover:text-rose-700 text-xs font-bold text-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer"
+              disabled={isLoggingOut}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5 ${
+                isLoggingOut
+                  ? 'bg-rose-50 text-rose-400 cursor-not-allowed'
+                  : 'bg-slate-100 hover:bg-rose-50 hover:text-rose-700 text-slate-700 cursor-pointer'
+              }`}
             >
-              <LogOut size={14} />
-              <span className="hidden sm:inline">ออกจากระบบ</span>
+              <LogOut size={14} className={isLoggingOut ? 'animate-pulse' : ''} />
+              <span className="hidden sm:inline">{isLoggingOut ? 'กำลังออก...' : 'ออกจากระบบ'}</span>
             </button>
           </div>
         </header>
@@ -251,9 +256,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </Link>
               <button
                 onClick={handleLogout}
-                className="w-full text-center py-2 rounded-xl bg-rose-900/40 text-rose-300 text-xs font-bold"
+                disabled={isLoggingOut}
+                className="w-full text-center py-2 rounded-xl bg-rose-900/40 hover:bg-rose-900/60 text-rose-300 text-xs font-bold disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
-                ออกจากระบบ
+                {isLoggingOut ? 'กำลังออกจากระบบ...' : 'ออกจากระบบ'}
               </button>
             </div>
           </div>

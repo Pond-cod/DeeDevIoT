@@ -1,7 +1,13 @@
 import { google } from 'googleapis';
 
-// สร้าง Helper Function เพื่อใช้งาน Auth และ Sheets ร่วมกัน
+// Singleton cache for Google Auth & Sheet IDs (BUG-14)
+let cachedAuth: { sheets: ReturnType<typeof google.sheets>; GOOGLE_SHEET_ID: string } | null = null;
+const cachedSheetIds: Record<string, number> = {};
+
+// Helper Function ใช้งาน Auth และ Sheets ร่วมกัน (Singleton Pattern)
 function getGoogleAuth() {
+  if (cachedAuth) return cachedAuth;
+
   const GOOGLE_CLIENT_EMAIL = process.env.GOOGLE_CLIENT_EMAIL;
   // แทนที่ \n ที่เป็นตัวอักษรด้วย Newline จริงๆ เพื่อไม่ให้คีย์พัง
   const GOOGLE_PRIVATE_KEY = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n');
@@ -22,20 +28,33 @@ function getGoogleAuth() {
 
   // สร้าง Client สำหรับเชื่อมต่อ Sheets API v4
   const sheets = google.sheets({ version: 'v4', auth });
-
-  return { sheets, GOOGLE_SHEET_ID };
+  cachedAuth = { sheets, GOOGLE_SHEET_ID };
+  return cachedAuth;
 }
 
-async function getSheetId(tabName: string) {
+async function getSheetId(tabName: string): Promise<number> {
+  const normalized = tabName.toLowerCase();
+  if (cachedSheetIds[normalized] !== undefined) {
+    return cachedSheetIds[normalized];
+  }
+
   const { sheets, GOOGLE_SHEET_ID } = getGoogleAuth();
   const spreadsheet = await sheets.spreadsheets.get({
     spreadsheetId: GOOGLE_SHEET_ID,
   });
-  const sheet = spreadsheet.data.sheets?.find(
-    (s) => s.properties?.title?.toLowerCase() === tabName.toLowerCase()
-  );
-  if (!sheet) throw new Error(`Sheet with title ${tabName} not found`);
-  return sheet.properties?.sheetId;
+
+  if (spreadsheet.data.sheets) {
+    for (const s of spreadsheet.data.sheets) {
+      if (s.properties?.title && s.properties.sheetId !== undefined && s.properties.sheetId !== null) {
+        cachedSheetIds[s.properties.title.toLowerCase()] = s.properties.sheetId;
+      }
+    }
+  }
+
+  if (cachedSheetIds[normalized] === undefined) {
+    throw new Error(`Sheet with title ${tabName} not found`);
+  }
+  return cachedSheetIds[normalized];
 }
 
 export async function getSheetValues(range: string) {
@@ -214,6 +233,28 @@ export async function getConfig() {
         }
       }
     }
+
+    // Bidirectional sync for key aliases between SiteConfig and Sheets (BUG-09)
+    if (configObj.solutions_title_en && !configObj.svc_title_en) configObj.svc_title_en = configObj.solutions_title_en;
+    if (configObj.solutions_title_th && !configObj.svc_title_th) configObj.svc_title_th = configObj.solutions_title_th;
+    if (configObj.svc_title_en && !configObj.solutions_title_en) configObj.solutions_title_en = configObj.svc_title_en;
+    if (configObj.svc_title_th && !configObj.solutions_title_th) configObj.solutions_title_th = configObj.svc_title_th;
+
+    if (configObj.solutions_description_en && !configObj.svc_desc_en) configObj.svc_desc_en = configObj.solutions_description_en;
+    if (configObj.solutions_description_th && !configObj.svc_desc_th) configObj.svc_desc_th = configObj.solutions_description_th;
+    if (configObj.svc_desc_en && !configObj.solutions_description_en) configObj.solutions_description_en = configObj.svc_desc_en;
+    if (configObj.svc_desc_th && !configObj.solutions_description_th) configObj.solutions_description_th = configObj.svc_desc_th;
+
+    if (configObj.integrations_title_en && !configObj.int_title_en) configObj.int_title_en = configObj.integrations_title_en;
+    if (configObj.integrations_title_th && !configObj.int_title_th) configObj.int_title_th = configObj.integrations_title_th;
+    if (configObj.int_title_en && !configObj.integrations_title_en) configObj.integrations_title_en = configObj.int_title_en;
+    if (configObj.int_title_th && !configObj.integrations_title_th) configObj.integrations_title_th = configObj.int_title_th;
+
+    if (configObj.port_desc_en && !configObj.int_desc_en) configObj.int_desc_en = configObj.port_desc_en;
+    if (configObj.port_desc_th && !configObj.int_desc_th) configObj.int_desc_th = configObj.port_desc_th;
+    if (configObj.int_desc_en && !configObj.port_desc_en) configObj.port_desc_en = configObj.int_desc_en;
+    if (configObj.int_desc_th && !configObj.port_desc_th) configObj.port_desc_th = configObj.int_desc_th;
+
     return configObj;
   } catch (error) {
     console.error('Error getting config:', error);
@@ -337,3 +378,55 @@ export async function deleteSheetRow(tabName: string, id: string) {
     throw error;
   }
 }
+
+/**
+ * Cascade deletion helper: deletes all rows in tabName where column[columnIndex] equals targetValue.
+ * Deletions are executed in reverse row order to maintain stable indices.
+ */
+export async function deleteSheetRowsByColumn(tabName: string, columnIndex: number, targetValue: string) {
+  try {
+    const { sheets, GOOGLE_SHEET_ID } = getGoogleAuth();
+    const rows = await getSheetValues(`${tabName}!A2:Z`);
+    const normalizedTarget = String(targetValue || '').trim().toLowerCase();
+
+    // Find all matching row indices (0-indexed in A2:Z array -> sheet row (index + 2) -> 0-indexed in API is index + 1)
+    const matchingIndices: number[] = [];
+    rows.forEach((row, index) => {
+      const colVal = String(row[columnIndex] || '').trim().toLowerCase();
+      if (colVal === normalizedTarget) {
+        matchingIndices.push(index + 1);
+      }
+    });
+
+    if (matchingIndices.length === 0) {
+      return { deletedCount: 0 };
+    }
+
+    const sheetId = await getSheetId(tabName);
+
+    // Sort descending so deleting higher indices does not affect lower indices
+    matchingIndices.sort((a, b) => b - a);
+
+    const requests = matchingIndices.map((startIndex) => ({
+      deleteDimension: {
+        range: {
+          sheetId,
+          dimension: 'ROWS',
+          startIndex: startIndex,
+          endIndex: startIndex + 1,
+        },
+      },
+    }));
+
+    const response = await sheets.spreadsheets.batchUpdate({
+      spreadsheetId: GOOGLE_SHEET_ID,
+      requestBody: { requests },
+    });
+
+    return { deletedCount: matchingIndices.length, response: response.data };
+  } catch (error) {
+    console.error(`Error deleting rows by column from ${tabName}:`, error);
+    throw error;
+  }
+}
+

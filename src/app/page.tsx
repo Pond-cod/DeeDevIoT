@@ -13,53 +13,14 @@ import {
 import {
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid
 } from 'recharts';
-
-interface ProjectItem {
-  id: string;
-  name: string;
-  category: string;
-  categoryKey: string;
-  description: string;
-  technologies: string[];
-  imageUrl: string;
-  demoUrl?: string; // Content link / Live demo
-  manualUrl?: string; // Documentation / Manual link
-  videoUrls?: string[];
-  architectureDetails: string[];
-  sourceType: 'portfolio' | 'service';
-}
-
-interface IoTDeviceState {
-  id: string;
-  name: string;
-  locationName: string;
-  hardwareModel: string;
-  connectionStatus: 'Online' | 'Offline' | 'Warning';
-  relayStatus: boolean;
-  temperatureCelsius: number;
-  humidityPercentage: number;
-  wifiSignalDbm: number;
-  connectionLatencyMs: number | null;
-  lastSeenTimestamp: string;
-  telemetryHistory: { time: string; temp: number; humidity: number; latency: number }[];
-}
-
-interface DeviceTelemetryEvent {
-  eventId: string;
-  timestamp: string;
-  deviceName: string;
-  eventDescription: string;
-  severity: 'info' | 'warning' | 'normal';
-}
-
-interface ConceptItem {
-  id: string;
-  title_en: string;
-  title_th: string;
-  desc_en: string;
-  desc_th: string;
-  icon: string;
-}
+import type {
+  ProjectItem,
+  IoTDeviceState,
+  DeviceTelemetryEvent,
+  ConceptItem,
+  SiteConfig
+} from '../types/portfolio';
+import { usePortfolioData, DEFAULT_CONCEPTS } from '../hooks/usePortfolioData';
 
 function FacebookIcon({ className = "w-5 h-5", fill = "currentColor" }: { className?: string; fill?: string }) {
   return (
@@ -76,41 +37,6 @@ function MessengerIcon({ className = "w-5 h-5", fill = "currentColor" }: { class
     </svg>
   );
 }
-
-const DEFAULT_CONCEPTS: ConceptItem[] = [
-  {
-    id: 'stability',
-    title_th: 'Industrial Stability',
-    title_en: 'Industrial Grade Stability',
-    desc_th: 'ออกแบบฮาร์ดแวร์และเฟิร์มแวร์เน้นความทนทาน ทำงานต่อเนื่อง 24/7 พร้อมระบบ Watchdog ป้องกันค้าง',
-    desc_en: 'Built with hardware watchdog timers, isolated power relays, and noise immunity for 24/7 non-stop operations.',
-    icon: 'ShieldCheck'
-  },
-  {
-    id: 'cloud',
-    title_th: 'Sub-second Cloud Sync',
-    title_en: 'Real-time Telemetry Delivery',
-    desc_th: 'ส่งข้อมูลสดสู่ Cloud Platform ด้วยโปรโตคอล MQTT / WebSockets ตอบสนองทันทีแบบ Real-time',
-    desc_en: 'Real-time telemetry and command delivery using lightweight, ultra-low-latency protocols.',
-    icon: 'Zap'
-  },
-  {
-    id: 'security',
-    title_th: 'Enterprise Security',
-    title_en: 'Data Security & Privacy',
-    desc_th: 'เข้ารหัสข้อมูลตั้งแต่ระดับ Microcontroller ป้องกันการดักจับ และจัดเก็บฐานข้อมูลแยกเป็นสัดส่วน',
-    desc_en: 'End-to-end payload encryption and secure token authentication at every network layer.',
-    icon: 'Lock'
-  },
-  {
-    id: 'custom',
-    title_th: '100% Tailor-made',
-    title_en: 'Customized to Your Business',
-    desc_th: 'พัฒนาตามขั้นตอนธุรกิจจริงของท่าน ไม่ยึดติดกับแพ็กเกจสำเร็จรูป พร้อมต่อยอดสู่ LINE OA และ ERP',
-    desc_en: 'Fully adapted to your business SOP, seamless integration with LINE OA, Google Sheets, or internal ERP.',
-    icon: 'Cpu'
-  }
-];
 
 const INITIAL_IOT_DEVICES: IoTDeviceState[] = [
   {
@@ -214,10 +140,14 @@ export default function DeeDevIOTWebsite() {
   const [isClientMounted, setIsClientMounted] = useState(false);
   const [activeProjectModal, setActiveProjectModal] = useState<ProjectItem | null>(null);
   const [selectedWorkCategory, setSelectedWorkCategory] = useState<string>('all');
-  const [cmsServices, setCmsServices] = useState<any[]>([]);
-  const [cmsIntegrations, setCmsIntegrations] = useState<any[]>([]);
-  const [cmsConcepts, setCmsConcepts] = useState<ConceptItem[]>(DEFAULT_CONCEPTS);
-  const [siteConfig, setSiteConfig] = useState<any>({});
+
+  // Shared hook for portfolio CMS data (BUG-08)
+  const {
+    services: cmsServices,
+    integrations: cmsIntegrations,
+    concepts: cmsConcepts,
+    config: siteConfig,
+  } = usePortfolioData();
 
   const [iotDevices, setIotDevices] = useState<IoTDeviceState[]>(INITIAL_IOT_DEVICES);
   const [selectedDashboardDeviceId, setSelectedDashboardDeviceId] = useState<string>('conference-room');
@@ -240,39 +170,6 @@ export default function DeeDevIOTWebsite() {
     }
   }, [mobileMenuOpen, activeProjectModal]);
 
-  useEffect(() => {
-    const fetchCmsData = async () => {
-      try {
-        const [servicesRes, integrationsRes, configRes, conceptsRes] = await Promise.all([
-          fetch('/api/services', { cache: 'no-store' }),
-          fetch('/api/integrations', { cache: 'no-store' }),
-          fetch('/api/config', { cache: 'no-store' }),
-          fetch('/api/concept', { cache: 'no-store' })
-        ]);
-        const [servicesData, integrationsData, configData, conceptsData] = await Promise.all([
-          servicesRes.json(),
-          integrationsRes.json(),
-          configRes.json(),
-          conceptsRes.json()
-        ]);
-        if (servicesData.success && Array.isArray(servicesData.data)) {
-          setCmsServices(servicesData.data);
-        }
-        if (integrationsData.success && Array.isArray(integrationsData.data)) {
-          setCmsIntegrations(integrationsData.data);
-        }
-        if (configData.success && configData.data) {
-          setSiteConfig(configData.data);
-        }
-        if (conceptsData.success && Array.isArray(conceptsData.data) && conceptsData.data.length > 0) {
-          setCmsConcepts(conceptsData.data);
-        }
-      } catch {
-        // Fallback maintained
-      }
-    };
-    fetchCmsData();
-  }, []);
 
   const handleToggleRelay = (deviceId: string) => {
     setIotDevices(prevDevices =>

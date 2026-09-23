@@ -149,8 +149,11 @@ export default function AdminDashboardPage() {
           </p>
 
           <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs font-mono space-y-1">
-            <div className="text-slate-500 text-[10px]">SHEET ID:</div>
-            <div className="text-slate-800 truncate font-bold">1rXZb4APhgkQad6UNgQ2DdwF7lo1xSHq20Y5Owmdt6aE</div>
+            <div className="text-slate-500 text-[10px]">GOOGLE SHEETS DATABASE:</div>
+            <div className="text-slate-800 truncate font-bold flex items-center gap-1.5">
+              <span className="text-emerald-600 font-sans">●</span>
+              <span>1rXZb4••••••••••••••••mdt6aE (Protected via Env)</span>
+            </div>
           </div>
         </div>
 

@@ -17,6 +17,10 @@ dist/
 *.key
 deedeviot-*.json
 *-service-account.json
+*service-account*.json
+*credentials*.json
+service-account*.json
+tmp-*.json
 
 # Logs
 npm-debug.log*
@@ -24,3 +28,4 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 *.tsbuildinfo
+

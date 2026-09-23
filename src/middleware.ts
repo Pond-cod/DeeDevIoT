@@ -1,12 +1,14 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { verifySessionToken } from './lib/auth';
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   // Check if there is a session cookie
   const session = request.cookies.get('admin_session');
 
-  // If there's no session and the user is trying to access /admin, redirect them to /login
-  if (!session || session.value !== 'authenticated') {
+  // If there's no session or the cryptographic signature is invalid/expired, redirect to /login
+  const isValid = session ? await verifySessionToken(session.value) : false;
+  if (!isValid) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
@@ -14,7 +16,8 @@ export function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
-// See "Matching Paths" below to learn more
+// Matching Admin Paths
 export const config = {
   matcher: ['/admin/:path*'],
 };
+

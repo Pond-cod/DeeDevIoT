@@ -1,22 +1,81 @@
-export function extractDriveId(url: string): string | null {
-  if (!url) return null;
-  const regex = /(?:\/d\/|id=|\/open\?id=)([a-zA-Z0-9_-]{20,})/;
-  const match = url.match(regex);
-  return match ? match[1] : null;
+/**
+ * Unified Google Drive utility for DeeDevIoT
+ * Single Source of Truth for extracting IDs and generating preview/direct links.
+ */
+
+const DRIVE_REGEX = /(?:\/d\/|id=|\/open\?id=)([a-zA-Z0-9_-]{20,})/;
+
+/**
+ * Extracts the file ID from a Google Drive URL or returns the string if already an ID.
+ */
+export function extractDriveId(url: string | undefined | null): string | null {
+  if (!url || typeof url !== 'string') return null;
+  const cleanStr = url.trim().replace(/\s+/g, '');
+  const match = cleanStr.match(DRIVE_REGEX);
+  if (match && match[1]) {
+    return match[1];
+  }
+  // If string itself looks like a raw Google Drive ID (alphanumeric, dashes, underscores, length >= 25)
+  if (/^[a-zA-Z0-9_-]{25,}$/.test(cleanStr) && !cleanStr.includes('http')) {
+    return cleanStr;
+  }
+  return null;
 }
 
-export function getDriveThumbnailUrl(id: string): string {
-  return `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
+/**
+ * Generates a thumbnail URL for Google Drive (supports both Drive ID and full URL).
+ */
+export function getDriveThumbnailUrl(input: string | undefined | null, size: number = 1000): string {
+  if (!input) return '';
+  const id = extractDriveId(input) || input.trim();
+  if (id && !id.includes('http')) {
+    return `https://drive.google.com/thumbnail?id=${id}&sz=w${size}`;
+  }
+  return input;
 }
 
-export function convertToDirectLink(driveUrls: string): string {
-  if (!driveUrls) return driveUrls;
+/**
+ * Generates an embedded iframe/preview URL for Google Drive.
+ */
+export function getDriveIframeUrl(input: string | undefined | null): string {
+  if (!input) return '';
+  const id = extractDriveId(input);
+  if (id) {
+    return `https://drive.google.com/file/d/${id}/preview`;
+  }
+  return input;
+}
 
-  // แยก URL กรณีมีหลายรูปรวมกันคั่นด้วย comma
-  const urlList = driveUrls.split(',').map(u => u.trim()).filter(Boolean);
+/**
+ * Generates a direct download/view URL for Google Drive.
+ */
+export function getDriveDirectUrl(input: string | undefined | null): string {
+  if (!input) return '';
+  const id = extractDriveId(input);
+  if (id) {
+    return `https://drive.google.com/uc?export=download&id=${id}`;
+  }
+  return input;
+}
 
-  const converted = urlList.map(url => {
-    // ตรวจสอบเฉพาะ Google Drive / Google Docs เท่านั้น ป้องกันไม่ให้ไปแปลง URL ของ Facebook หรือที่อื่น
+/**
+ * Converts comma-separated or single Drive URLs to high-speed lh3 direct image links.
+ * Preserves non-Drive URLs (Facebook CDN, external images) untouched.
+ * Avoids redundant double transformations.
+ */
+export function convertToDirectLink(driveUrls: string | undefined | null): string {
+  if (!driveUrls || typeof driveUrls !== 'string') return driveUrls || '';
+
+  // Separate multiple comma-separated URLs
+  const urlList = driveUrls.split(',').map((u) => u.trim()).filter(Boolean);
+
+  const converted = urlList.map((url) => {
+    // If already in lh3 format, preserve it to avoid double-processing (BUG-11)
+    if (url.includes('lh3.googleusercontent.com/d/')) {
+      return url;
+    }
+
+    // Only transform Google Drive / Google Docs links
     if (url.includes('drive.google.com') || url.includes('docs.google.com')) {
       const id = extractDriveId(url);
       if (id) {
@@ -24,10 +83,9 @@ export function convertToDirectLink(driveUrls: string): string {
       }
     }
 
-    // สำหรับ Facebook CDN (เช่น scontent...fbcdn.net) หรือ Direct image URL อื่นๆ ให้คง URL เดิมไว้ 100%
+    // External direct image URLs (Facebook, Cloudinary, AWS S3, etc.) are kept 100% as-is
     return url;
   });
 
   return converted.join(',');
 }
-

@@ -67,6 +67,14 @@ let globalCache: {
 
 const CACHE_TTL_MS = 60 * 1000; // 1 minute in-memory cache
 
+/**
+ * Manually invalidate the portfolio cache so that the next request gets fresh data
+ */
+export function invalidatePortfolioCache(): void {
+  globalCache = null;
+}
+
+
 export function usePortfolioData() {
   const [services, setServices] = useState<ServiceData[]>(globalCache?.services || []);
   const [integrations, setIntegrations] = useState<IntegrationData[]>(globalCache?.integrations || []);
