@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSheetValues, appendSheetValues, updateSheetRow, deleteSheetRow } from '../../../lib/google';
+import { convertToDirectLink, getDriveIframeUrl } from '../../../lib/utils/drive';
 
 // กำหนด Interface โครงสร้างของข้อมูล Service / Works
 export interface ServiceData {
@@ -22,41 +23,25 @@ export async function GET() {
     const rows = await getSheetValues(range);
 
     // จัดระเบียบข้อมูล (Map) ให้ตรงกับ Interface
-    const services: ServiceData[] = rows.map((row) => {
-      let imageUrlsStr = row[4] || '';
-      let videoUrlsStr = row[8] || '';
+    const services: ServiceData[] = rows.map((row: any[]) => {
+      const imageUrlsStr: string = String(row[4] || '');
+      const videoUrlsStr: string = String(row[8] || '');
       
       // Transform Google Drive links for multiple images
-      const imageUrl = imageUrlsStr.split(',').map(url => {
-        let cleanUrl = url.trim();
-        if (cleanUrl.includes('drive.google.com')) {
-          const regex = /(?:\/d\/|id=|\/open\?id=)([a-zA-Z0-9_-]{20,})/;
-          const match = cleanUrl.match(regex);
-          if (match && match[1]) {
-            return `https://lh3.googleusercontent.com/d/${match[1]}=w1000`;
-          }
-        }
-        return cleanUrl;
-      }).filter(u => u).join(',');
+      const imageUrl = convertToDirectLink(imageUrlsStr);
 
       // Transform Google Drive video links to Preview/Embed links
-      const videoUrls = videoUrlsStr.split(',').map(url => {
-        let cleanUrl = url.trim();
-        if (cleanUrl.includes('drive.google.com')) {
-          const regex = /(?:\/d\/|id=|\/open\?id=)([a-zA-Z0-9_-]{20,})/;
-          const match = cleanUrl.match(regex);
-          if (match && match[1]) {
-            return `https://drive.google.com/file/d/${match[1]}/preview`;
-          }
-        }
-        return cleanUrl;
-      }).filter(u => u).join(',');
+      const videoUrls = videoUrlsStr
+        .split(',')
+        .map((url: string) => getDriveIframeUrl(url.trim()))
+        .filter(Boolean)
+        .join(',');
 
       return {
-        id: row[0] || '',
-        title: row[1] || '',
-        description: row[2] || '',
-        icon: row[3] || '',
+        id: String(row[0] || ''),
+        title: String(row[1] || ''),
+        description: String(row[2] || ''),
+        icon: String(row[3] || ''),
         imageUrl: imageUrl,
         demoUrl: row[5] || '',
         title_th: row[6] || '',

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSheetValues, appendSheetValues, updateSheetRow, deleteSheetRow } from '../../../lib/google';
+import { convertToDirectLink } from '../../../lib/utils/drive';
 
 export interface SectionItemData {
   id: string;
@@ -17,24 +18,17 @@ export async function GET() {
     const range = 'section_items!A2:H';
     const rows = await getSheetValues(range);
 
-    const items: SectionItemData[] = rows.map((row) => {
-      let imageUrl = row[7] || '';
-      if (imageUrl.includes('drive.google.com')) {
-        const regex = /(?:\/d\/|id=|\/open\?id=)([a-zA-Z0-9_-]{20,})/;
-        const match = imageUrl.match(regex);
-        if (match && match[1]) {
-          imageUrl = `https://lh3.googleusercontent.com/d/${match[1]}=w1000`;
-        }
-      }
+    const items: SectionItemData[] = rows.map((row: any[]) => {
+      const imageUrl = convertToDirectLink(String(row[7] || ''));
 
       return {
-        id: row[0] || '',
-        section_id: row[1] || '',
-        title_en: row[2] || '',
-        title_th: row[3] || '',
-        desc_en: row[4] || '',
-        desc_th: row[5] || '',
-        icon: row[6] || '',
+        id: String(row[0] || ''),
+        section_id: String(row[1] || ''),
+        title_en: String(row[2] || ''),
+        title_th: String(row[3] || ''),
+        desc_en: String(row[4] || ''),
+        desc_th: String(row[5] || ''),
+        icon: String(row[6] || ''),
         imageUrl: imageUrl,
       };
     });

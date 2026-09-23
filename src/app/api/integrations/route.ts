@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSheetValues, appendSheetValues, updateSheetRow, deleteSheetRow } from '../../../lib/google';
+import { convertToDirectLink } from '../../../lib/utils/drive';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -19,28 +20,19 @@ export interface IntegrationData {
 export async function GET() {
   try {
     const rows = await getSheetValues('Integrations!A2:I');
-    const integrations: IntegrationData[] = rows.map((row) => {
-      let imageUrl = row[3] || ''; // Column D: ImageUrl
-      
-      // Transform Google Drive links to bypass CORB/ORB
-      if (imageUrl.includes('drive.google.com')) {
-        const regex = /(?:\/d\/|id=|\/open\?id=)([a-zA-Z0-9_-]{20,})/;
-        const match = imageUrl.match(regex);
-        if (match && match[1]) {
-          imageUrl = `https://lh3.googleusercontent.com/d/${match[1]}=w1000`;
-        }
-      }
+    const integrations: IntegrationData[] = rows.map((row: any[]) => {
+      const imageUrl = convertToDirectLink(String(row[3] || ''));
 
       return {
-        id: row[0] || '',
-        title: row[1] || '',
-        tag: row[2] || '',
+        id: String(row[0] || ''),
+        title: String(row[1] || ''),
+        tag: String(row[2] || ''),
         imageUrl: imageUrl,
-        description: row[4] || row[1] || '',
-        referenceUrl: row[5] || '',
-        title_th: row[6] || '',
-        description_th: row[7] || '',
-        manualUrl: row[8] || '',
+        description: String(row[4] || row[1] || ''),
+        referenceUrl: String(row[5] || ''),
+        title_th: String(row[6] || ''),
+        description_th: String(row[7] || ''),
+        manualUrl: String(row[8] || ''),
       };
     });
 
