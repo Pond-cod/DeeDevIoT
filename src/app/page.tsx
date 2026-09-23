@@ -566,40 +566,47 @@ export default function DeeDevIOTWebsite() {
                 </a>
               </div>
 
-              {/* Compact & Sleek HTML Showcase Banner */}
-              <div className="mb-5 relative group max-w-2xl">
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-amber-400 via-orange-500 to-[#E11D48] rounded-xl blur-xs opacity-35 group-hover:opacity-75 transition-all duration-300" />
+              {/* High-Impact & Prominent HTML Showcase Banner */}
+              <div className="mb-6 relative group max-w-2xl">
+                {/* Vivid ambient animated glow */}
+                <div className="absolute -inset-1 bg-gradient-to-r from-amber-400 via-[#EA580C] to-[#E11D48] rounded-2xl blur-sm opacity-60 group-hover:opacity-100 transition-all duration-300" />
                 
                 <a
                   href="https://html-show.vercel.app"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="relative py-2.5 px-3 sm:px-4 rounded-xl bg-white/95 backdrop-blur-md border border-amber-300/90 hover:border-[#E11D48] shadow-xs hover:shadow-md transition-all duration-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5"
+                  className="relative p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-50/95 via-white/95 to-orange-50/95 backdrop-blur-md border-2 border-amber-400/90 hover:border-[#E11D48] shadow-md hover:shadow-xl transition-all duration-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4"
                   title="เปิดดูเว็บแนะนำรวมตัวอย่าง HTML (html-show.vercel.app)"
                 >
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-400 via-orange-500 to-[#E11D48] text-white flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
-                      <Sparkles size={14} />
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-amber-500 via-[#EA580C] to-[#E11D48] text-white flex items-center justify-center shrink-0 shadow-md shadow-orange-500/30 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300">
+                      <Sparkles size={20} className="animate-pulse" />
                     </div>
 
-                    <div className="min-w-0 flex items-center gap-2 flex-wrap text-xs">
-                      <span className="text-[9px] font-mono font-black uppercase px-1.5 py-0.5 rounded bg-amber-100 text-amber-950 border border-amber-300 shrink-0">
-                        HOT PORTAL
-                      </span>
-                      <span className="font-extrabold text-slate-950 group-hover:text-[#E11D48] transition-colors shrink-0">
-                        เว็บแนะนำรวมตัวอย่าง HTML
-                      </span>
-                      <span className="text-[#EA580C] font-mono font-bold text-xs shrink-0">→</span>
-                      <span className="font-mono text-[11px] sm:text-xs font-bold text-[#E11D48] bg-rose-50 px-2 py-0.5 rounded border border-rose-200 group-hover:bg-[#E11D48] group-hover:text-white transition-colors truncate">
-                        html-show.vercel.app
-                      </span>
+                    <div className="min-w-0 space-y-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-[10px] font-mono font-black uppercase px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-500 to-rose-600 text-white shadow-2xs shrink-0 flex items-center gap-1.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping shrink-0" />
+                          HOT PORTAL
+                        </span>
+                        <span className="text-xs sm:text-sm font-extrabold text-slate-950 group-hover:text-[#EA580C] transition-colors shrink-0">
+                          เว็บแนะนำรวมตัวอย่าง HTML
+                        </span>
+                        <span className="text-[#EA580C] font-mono font-black text-sm hidden xs:inline shrink-0">→</span>
+                        <span className="font-mono text-xs sm:text-sm font-bold text-[#E11D48] bg-rose-100/90 px-2.5 py-0.5 rounded-lg border-2 border-rose-300/80 group-hover:bg-[#E11D48] group-hover:text-white transition-colors truncate shadow-2xs">
+                          html-show.vercel.app
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-slate-600 font-medium hidden sm:block">
+                        คลังไอเดีย &amp; โค้ดต้นแบบ UI สำหรับสั่งพัฒนาโปรเจกต์ของคุณ
+                      </p>
                     </div>
                   </div>
 
                   <div className="self-end sm:self-center shrink-0">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-[#E11D48] to-[#EA580C] text-white font-mono text-[11px] font-bold shadow-xs hover:brightness-105 transition-all">
+                    <span className="inline-flex items-center gap-1.5 px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl bg-gradient-to-r from-[#E11D48] via-[#EA580C] to-amber-500 text-white font-mono text-xs sm:text-xs font-black shadow-md shadow-rose-500/30 group-hover:shadow-lg group-hover:shadow-orange-500/40 group-hover:scale-105 transition-all">
                       <span>ชมตัวอย่าง</span>
-                      <ExternalLink size={11} />
+                      <ExternalLink size={13} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                     </span>
                   </div>
                 </a>
