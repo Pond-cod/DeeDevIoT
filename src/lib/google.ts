@@ -158,7 +158,7 @@ export async function getConfig() {
         ['port_desc', 'Enhance your workflow flawlessly by connecting our custom-built platforms with the everyday tools you already trust.', 'เพิ่มประสิทธิภาพการทำงานด้วยการเชื่อมต่อแพลตฟอร์มของเรากับเครื่องมือที่คุณคุ้นเคย'],
         ['cta_heading', 'Ready to Start Your Next Big Project?', 'พร้อมเริ่มพัฒนาโปรเจกต์ของคุณแล้วหรือยัง?'],
         ['footer_bio', 'Your trusted tech partner in turning innovative ideas into powerful, real-world Web & Hardware platforms.', 'พาร์ทเนอร์ที่พร้อมสานต่อไอเดียของคุณให้กลายเป็นแพลตฟอร์มที่ใช้งานได้จริง'],
-        ['facebook_url', 'https://facebook.com/deedeviot', ''],
+        ['facebook_url', 'https://www.facebook.com/DeeDevIOT', ''],
         ['nav_item1', 'Concept', 'แนวคิด'],
         ['nav_btn', 'Contact Us', 'ติดต่อเรา'],
         ['concept_title1', 'SMART', 'สมาร์ท'],
@@ -175,7 +175,8 @@ export async function getConfig() {
         ['contact_email', 'hello@deedeviot.com', 'hello@deedeviot.com'],
         ['contact_phone', '02-123-4567', '02-123-4567'],
         ['contact_facebook', 'DeeDevIOT Page', 'เพจ DeeDevIOT'],
-        ['contact_line', '@DEEDEVIOT', '@DEEDEVIOT']
+        ['contact_messenger', 'https://m.me/DeeDevIOT', 'https://m.me/DeeDevIOT'],
+        ['contact_line', '', '']
       ];
       
       try {

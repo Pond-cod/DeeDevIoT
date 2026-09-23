@@ -61,6 +61,22 @@ interface ConceptItem {
   icon: string;
 }
 
+function FacebookIcon({ className = "w-5 h-5", fill = "currentColor" }: { className?: string; fill?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill={fill}>
+      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+    </svg>
+  );
+}
+
+function MessengerIcon({ className = "w-5 h-5", fill = "currentColor" }: { className?: string; fill?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill={fill}>
+      <path d="M12 0C5.373 0 0 4.974 0 11.111c0 3.498 1.744 6.614 4.469 8.654V24l4.088-2.242c1.092.302 2.249.464 3.443.464 6.627 0 12-4.975 12-11.111C24 4.974 18.627 0 12 0zm1.192 14.963l-3.056-3.26-5.963 3.26L10.79 8.24l3.13 3.259 5.888-3.259-6.616 6.723z"/>
+    </svg>
+  );
+}
+
 const DEFAULT_CONCEPTS: ConceptItem[] = [
   {
     id: 'stability',
@@ -759,6 +775,7 @@ export default function DeeDevIOTWebsite() {
                       alt={project.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
                       loading="lazy"
+                      referrerPolicy="no-referrer"
                     />
                   ) : (
                     <div className="w-full h-full bg-gradient-to-br from-slate-50 via-rose-50/40 to-orange-50/40 flex items-center justify-center">
@@ -1304,18 +1321,29 @@ export default function DeeDevIOTWebsite() {
             เราช่วยวิเคราะห์ ออกแบบ และพัฒนาระบบให้เหมาะกับการใช้งานจริง ไม่ว่าจะเป็นระบบขนาดเล็กหรือระบบเฉพาะทางขององค์กร ทักมาคุยกันได้โดยไม่มีข้อผูกมัด
           </p>
 
-          {/* High-Impact Contact Buttons */}
+          {/* High-Impact Contact Buttons - Facebook & Messenger Centric */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-14">
             
-            {/* LINE Official - Thai standard LINE Green */}
+            {/* Messenger Direct Inbox - Primary Chat CTA */}
             <a
-              href={`https://line.me/ti/p/~${(siteConfig.contact_line || '@DEEDEVIOT').replace('@', '')}`}
+              href={siteConfig.contact_messenger || "https://m.me/DeeDevIOT"}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto px-8 py-4 bg-[#06C755] hover:bg-[#05b34c] text-white font-mono text-xs uppercase tracking-wider font-extrabold rounded-xl transition-all flex items-center justify-center gap-2.5 shadow-[0_4px_20px_rgba(6,199,85,0.35)] transform hover:-translate-y-0.5 min-h-[48px] touch-target"
+              className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-[#0084FF] to-[#00C6FF] hover:from-[#0074E4] hover:to-[#00B4F0] text-white font-mono text-xs uppercase tracking-wider font-extrabold rounded-xl transition-all flex items-center justify-center gap-2.5 shadow-[0_4px_20px_rgba(0,132,255,0.35)] transform hover:-translate-y-0.5 min-h-[48px] touch-target"
             >
-              <MessageCircle size={18} />
-              <span>คุยกับเราใน LINE →</span>
+              <MessengerIcon className="w-5 h-5 shrink-0 fill-white" />
+              <span>ทัก Inbox / Messenger คุยกับเรา →</span>
+            </a>
+
+            {/* Facebook Page - Official DeeDevIOT Page */}
+            <a
+              href={siteConfig.facebook_url || "https://www.facebook.com/DeeDevIOT"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto px-8 py-4 bg-[#1877F2] hover:bg-[#166FE5] text-white font-mono text-xs uppercase tracking-wider font-extrabold rounded-xl transition-all flex items-center justify-center gap-2.5 shadow-[0_4px_20px_rgba(24,119,242,0.3)] transform hover:-translate-y-0.5 min-h-[48px] touch-target"
+            >
+              <FacebookIcon className="w-5 h-5 shrink-0 fill-white" />
+              <span>เพจ Facebook: DeeDevIOT ↗</span>
             </a>
 
             {/* Email - Crisp Deep Slate / Rose */}
@@ -1330,11 +1358,41 @@ export default function DeeDevIOTWebsite() {
 
           {/* Direct Channels Information Grid */}
           <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 text-left font-mono text-xs">
-            <div className="p-4 bg-emerald-50/80 border-2 border-emerald-200/90 rounded-2xl shadow-2xs">
-              <span className="text-[10px] text-emerald-800 block mb-1 font-extrabold">LINE OFFICIAL</span>
-              <span className="text-slate-950 font-extrabold">{siteConfig.contact_line || '@DEEDEVIOT'}</span>
+            {/* Messenger Inbox */}
+            <div className="p-4 bg-blue-50/80 border-2 border-blue-200/90 rounded-2xl shadow-2xs">
+              <span className="text-[10px] text-blue-800 mb-1 font-extrabold flex items-center gap-1.5">
+                <MessengerIcon className="w-3.5 h-3.5 text-[#0084FF] fill-[#0084FF]" />
+                <span>MESSENGER INBOX</span>
+              </span>
+              <a 
+                href={siteConfig.contact_messenger || "https://m.me/DeeDevIOT"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-slate-950 font-extrabold hover:text-[#0084FF] flex items-center gap-1.5 group"
+              >
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>ทักแชทคุยได้ทันที ↗</span>
+              </a>
             </div>
 
+            {/* Facebook Page */}
+            <div className="p-4 bg-indigo-50/80 border-2 border-indigo-200/90 rounded-2xl shadow-2xs">
+              <span className="text-[10px] text-indigo-800 mb-1 font-extrabold flex items-center gap-1.5">
+                <FacebookIcon className="w-3.5 h-3.5 text-[#1877F2] fill-[#1877F2]" />
+                <span>FACEBOOK PAGE</span>
+              </span>
+              <a 
+                href={siteConfig.facebook_url || "https://www.facebook.com/DeeDevIOT"} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-slate-950 font-extrabold hover:text-[#1877F2] flex items-center gap-1"
+              >
+                <span>DeeDevIOT</span>
+                <ExternalLink size={12} />
+              </a>
+            </div>
+
+            {/* Email */}
             <div className="p-4 bg-rose-50/80 border-2 border-rose-200/90 rounded-2xl shadow-2xs">
               <span className="text-[10px] text-rose-800 block mb-1 font-extrabold">EMAIL</span>
               <a href={`mailto:${siteConfig.contact_email || 'hello@deedeviot.com'}`} className="text-slate-950 font-extrabold hover:text-[#E11D48] break-all">
@@ -1342,23 +1400,11 @@ export default function DeeDevIOTWebsite() {
               </a>
             </div>
 
+            {/* Telephone */}
             <div className="p-4 bg-amber-50/80 border-2 border-amber-200/90 rounded-2xl shadow-2xs">
               <span className="text-[10px] text-amber-800 block mb-1 font-extrabold">TELEPHONE</span>
               <a href={`tel:${siteConfig.contact_phone || '02-123-4567'}`} className="text-slate-950 font-extrabold hover:text-[#EA580C]">
                 {siteConfig.contact_phone || '02-123-4567'}
-              </a>
-            </div>
-
-            <div className="p-4 bg-sky-50/80 border-2 border-sky-200/90 rounded-2xl shadow-2xs">
-              <span className="text-[10px] text-sky-800 block mb-1 font-extrabold">FACEBOOK</span>
-              <a 
-                href={siteConfig.facebook_url || "https://facebook.com/deedeviot"} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-slate-950 font-extrabold hover:text-[#0284C7] flex items-center gap-1"
-              >
-                <span>DeeDevIOT</span>
-                <ExternalLink size={12} />
               </a>
             </div>
           </div>
@@ -1623,6 +1669,28 @@ export default function DeeDevIOTWebsite() {
                 <li><a href="#solutions" className="hover:text-white transition-colors">Solutions (โซลูชัน)</a></li>
                 <li><a href="#contact" className="hover:text-white transition-colors">Contact (ติดต่อเรา)</a></li>
                 <li><a href="#about" className="hover:text-white transition-colors">About (เกี่ยวกับเรา)</a></li>
+                <li className="pt-2">
+                  <a 
+                    href={siteConfig.facebook_url || "https://www.facebook.com/DeeDevIOT"} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-[#1877F2] hover:text-white transition-colors flex items-center gap-1.5 font-bold"
+                  >
+                    <FacebookIcon className="w-3.5 h-3.5 fill-current" />
+                    <span>Facebook: DeeDevIOT ↗</span>
+                  </a>
+                </li>
+                <li>
+                  <a 
+                    href={siteConfig.contact_messenger || "https://m.me/DeeDevIOT"} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-[#0084FF] hover:text-white transition-colors flex items-center gap-1.5 font-bold"
+                  >
+                    <MessengerIcon className="w-3.5 h-3.5 fill-current" />
+                    <span>Inbox Messenger ↗</span>
+                  </a>
+                </li>
               </ul>
             </div>
 
@@ -1667,6 +1735,7 @@ export default function DeeDevIOTWebsite() {
                   src={activeProjectModal.imageUrl}
                   alt={activeProjectModal.name}
                   className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
                 />
                 <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-white/95 backdrop-blur-sm border border-slate-200 text-xs font-mono text-slate-800 font-bold shadow-xs">
                   {activeProjectModal.category}
@@ -1760,6 +1829,31 @@ export default function DeeDevIOTWebsite() {
           </div>
         </div>
       )}
+
+      {/* Floating Messenger Quick Contact Widget */}
+      <aside aria-label="Quick Contact via Messenger" className="fixed bottom-6 right-6 z-40 flex items-center gap-3">
+        <a
+          href={siteConfig.contact_messenger || "https://m.me/DeeDevIOT"}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group relative flex items-center gap-3 bg-white/95 backdrop-blur-md pl-4 pr-3 py-2.5 rounded-full border-2 border-blue-200 shadow-xl hover:shadow-2xl hover:border-blue-400 transition-all duration-300 transform hover:-translate-y-1"
+          aria-label="ทักแชท Inbox ปรึกษาเราผ่าน Messenger"
+        >
+          <div className="hidden sm:flex flex-col text-left">
+            <span className="text-[10px] font-mono font-bold text-blue-600 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              ONLINE
+            </span>
+            <span className="text-xs font-extrabold text-slate-900 group-hover:text-blue-600 transition-colors">
+              ทัก Inbox ปรึกษาเรา
+            </span>
+          </div>
+
+          <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-[#0084FF] to-[#00C6FF] flex items-center justify-center text-white shadow-[0_4px_16px_rgba(0,132,255,0.4)] group-hover:scale-105 transition-transform shrink-0">
+            <MessengerIcon className="w-6 h-6 fill-white" />
+          </div>
+        </a>
+      </aside>
 
     </div>
   );

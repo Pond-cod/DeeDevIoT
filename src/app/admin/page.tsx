@@ -8,7 +8,7 @@ import {
   Menu as MenuIcon, X, Type, Zap, Lightbulb, Star, Phone, Globe, ChevronRight, Plus, 
   FileText, Image as ImageIcon, ExternalLink, ShieldCheck, FolderPlus,
   Layers, ArrowUpRight, Check, HelpCircle, Info, Edit3, ArrowLeft,
-  Sliders, Eye, Sparkles, Mail, MessageSquare
+  Sliders, Eye, Sparkles, Mail, MessageSquare, MessageCircle
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { convertToDirectLink } from '../../lib/utils/drive';
@@ -63,6 +63,7 @@ interface ConfigData {
   contact_email: string;
   contact_phone: string;
   contact_facebook_en: string; contact_facebook_th: string;
+  contact_messenger: string;
   contact_line: string;
   nav_btn_en: string; nav_btn_th: string;
   back_btn_en: string; back_btn_th: string;
@@ -99,6 +100,7 @@ const emptyConf: ConfigData = {
   contact_email: '',
   contact_phone: '',
   contact_facebook_en: '', contact_facebook_th: '',
+  contact_messenger: '',
   contact_line: '',
   nav_btn_en: '', nav_btn_th: '',
   back_btn_en: '', back_btn_th: '',
@@ -948,10 +950,10 @@ export default function AdminDashboard() {
                   >
                     <div className="space-y-1">
                       <span className="text-xs font-extrabold text-slate-950 block group-hover:text-[#059669] transition-colors">
-                        ข้อมูลการติดต่อ & LINE
+                        ข้อมูลการติดต่อหลัก (Facebook & Channels)
                       </span>
                       <span className="text-[11px] text-slate-600 font-medium block leading-normal">
-                        อัปเดต LINE ID, เบอร์โทรศัพท์, อีเมล, Facebook
+                        อัปเดต Facebook Page, Messenger, อีเมล, เบอร์โทรศัพท์
                       </span>
                     </div>
                     <ChevronRight size={16} className="text-slate-400 group-hover:text-[#059669] shrink-0 mt-0.5" />
@@ -1177,15 +1179,27 @@ export default function AdminDashboard() {
                               arr[i] = e.target.value; 
                               setSvcImageUrls(arr); 
                             }} 
-                            placeholder="https://drive.google.com/... หรือ Direct Link รูปภาพ" 
+                            placeholder="https://drive.google.com/... หรือ ลิงก์รูป Facebook (scontent...fbcdn.net)" 
                             className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-emerald-500 transition-all" 
                           />
+                          {url.includes('facebook.com') && !url.includes('fbcdn.net') && (
+                            <div className="p-2.5 bg-blue-50 border border-blue-200 rounded-xl text-[11px] text-blue-900 flex items-start gap-2">
+                              <span className="font-bold shrink-0">💡 ข้อแนะนำ Facebook:</span>
+                              <span>ตรวจพบลิงก์หน้าโพสต์ Facebook กรุณาคลิกขวาที่ภาพ แล้วเลือก <b>&quot;คัดลอกที่อยู่รูปภาพ&quot; (Copy image address)</b> เพื่อนำลิงก์ CDN (<code className="bg-blue-100 px-1 rounded text-blue-800">https://scontent...fbcdn.net</code>) มาใส่แทน ลิงก์จึงจะแสดงผลได้สมบูรณ์</span>
+                            </div>
+                          )}
+                          {url.includes('fbcdn.net') && (
+                            <span className="text-[11px] text-emerald-700 font-bold flex items-center gap-1">
+                              ✓ ลิงก์รูปภาพ Facebook CDN (รองรับสมบูรณ์)
+                            </span>
+                          )}
                           {url.trim() && (
                             <div className="flex items-center gap-2.5 p-2 bg-slate-100 rounded-xl border-2 border-slate-200">
                               <img 
                                 src={convertToDirectLink(url)} 
                                 alt="preview" 
-                                className="w-12 h-12 object-cover rounded-lg bg-white border-2 border-slate-300 shrink-0" 
+                                referrerPolicy="no-referrer"
+                                className="w-12 h-12 object-cover rounded-lg bg-white border-2 border-slate-300 shrink-0 shadow-2xs" 
                                 onError={(e) => (e.currentTarget.style.display = 'none')} 
                               />
                               <span className="text-[11px] text-slate-700 font-bold truncate">
@@ -1197,7 +1211,7 @@ export default function AdminDashboard() {
                       ))}
                     </div>
                     <span className="text-[11px] text-slate-500 font-medium mt-1 block">
-                      รองรับลิงก์ Google Drive โดยตรง (ระบบแปลงให้ทันที)
+                      รองรับลิงก์รูปภาพ Google Drive (ระบบแปลงให้อัตโนมัติ) และ Facebook (คลิกขวาที่รูป &gt; คัดลอกที่อยู่รูปภาพ)
                     </span>
                   </div>
 
@@ -1305,6 +1319,7 @@ export default function AdminDashboard() {
                                 <img 
                                   src={convertToDirectLink(svc.imageUrl.split(',')[0])} 
                                   alt="thumb" 
+                                  referrerPolicy="no-referrer"
                                   className="w-14 h-14 rounded-lg object-cover bg-white border-2 border-slate-300 shrink-0 shadow-2xs"
                                   onError={(e) => (e.currentTarget.style.display = 'none')}
                                 />
@@ -1547,14 +1562,26 @@ export default function AdminDashboard() {
                       type="text" 
                       value={intForm.imageUrl} 
                       onChange={(e) => setIntForm({...intForm, imageUrl: e.target.value})} 
-                      placeholder="https://drive.google.com/... หรือ Direct URL" 
+                      placeholder="https://drive.google.com/... หรือ ลิงก์รูป Facebook (scontent...fbcdn.net)" 
                       className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-emerald-500 transition-all" 
                     />
+                    {intForm.imageUrl.includes('facebook.com') && !intForm.imageUrl.includes('fbcdn.net') && (
+                      <div className="mt-2 p-2.5 bg-blue-50 border border-blue-200 rounded-xl text-[11px] text-blue-900 flex items-start gap-2">
+                        <span className="font-bold shrink-0">💡 ข้อแนะนำ Facebook:</span>
+                        <span>ตรวจพบลิงก์หน้าโพสต์ Facebook กรุณาคลิกขวาที่ภาพ แล้วเลือก <b>&quot;คัดลอกที่อยู่รูปภาพ&quot; (Copy image address)</b> เพื่อนำลิงก์ CDN (<code className="bg-blue-100 px-1 rounded text-blue-800">https://scontent...fbcdn.net</code>) มาใส่แทน</span>
+                      </div>
+                    )}
+                    {intForm.imageUrl.includes('fbcdn.net') && (
+                      <span className="text-[11px] text-emerald-700 font-bold flex items-center gap-1 mt-1.5">
+                        ✓ ลิงก์รูปภาพ Facebook CDN (รองรับสมบูรณ์)
+                      </span>
+                    )}
                     {intForm.imageUrl && (
                       <div className="mt-2 flex items-center gap-2.5 p-2 bg-slate-100 rounded-xl border-2 border-slate-200">
                         <img 
                           src={convertToDirectLink(intForm.imageUrl)} 
                           alt="preview" 
+                          referrerPolicy="no-referrer"
                           className="w-12 h-12 object-cover rounded-lg bg-white border-2 border-slate-300 shrink-0 shadow-2xs" 
                           onError={(e) => (e.currentTarget.style.display = 'none')} 
                         />
@@ -1666,6 +1693,7 @@ export default function AdminDashboard() {
                                 <img 
                                   src={convertToDirectLink(item.imageUrl.split(',')[0])} 
                                   alt="thumb" 
+                                  referrerPolicy="no-referrer"
                                   className="w-14 h-14 rounded-lg object-cover bg-white border-2 border-slate-300 shrink-0 shadow-2xs"
                                   onError={(e) => (e.currentTarget.style.display = 'none')}
                                 />
@@ -2609,8 +2637,20 @@ export default function AdminDashboard() {
                         value={sectionItemForm.imageUrl} 
                         onChange={e => setSectionItemForm({...sectionItemForm, imageUrl: e.target.value})} 
                         className="w-full bg-white border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:border-[#E11D48] transition-all" 
-                        placeholder="https://..."
+                        placeholder="https://drive.google.com/... หรือ ลิงก์รูป Facebook"
                       />
+                      {sectionItemForm.imageUrl && (
+                        <div className="mt-1 flex items-center gap-2">
+                          <img 
+                            src={convertToDirectLink(sectionItemForm.imageUrl)} 
+                            alt="preview" 
+                            referrerPolicy="no-referrer"
+                            className="w-8 h-8 object-cover rounded bg-white border border-slate-200"
+                            onError={(e) => (e.currentTarget.style.display = 'none')}
+                          />
+                          <span className="text-[10px] text-slate-500 font-medium">พรีวิวรูปภาพ</span>
+                        </div>
+                      )}
                     </div>
                     <div className="flex items-end">
                       <button 
@@ -2793,17 +2833,54 @@ export default function AdminDashboard() {
               <div className="pb-4 mb-6 border-b-2 border-slate-100">
                 <h3 className="text-base font-extrabold text-slate-950 flex items-center gap-2.5">
                   <Phone size={20} className="text-[#059669]" />
-                  <span>แก้ไขข้อมูลการติดต่อ (Contact Information)</span>
+                  <span>แก้ไขข้อมูลการติดต่อหลัก (Contact Information & Facebook)</span>
                 </h3>
                 <p className="text-xs text-slate-600 font-medium mt-1">
-                  ปรับปรุงช่องทางการติดต่อ อีเมล เบอร์โทรศัพท์ LINE Official และลิงก์ Facebook
+                  ปรับปรุงช่องทางการติดต่อ Facebook Page, Messenger Inbox, อีเมล และเบอร์โทรศัพท์
                 </p>
               </div>
 
               <form onSubmit={handleConfSubmit} className="space-y-6 text-xs">
                 
                 {/* Contact channels */}
-                <div className="grid md:grid-cols-3 gap-4">
+                <div className="grid md:grid-cols-2 gap-4">
+                  {/* Facebook Messenger */}
+                  <div className="bg-blue-50/60 p-3.5 rounded-xl border-2 border-blue-200">
+                    <label className="block text-xs font-extrabold text-blue-950 mb-1.5 flex items-center gap-1.5">
+                      <MessageCircle size={14} className="text-[#0084FF]" />
+                      <span>Facebook Messenger Link (ลิงก์ทักแชท Inbox)</span>
+                    </label>
+                    <input 
+                      type="text" 
+                      value={configData.contact_messenger || ''} 
+                      onChange={e => setConfigData({...configData, contact_messenger: e.target.value})} 
+                      className="w-full bg-white border-2 border-blue-200 rounded-xl px-3.5 py-2 text-xs text-slate-950 font-medium outline-none hover:border-blue-300 focus:border-[#0084FF] transition-all" 
+                      placeholder="https://m.me/DeeDevIOT"
+                    />
+                    <span className="text-[10px] text-blue-700 block mt-1">
+                      ลิงก์เปิดแชทกับเพจทันที เช่น https://m.me/DeeDevIOT
+                    </span>
+                  </div>
+
+                  {/* Facebook Page */}
+                  <div className="bg-indigo-50/60 p-3.5 rounded-xl border-2 border-indigo-200">
+                    <label className="block text-xs font-extrabold text-indigo-950 mb-1.5 flex items-center gap-1.5">
+                      <Globe size={14} className="text-[#1877F2]" />
+                      <span>Facebook Page URL (ลิงก์หน้าเพจหลัก)</span>
+                    </label>
+                    <input 
+                      type="text" 
+                      value={configData.facebook_url || ''} 
+                      onChange={e => setConfigData({...configData, facebook_url: e.target.value})} 
+                      className="w-full bg-white border-2 border-indigo-200 rounded-xl px-3.5 py-2 text-xs text-slate-950 font-medium outline-none hover:border-indigo-300 focus:border-[#1877F2] transition-all" 
+                      placeholder="https://www.facebook.com/DeeDevIOT"
+                    />
+                    <span className="text-[10px] text-indigo-700 block mt-1">
+                      ลิงก์หน้าแฟนเพจ เช่น https://www.facebook.com/DeeDevIOT
+                    </span>
+                  </div>
+
+                  {/* Email */}
                   <div className="bg-rose-50/50 p-3.5 rounded-xl border-2 border-rose-200">
                     <label className="block text-xs font-extrabold text-rose-950 mb-1.5 flex items-center gap-1.5">
                       <Mail size={14} className="text-rose-600" />
@@ -2818,6 +2895,7 @@ export default function AdminDashboard() {
                     />
                   </div>
 
+                  {/* Phone */}
                   <div className="bg-amber-50/50 p-3.5 rounded-xl border-2 border-amber-200">
                     <label className="block text-xs font-extrabold text-amber-950 mb-1.5 flex items-center gap-1.5">
                       <Phone size={14} className="text-amber-600" />
@@ -2831,35 +2909,6 @@ export default function AdminDashboard() {
                       placeholder="08x-xxx-xxxx"
                     />
                   </div>
-
-                  <div className="bg-emerald-50/50 p-3.5 rounded-xl border-2 border-emerald-200">
-                    <label className="block text-xs font-extrabold text-emerald-950 mb-1.5 flex items-center gap-1.5">
-                      <MessageSquare size={14} className="text-emerald-600" />
-                      <span>LINE Official ID</span>
-                    </label>
-                    <input 
-                      type="text" 
-                      value={configData.contact_line} 
-                      onChange={e => setConfigData({...configData, contact_line: e.target.value})} 
-                      className="w-full bg-white border-2 border-emerald-200 rounded-xl px-3.5 py-2 text-xs text-slate-950 font-medium outline-none hover:border-emerald-300 focus:border-[#059669] transition-all" 
-                      placeholder="@DEEDEVIOT"
-                    />
-                  </div>
-                </div>
-
-                {/* Facebook */}
-                <div className="bg-sky-50/50 p-3.5 rounded-xl border-2 border-sky-200">
-                  <label className="block text-xs font-extrabold text-sky-950 mb-1.5 flex items-center gap-1.5">
-                    <Globe size={14} className="text-sky-600" />
-                    <span>Facebook Page URL</span>
-                  </label>
-                  <input 
-                    type="text" 
-                    value={configData.facebook_url} 
-                    onChange={e => setConfigData({...configData, facebook_url: e.target.value})} 
-                    className="w-full bg-white border-2 border-sky-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-950 font-medium outline-none hover:border-sky-300 focus:border-[#0284C7] transition-all" 
-                    placeholder="https://facebook.com/deedeviot"
-                  />
                 </div>
 
                 {/* Contact titles */}

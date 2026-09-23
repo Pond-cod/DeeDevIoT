@@ -10,6 +10,7 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
+  referrer: 'no-referrer',
   title: 'DeeDevIOT | Connecting Devices. Developing Futures. | รับพัฒนา Web Application, IoT และระบบ IT',
   description: 'DeeDevIOT สตูดิโอพัฒนา Web Application, IoT, Dashboard และระบบ IT เชื่อมต่ออุปกรณ์ฮาร์ดแวร์โดยทีมงานคนไทย',
   icons: {
@@ -30,6 +31,7 @@ export default function RootLayout({
   return (
     <html lang="th" className="scroll-smooth">
       <head>
+        <meta name="referrer" content="no-referrer" />
         <link rel="icon" type="image/png" href="/icon.png" />
         <link rel="shortcut icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/icon.png" />
