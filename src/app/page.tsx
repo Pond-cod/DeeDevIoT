@@ -783,6 +783,12 @@ export default function DeeDevIOTWebsite() {
                       className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
                       loading="lazy"
                       referrerPolicy="no-referrer"
+                      onError={(e) => {
+                        const match = e.currentTarget.src.match(/(?:\/d\/|id=)([a-zA-Z0-9_-]{20,})/);
+                        if (match && match[1] && !e.currentTarget.src.includes('thumbnail')) {
+                          e.currentTarget.src = `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1000`;
+                        }
+                      }}
                     />
                   ) : (
                     <div className="w-full h-full bg-gradient-to-br from-slate-50 via-rose-50/40 to-orange-50/40 flex items-center justify-center">
@@ -1743,6 +1749,12 @@ export default function DeeDevIOTWebsite() {
                   alt={activeProjectModal.name}
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    const match = e.currentTarget.src.match(/(?:\/d\/|id=)([a-zA-Z0-9_-]{20,})/);
+                    if (match && match[1] && !e.currentTarget.src.includes('thumbnail')) {
+                      e.currentTarget.src = `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1000`;
+                    }
+                  }}
                 />
                 <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-white/95 backdrop-blur-sm border border-slate-200 text-xs font-mono text-slate-800 font-bold shadow-xs">
                   {activeProjectModal.category}

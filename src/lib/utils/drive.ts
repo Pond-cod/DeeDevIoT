@@ -1,3 +1,14 @@
+export function extractDriveId(url: string): string | null {
+  if (!url) return null;
+  const regex = /(?:\/d\/|id=|\/open\?id=)([a-zA-Z0-9_-]{20,})/;
+  const match = url.match(regex);
+  return match ? match[1] : null;
+}
+
+export function getDriveThumbnailUrl(id: string): string {
+  return `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
+}
+
 export function convertToDirectLink(driveUrls: string): string {
   if (!driveUrls) return driveUrls;
 
@@ -7,10 +18,9 @@ export function convertToDirectLink(driveUrls: string): string {
   const converted = urlList.map(url => {
     // ตรวจสอบเฉพาะ Google Drive / Google Docs เท่านั้น ป้องกันไม่ให้ไปแปลง URL ของ Facebook หรือที่อื่น
     if (url.includes('drive.google.com') || url.includes('docs.google.com')) {
-      const regex = /(?:\/d\/|id=|\/open\?id=)([a-zA-Z0-9_-]{20,})/;
-      const match = url.match(regex);
-      if (match && match[1]) {
-        return `https://lh3.googleusercontent.com/d/${match[1]}=w1000`;
+      const id = extractDriveId(url);
+      if (id) {
+        return `https://lh3.googleusercontent.com/d/${id}=w1000`;
       }
     }
 
@@ -20,3 +30,4 @@ export function convertToDirectLink(driveUrls: string): string {
 
   return converted.join(',');
 }
+
