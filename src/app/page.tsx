@@ -1499,51 +1499,63 @@ export default function DeeDevIOTWebsite() {
             </div>
 
             {/* Why Choose Us - 4 Points */}
-            <div className="lg:col-span-5 bg-white/95 backdrop-blur-sm border-2 border-slate-200/90 rounded-2xl p-8 shadow-sm flex flex-col justify-between">
-              <span className="font-mono text-xs text-[#E11D48] font-extrabold uppercase tracking-wider block mb-4">
-                WHY CHOOSE US // ทำไมต้องเลือกเรา
-              </span>
+            <div className="lg:col-span-5 bg-white/95 backdrop-blur-sm border-2 border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-sm flex flex-col justify-between relative overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#E11D48] via-amber-500 to-emerald-500" />
+              
+              <div>
+                <span className="font-mono text-xs text-[#E11D48] font-extrabold uppercase tracking-wider block mb-4">
+                  WHY CHOOSE US // ทำไมต้องเลือกเรา
+                </span>
 
-              <div className="space-y-4 font-mono text-xs">
-                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-                  <div className="font-extrabold text-slate-950 flex items-center gap-2 mb-1">
-                    <span className="text-[#E11D48]">01 //</span>
-                    <span>ครบทั้ง Hardware & Software</span>
+                <div className="space-y-3.5 sm:space-y-4 font-mono text-xs">
+                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 hover:border-slate-300 transition-colors">
+                    <div className="font-extrabold text-slate-950 flex items-center gap-2 mb-1.5 text-xs sm:text-sm">
+                      <span className="text-[#E11D48]">01 //</span>
+                      <span>ครบทั้ง Hardware & Software</span>
+                    </div>
+                    <p className="text-xs text-slate-600 font-normal leading-relaxed">
+                      คุยที่เดียวจบ ตั้งแต่วงจร ESP32, เฟิร์มแวร์, คลาวด์ จนถึงหน้าจอเว็บ Dashboard
+                    </p>
                   </div>
-                  <p className="text-[11px] text-slate-600 font-normal">
-                    คุยที่เดียวจบ ตั้งแต่วงจร ESP32, เฟิร์มแวร์, คลาวด์ จนถึงหน้าจอเว็บ Dashboard
-                  </p>
-                </div>
 
-                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-                  <div className="font-extrabold text-slate-950 flex items-center gap-2 mb-1">
-                    <span className="text-[#0284C7]">02 //</span>
-                    <span>ส่งมอบ Source Code 100%</span>
+                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 hover:border-slate-300 transition-colors">
+                    <div className="font-extrabold text-slate-950 flex items-center gap-2 mb-1.5 text-xs sm:text-sm">
+                      <span className="text-[#0284C7]">02 //</span>
+                      <span>ส่งมอบ Source Code 100%</span>
+                    </div>
+                    <p className="text-xs text-slate-600 font-normal leading-relaxed">
+                      คุณเป็นเจ้าของระบบอย่างแท้จริง ไม่มีการผูกขาดลิขสิทธิ์ ต่อเติมได้อิสระ
+                    </p>
                   </div>
-                  <p className="text-[11px] text-slate-600 font-normal">
-                    คุณเป็นเจ้าของระบบอย่างแท้จริง ไม่มีการผูกขาดลิขสิทธิ์ ต่อเติมได้อิสระ
-                  </p>
-                </div>
 
-                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-                  <div className="font-extrabold text-slate-950 flex items-center gap-2 mb-1">
-                    <span className="text-[#059669]">03 //</span>
-                    <span>แก้ปัญหาตรงจุด ใช้งานง่าย</span>
+                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 hover:border-slate-300 transition-colors">
+                    <div className="font-extrabold text-slate-950 flex items-center gap-2 mb-1.5 text-xs sm:text-sm">
+                      <span className="text-[#059669]">03 //</span>
+                      <span>แก้ปัญหาตรงจุด ใช้งานง่าย</span>
+                    </div>
+                    <p className="text-xs text-slate-600 font-normal leading-relaxed">
+                      ลดขั้นตอนที่ซับซ้อนของผู้ใช้งาน เน้น UI สบายตา ชัดเจน อ่านค่าง่าย
+                    </p>
                   </div>
-                  <p className="text-[11px] text-slate-600 font-normal">
-                    ลดขั้นตอนที่ซับซ้อนของผู้ใช้งาน เน้น UI สบายตา ชัดเจน อ่านค่าง่าย
-                  </p>
-                </div>
 
-                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-                  <div className="font-extrabold text-slate-950 flex items-center gap-2 mb-1">
-                    <span className="text-[#EA580C]">04 //</span>
-                    <span>มีบริการดูแลหลังส่งมอบ</span>
+                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 hover:border-slate-300 transition-colors">
+                    <div className="font-extrabold text-slate-950 flex items-center gap-2 mb-1.5 text-xs sm:text-sm">
+                      <span className="text-[#EA580C]">04 //</span>
+                      <span>มีบริการดูแลหลังส่งมอบ</span>
+                    </div>
+                    <p className="text-xs text-slate-600 font-normal leading-relaxed">
+                      พร้อมช่วยเหลือ ให้คำปรึกษาทางเทคนิค และอัปเกรดระบบเมื่อธุรกิจเติบโต
+                    </p>
                   </div>
-                  <p className="text-[11px] text-slate-600 font-normal">
-                    พร้อมช่วยเหลือ ให้คำปรึกษาทางเทคนิค และอัปเกรดระบบเมื่อธุรกิจเติบโต
-                  </p>
                 </div>
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between font-mono text-[11px] text-slate-500">
+                <div className="flex items-center gap-2 text-slate-600 font-medium">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>Ready to Deploy & Scale</span>
+                </div>
+                <span className="text-[#E11D48] font-bold">DeeDev IoT Guarantee</span>
               </div>
             </div>
 
