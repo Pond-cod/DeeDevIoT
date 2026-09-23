@@ -60,8 +60,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: 'Title is required' }, { status: 400 });
     }
 
+    const finalId = id?.trim() || `int-${Date.now()}`;
+
     const rowData = [
-      id || Date.now().toString(),
+      finalId,
       title || "",
       tag || "",
       imageUrl || "",
@@ -77,6 +79,17 @@ export async function POST(request: Request) {
       const result = await updateSheetRow('Integrations', id, rowData, 'A:I');
       return NextResponse.json({ success: true, message: 'Integration updated', data: result });
     } else {
+      // ตรวจสอบว่ามี ID นี้อยู่แล้วหรือไม่
+      const existingRows = await getSheetValues('Integrations!A2:A');
+      const normalizedNewId = finalId.toLowerCase();
+      const duplicate = existingRows.some(row => String(row[0] || '').trim().toLowerCase() === normalizedNewId);
+      if (duplicate) {
+        return NextResponse.json(
+          { success: false, error: `รหัสระบบ '${finalId}' มีอยู่ในระบบแล้ว กรุณาระบุรหัสใหม่ หรือกดแก้ไขรายการเดิม` },
+          { status: 400 }
+        );
+      }
+
       const result = await appendSheetValues('Integrations!A:I', [rowData]);
       return NextResponse.json({ success: true, message: 'Integration added', data: result });
     }

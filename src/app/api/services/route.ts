@@ -99,9 +99,11 @@ export async function POST(request: Request) {
       );
     }
 
+    const finalId = id?.trim() || `svc-${Date.now()}`;
+
     // ลำดับคอลัมน์: [id, title, description, icon, imageUrl, demoUrl, title_th, description_th, videoUrls, manualUrl]
     const rowData = [
-      id || Date.now().toString(),
+      finalId,
       title || "",
       description || "",
       icon || "",
@@ -127,6 +129,17 @@ export async function POST(request: Request) {
         data: result,
       });
     } else {
+      // ตรวจสอบว่ามี ID นี้อยู่แล้วหรือไม่ เพื่อป้องกันการบันทึกซ้ำ
+      const existingRows = await getSheetValues('Services!A2:A');
+      const normalizedNewId = finalId.toLowerCase();
+      const duplicate = existingRows.some(row => String(row[0] || '').trim().toLowerCase() === normalizedNewId);
+      if (duplicate) {
+        return NextResponse.json(
+          { success: false, error: `รหัสผลงาน '${finalId}' มีอยู่ในระบบแล้ว กรุณาระบุรหัสใหม่ หรือกดแก้ไขรายการเดิม` },
+          { status: 400 }
+        );
+      }
+
       const newRow = [rowData];
       const range = 'Services!A:J';
       const result = await appendSheetValues(range, newRow);

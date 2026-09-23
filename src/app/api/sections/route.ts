@@ -39,8 +39,10 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { id, title_en, title_th, subtitle_en, subtitle_th, is_active, isEdit } = body;
 
+    const finalId = id?.trim() || `sec-${Date.now()}`;
+
     const rowData = [
-      id || Date.now().toString(),
+      finalId,
       title_en || "",
       title_th || "",
       subtitle_en || "",
@@ -49,8 +51,14 @@ export async function POST(request: Request) {
     ];
 
     if (isEdit) {
+      if (!id) return NextResponse.json({ success: false, error: 'ID required' }, { status: 400 });
       await updateSheetRow('sections', id, rowData, 'A:F');
     } else {
+      const existingRows = await getSheetValues('sections!A2:A');
+      const normalizedNewId = finalId.toLowerCase();
+      if (existingRows.some(row => String(row[0] || '').trim().toLowerCase() === normalizedNewId)) {
+        return NextResponse.json({ success: false, error: `รหัส '${finalId}' มีอยู่แล้วในระบบ` }, { status: 400 });
+      }
       await appendSheetValues('sections!A:F', [rowData]);
     }
 

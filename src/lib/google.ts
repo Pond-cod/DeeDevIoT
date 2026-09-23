@@ -32,7 +32,7 @@ async function getSheetId(tabName: string) {
     spreadsheetId: GOOGLE_SHEET_ID,
   });
   const sheet = spreadsheet.data.sheets?.find(
-    (s) => s.properties?.title === tabName
+    (s) => s.properties?.title?.toLowerCase() === tabName.toLowerCase()
   );
   if (!sheet) throw new Error(`Sheet with title ${tabName} not found`);
   return sheet.properties?.sheetId;
@@ -83,11 +83,19 @@ export async function updateSheetRow(tabName: string, id: string, values: any[],
 
     const rangeFetch = `${tabName}!${columnRange}`;
     const currentData = await getSheetValues(rangeFetch);
-    const rowIndex = currentData.findIndex((row) => row[0] === id);
+    const normalizedId = String(id || '').trim().toLowerCase();
+    
+    // Find index, skipping header at index 0
+    const rowIndex = currentData.findIndex((row, index) => 
+      index > 0 && String(row[0] || '').trim().toLowerCase() === normalizedId
+    );
 
     if (rowIndex !== -1) {
-      const rowNumber = rowIndex + 2;
-      const range = `${tabName}!${columnRange.split(':')[0]}${rowNumber}:${columnRange.split(':')[1]}${rowNumber}`;
+      // currentData[0] is Row 1 (Header), so currentData[rowIndex] is Sheet Row (rowIndex + 1)
+      const rowNumber = rowIndex + 1;
+      const startCol = columnRange.split(':')[0].replace(/[0-9]/g, '');
+      const endCol = columnRange.split(':')[1].replace(/[0-9]/g, '');
+      const range = `${tabName}!${startCol}${rowNumber}:${endCol}${rowNumber}`;
 
       const response = await sheets.spreadsheets.values.update({
         spreadsheetId: GOOGLE_SHEET_ID,
@@ -187,7 +195,7 @@ export async function getConfig() {
     const bilingualKeys = [
       'hero_badge', 'hero_headline', 'hero_sub', 'hero_btn1_text', 'hero_btn2_text',
       'why_badge', 'why_choose_title', 'why1_title', 'why1_desc', 'why2_title', 'why2_desc',
-      'why3_title', 'why3_desc', 'why4_title', 'why4_desc', 'svc_badge', 'solutions_title',
+      'why3_title', 'why3_desc', 'why4_title', 'why4_desc', 'svc_badge', 'solutions_title', 'solutions_description',
       'port_badge', 'integrations_title', 'port_desc', 'cta_heading', 'footer_bio',
       'nav_item1', 'nav_btn',
       'concept_title1', 'concept_title2', 'concept_description', 
@@ -216,6 +224,14 @@ export async function updateConfig(configObj: Record<string, string>) {
   try {
     const { sheets, GOOGLE_SHEET_ID } = getGoogleAuth();
     
+    // Fetch existing rows to preserve row order and custom keys
+    let existingRows: any[][] = [];
+    try {
+      existingRows = await getSheetValues('SiteConfig!A2:C');
+    } catch {
+      existingRows = [];
+    }
+
     // Convert flat dictionary back to 3-column rows
     const rowMap: Record<string, [string, string, string]> = {};
     for (const [key, value] of Object.entries(configObj)) {
@@ -234,14 +250,35 @@ export async function updateConfig(configObj: Record<string, string>) {
       }
     }
     
-    const values = Object.values(rowMap);
-    const range = `SiteConfig!A2:C${values.length + 1}`;
+    // Merge with existing rows to preserve order in the sheet
+    const finalRows: [string, string, string][] = [];
+    const processedKeys = new Set<string>();
+
+    for (const row of existingRows) {
+      const k = row[0];
+      if (!k) continue;
+      if (rowMap[k]) {
+        finalRows.push(rowMap[k]);
+        processedKeys.add(k);
+      } else {
+        finalRows.push([k, row[1] || '', row[2] || '']);
+      }
+    }
+
+    // Add any remaining keys from rowMap that were not in existingRows
+    for (const [k, v] of Object.entries(rowMap)) {
+      if (!processedKeys.has(k)) {
+        finalRows.push(v);
+      }
+    }
+
+    const range = `SiteConfig!A2:C${finalRows.length + 1}`;
 
     const response = await sheets.spreadsheets.values.update({
       spreadsheetId: GOOGLE_SHEET_ID,
       range,
       valueInputOption: 'USER_ENTERED',
-      requestBody: { values },
+      requestBody: { values: finalRows },
     });
 
     return response.data;
@@ -260,10 +297,11 @@ export async function deleteSheetRow(tabName: string, id: string) {
   try {
     const { sheets, GOOGLE_SHEET_ID } = getGoogleAuth();
 
-    // Fetch the IDs to find the row index
+    // Fetch the IDs to find the row index (from A2 downwards)
     const range = `${tabName}!A2:A`;
     const rows = await getSheetValues(range);
-    const rowIndex = rows.findIndex((row) => row[0] === id);
+    const normalizedId = String(id || '').trim().toLowerCase();
+    const rowIndex = rows.findIndex((row) => String(row[0] || '').trim().toLowerCase() === normalizedId);
 
     if (rowIndex !== -1) {
       const sheetId = await getSheetId(tabName);

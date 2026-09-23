@@ -1018,10 +1018,10 @@ export default function AdminDashboard() {
                   <div>
                     <h3 className="text-sm font-extrabold text-slate-950 flex items-center gap-2">
                       <Server size={18} className="text-[#E11D48]" />
-                      <span>{isSvcEdit ? 'แก้ไขบริการ / ผลงาน' : 'เพิ่มบริการ / ผลงานใหม่'}</span>
+                      <span>{isSvcEdit ? 'แก้ไขบริการ / ผลงานเดิม' : 'เพิ่มบริการ / ผลงานใหม่'}</span>
                     </h3>
                     <p className="text-[11px] text-slate-600 font-medium">
-                      {isSvcEdit ? `รหัสผลงาน: ${svcForm.id}` : 'กรอกรายละเอียดเพื่อบันทึกลง Google Sheets'}
+                      {isSvcEdit ? `รหัสผลงาน: ${svcForm.id} (ระบบจะอัปเดตข้อมูลทับแถวเดิมใน Google Sheets)` : 'กรอกรายละเอียดเพื่อบันทึกลง Google Sheets'}
                     </p>
                   </div>
                   {isSvcEdit && (
@@ -1033,12 +1033,35 @@ export default function AdminDashboard() {
                         setSvcImageUrls(['']); 
                         setSvcVideoUrls(['']); 
                       }} 
-                      className="text-xs text-rose-900 hover:text-rose-950 font-bold px-3 py-1 rounded-lg bg-rose-100 border-2 border-rose-300 shadow-2xs"
+                      className="text-xs text-rose-900 hover:text-rose-950 font-bold px-3 py-1 rounded-lg bg-rose-100 border-2 border-rose-300 shadow-2xs hover:bg-rose-200 transition-colors"
                     >
                       ยกเลิกแก้ไข
                     </button>
                   )}
                 </div>
+
+                {isSvcEdit && (
+                  <div className="mb-4 p-3 bg-amber-50 border-2 border-amber-300 rounded-xl flex items-center justify-between shadow-xs">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse shrink-0" />
+                      <span className="text-xs font-bold text-amber-950 truncate">
+                        กำลังแก้ไข: <span className="underline">{svcForm.title_th || svcForm.title}</span> (#{svcForm.id})
+                      </span>
+                    </div>
+                    <button 
+                      type="button" 
+                      onClick={() => { 
+                        setSvcForm(emptySvc); 
+                        setIsSvcEdit(false); 
+                        setSvcImageUrls(['']); 
+                        setSvcVideoUrls(['']); 
+                      }} 
+                      className="text-[11px] text-amber-900 hover:text-amber-950 font-bold px-2 py-0.5 rounded bg-amber-200 hover:bg-amber-300 shrink-0 ml-2"
+                    >
+                      เคลียร์ฟอร์ม
+                    </button>
+                  </div>
+                )}
 
                 <form onSubmit={handleSvcSubmit} className="space-y-4 text-xs">
                   <div className="grid grid-cols-2 gap-3">
@@ -1052,7 +1075,11 @@ export default function AdminDashboard() {
                         onChange={(e) => setSvcForm({...svcForm, id: e.target.value})} 
                         placeholder="เช่น svc-1" 
                         readOnly={isSvcEdit} 
-                        className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#E11D48] transition-all" 
+                        className={`w-full border-2 rounded-xl px-3 py-2 text-xs font-medium outline-none transition-all ${
+                          isSvcEdit 
+                            ? 'bg-amber-50/80 border-amber-300 text-amber-950 cursor-not-allowed font-bold' 
+                            : 'bg-slate-50 border-slate-200 text-slate-950 hover:border-slate-300 focus:bg-white focus:border-[#E11D48]'
+                        }`} 
                       />
                     </div>
                     <div>
@@ -1207,10 +1234,14 @@ export default function AdminDashboard() {
                   {/* Submit Button */}
                   <button 
                     disabled={isSaving} 
-                    className="w-full py-3 bg-gradient-to-r from-[#E11D48] to-[#EA580C] hover:opacity-95 text-white rounded-xl font-extrabold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 mt-4 shadow-md hover:shadow-lg"
+                    className={`w-full py-3.5 text-white rounded-xl font-extrabold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 mt-4 shadow-md hover:shadow-lg ${
+                      isSvcEdit 
+                        ? 'bg-gradient-to-r from-amber-500 to-rose-600 hover:from-amber-600 hover:to-rose-700 ring-2 ring-amber-300' 
+                        : 'bg-gradient-to-r from-[#E11D48] to-[#EA580C] hover:opacity-95'
+                    }`}
                   >
                     {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : <Save size={15} />} 
-                    <span>บันทึกลง Google Sheets</span>
+                    <span>{isSvcEdit ? '✓ อัปเดตข้อมูลผลงานเดิม (Update Work)' : '+ บันทึกลง Google Sheets (Add New)'}</span>
                   </button>
                 </form>
               </div>
@@ -1257,100 +1288,117 @@ export default function AdminDashboard() {
                         (svc.title_th && svc.title_th.toLowerCase().includes(svcSearch.toLowerCase())) || 
                         svc.id.toLowerCase().includes(svcSearch.toLowerCase())
                       )
-                      .map(svc => (
-                      <div 
-                        key={svc.id} 
-                        className="bg-white hover:bg-slate-50/90 border-2 border-slate-200/90 hover:border-slate-300 p-4 rounded-xl flex flex-col sm:flex-row justify-between items-start gap-4 transition-all shadow-xs"
-                      >
-                        {/* Thumbnail on left */}
-                        <div className="flex items-start gap-3 flex-1 min-w-0">
-                          {svc.imageUrl ? (
-                            <img 
-                              src={convertToDirectLink(svc.imageUrl.split(',')[0])} 
-                              alt="thumb" 
-                              className="w-14 h-14 rounded-lg object-cover bg-white border-2 border-slate-300 shrink-0 shadow-2xs"
-                              onError={(e) => (e.currentTarget.style.display = 'none')}
-                            />
-                          ) : (
-                            <div className="w-14 h-14 rounded-lg bg-slate-100 text-slate-400 border-2 border-slate-200 flex items-center justify-center shrink-0">
-                              <ImageIcon size={20} />
+                      .map(svc => {
+                        const isCurrentlyEditing = isSvcEdit && svcForm.id === svc.id;
+                        return (
+                          <div 
+                            key={svc.id} 
+                            className={`p-4 rounded-xl flex flex-col sm:flex-row justify-between items-start gap-4 transition-all shadow-xs ${
+                              isCurrentlyEditing 
+                                ? 'bg-amber-50/80 border-2 border-amber-400 ring-2 ring-amber-300/70 shadow-md' 
+                                : 'bg-white hover:bg-slate-50/90 border-2 border-slate-200/90 hover:border-slate-300'
+                            }`}
+                          >
+                            {/* Thumbnail on left */}
+                            <div className="flex items-start gap-3 flex-1 min-w-0">
+                              {svc.imageUrl ? (
+                                <img 
+                                  src={convertToDirectLink(svc.imageUrl.split(',')[0])} 
+                                  alt="thumb" 
+                                  className="w-14 h-14 rounded-lg object-cover bg-white border-2 border-slate-300 shrink-0 shadow-2xs"
+                                  onError={(e) => (e.currentTarget.style.display = 'none')}
+                                />
+                              ) : (
+                                <div className="w-14 h-14 rounded-lg bg-slate-100 text-slate-400 border-2 border-slate-200 flex items-center justify-center shrink-0">
+                                  <ImageIcon size={20} />
+                                </div>
+                              )}
+
+                              <div className="space-y-1 min-w-0 flex-1">
+                                <div className="flex flex-wrap items-center gap-2">
+                                  <span className="font-extrabold text-slate-950 text-xs">
+                                    {svc.title_th || svc.title}
+                                  </span>
+                                  {svc.title_th && svc.title && (
+                                    <span className="text-slate-600 text-[11px] font-medium">({svc.title})</span>
+                                  )}
+                                  <span className="px-2 py-0.5 rounded-md text-[10px] font-mono bg-rose-100 text-rose-950 border border-rose-300 font-bold">
+                                    {svc.icon || 'Service'}
+                                  </span>
+                                  <span className="text-slate-600 text-[10px] font-mono font-bold bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
+                                    #{svc.id}
+                                  </span>
+                                  {isCurrentlyEditing && (
+                                    <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-200 text-amber-950 border border-amber-300 animate-pulse">
+                                      กำลังแก้ไขอยู่นี้
+                                    </span>
+                                  )}
+                                </div>
+
+                                <p className="text-[11px] text-slate-700 font-medium line-clamp-2 leading-relaxed">
+                                  {svc.description_th || svc.description}
+                                </p>
+
+                                <div className="flex flex-wrap gap-2 text-[10px] pt-1">
+                                  {svc.imageUrl && (
+                                    <span className="px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-950 border border-emerald-300 font-bold flex items-center gap-1 shadow-2xs">
+                                      <ImageIcon size={12} /> มีภาพประกอบ
+                                    </span>
+                                  )}
+                                  {svc.demoUrl && (
+                                    <a 
+                                      href={svc.demoUrl} 
+                                      target="_blank" 
+                                      rel="noopener noreferrer" 
+                                      className="px-2.5 py-1 rounded-md bg-sky-100 text-sky-950 border border-sky-300 font-bold flex items-center gap-1 hover:underline shadow-2xs"
+                                    >
+                                      <ExternalLink size={12} /> เปิดดูเนื้อหา
+                                    </a>
+                                  )}
+                                  {svc.manualUrl && (
+                                    <a 
+                                      href={svc.manualUrl} 
+                                      target="_blank" 
+                                      rel="noopener noreferrer" 
+                                      className="px-2.5 py-1 rounded-md bg-amber-100 text-amber-950 border border-amber-300 font-bold flex items-center gap-1 hover:underline shadow-2xs"
+                                    >
+                                      <FileText size={12} /> ดูคู่มือ
+                                    </a>
+                                  )}
+                                </div>
+                              </div>
                             </div>
-                          )}
 
-                          <div className="space-y-1 min-w-0 flex-1">
-                            <div className="flex flex-wrap items-center gap-2">
-                              <span className="font-extrabold text-slate-950 text-xs">
-                                {svc.title_th || svc.title}
-                              </span>
-                              {svc.title_th && svc.title && (
-                                <span className="text-slate-600 text-[11px] font-medium">({svc.title})</span>
-                              )}
-                              <span className="px-2 py-0.5 rounded-md text-[10px] font-mono bg-rose-100 text-rose-950 border border-rose-300 font-bold">
-                                {svc.icon || 'Service'}
-                              </span>
-                              <span className="text-slate-600 text-[10px] font-mono font-bold bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
-                                #{svc.id}
-                              </span>
-                            </div>
-
-                            <p className="text-[11px] text-slate-700 font-medium line-clamp-2 leading-relaxed">
-                              {svc.description_th || svc.description}
-                            </p>
-
-                            <div className="flex flex-wrap gap-2 text-[10px] pt-1">
-                              {svc.imageUrl && (
-                                <span className="px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-950 border border-emerald-300 font-bold flex items-center gap-1 shadow-2xs">
-                                  <ImageIcon size={12} /> มีภาพประกอบ
-                                </span>
-                              )}
-                              {svc.demoUrl && (
-                                <a 
-                                  href={svc.demoUrl} 
-                                  target="_blank" 
-                                  rel="noopener noreferrer" 
-                                  className="px-2.5 py-1 rounded-md bg-sky-100 text-sky-950 border border-sky-300 font-bold flex items-center gap-1 hover:underline shadow-2xs"
-                                >
-                                  <ExternalLink size={12} /> เปิดดูเนื้อหา
-                                </a>
-                              )}
-                              {svc.manualUrl && (
-                                <a 
-                                  href={svc.manualUrl} 
-                                  target="_blank" 
-                                  rel="noopener noreferrer" 
-                                  className="px-2.5 py-1 rounded-md bg-amber-100 text-amber-950 border border-amber-300 font-bold flex items-center gap-1 hover:underline shadow-2xs"
-                                >
-                                  <FileText size={12} /> ดูคู่มือ
-                                </a>
-                              )}
+                            {/* Actions */}
+                            <div className="flex gap-2 shrink-0 self-end sm:self-start">
+                              <button 
+                                onClick={() => { 
+                                  setSvcForm(svc); 
+                                  setSvcImageUrls(svc.imageUrl ? svc.imageUrl.split(',').map(u=>u.trim()) : ['']); 
+                                  setSvcVideoUrls(svc.videoUrls ? svc.videoUrls.split(',').map(u=>u.trim()) : ['']); 
+                                  setIsSvcEdit(true); 
+                                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                                }} 
+                                className={`px-3 py-1.5 rounded-lg border-2 text-xs font-bold flex items-center gap-1.5 shadow-xs transition-colors ${
+                                  isCurrentlyEditing 
+                                    ? 'bg-amber-500 text-white border-amber-600' 
+                                    : 'border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-900'
+                                }`}
+                              >
+                                <Edit3 size={13} />
+                                <span>{isCurrentlyEditing ? 'แก้ไขอยู่' : 'แก้ไข'}</span>
+                              </button>
+                              <button 
+                                onClick={() => handleDeleteSvc(svc.id)} 
+                                className="px-3 py-1.5 rounded-lg border-2 border-rose-300 bg-rose-100 hover:bg-rose-200 text-rose-950 text-xs font-bold flex items-center gap-1.5 shadow-xs"
+                              >
+                                <Trash2 size={13} />
+                                <span>ลบ</span>
+                              </button>
                             </div>
                           </div>
-                        </div>
-
-                        {/* Actions */}
-                        <div className="flex gap-2 shrink-0 self-end sm:self-start">
-                          <button 
-                            onClick={() => { 
-                              setSvcForm(svc); 
-                              setSvcImageUrls(svc.imageUrl ? svc.imageUrl.split(',').map(u=>u.trim()) : ['']); 
-                              setSvcVideoUrls(svc.videoUrls ? svc.videoUrls.split(',').map(u=>u.trim()) : ['']); 
-                              setIsSvcEdit(true); 
-                            }} 
-                            className="px-3 py-1.5 rounded-lg border-2 border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-bold flex items-center gap-1.5 shadow-xs"
-                          >
-                            <Edit3 size={13} />
-                            <span>แก้ไข</span>
-                          </button>
-                          <button 
-                            onClick={() => handleDeleteSvc(svc.id)} 
-                            className="px-3 py-1.5 rounded-lg border-2 border-rose-300 bg-rose-100 hover:bg-rose-200 text-rose-950 text-xs font-bold flex items-center gap-1.5 shadow-xs"
-                          >
-                            <Trash2 size={13} />
-                            <span>ลบ</span>
-                          </button>
-                        </div>
-                      </div>
-                    ))}
+                        );
+                      })}
                   </div>
                 )}
               </div>
@@ -1368,22 +1416,40 @@ export default function AdminDashboard() {
                   <div>
                     <h3 className="text-sm font-extrabold text-slate-950 flex items-center gap-2">
                       <LinkIcon size={18} className="text-[#EA580C]" />
-                      <span>{isIntEdit ? 'แก้ไขระบบงาน / IoT' : 'เพิ่มระบบงาน / IoT ใหม่'}</span>
+                      <span>{isIntEdit ? 'แก้ไขระบบงาน / IoT เดิม' : 'เพิ่มระบบงาน / IoT ใหม่'}</span>
                     </h3>
                     <p className="text-[11px] text-slate-600 font-medium">
-                      {isIntEdit ? `รหัสระบบ: ${intForm.id}` : 'กรอกข้อมูลเพื่อบันทึกลงแท็บ Integrations'}
+                      {isIntEdit ? `รหัสระบบ: ${intForm.id} (ระบบจะอัปเดตข้อมูลทับแถวเดิมใน Google Sheets)` : 'กรอกข้อมูลเพื่อบันทึกลงแท็บ Integrations'}
                     </p>
                   </div>
                   {isIntEdit && (
                     <button 
                       type="button" 
                       onClick={() => { setIntForm(emptyInt); setIsIntEdit(false); }} 
-                      className="text-xs text-rose-900 hover:text-rose-950 font-bold px-3 py-1 rounded-lg bg-rose-100 border-2 border-rose-300 shadow-2xs"
+                      className="text-xs text-rose-900 hover:text-rose-950 font-bold px-3 py-1 rounded-lg bg-rose-100 border-2 border-rose-300 shadow-2xs hover:bg-rose-200 transition-colors"
                     >
                       ยกเลิกแก้ไข
                     </button>
                   )}
                 </div>
+
+                {isIntEdit && (
+                  <div className="mb-4 p-3 bg-amber-50 border-2 border-amber-300 rounded-xl flex items-center justify-between shadow-xs">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse shrink-0" />
+                      <span className="text-xs font-bold text-amber-950 truncate">
+                        กำลังแก้ไข: <span className="underline">{intForm.title_th || intForm.title}</span> (#{intForm.id})
+                      </span>
+                    </div>
+                    <button 
+                      type="button" 
+                      onClick={() => { setIntForm(emptyInt); setIsIntEdit(false); }} 
+                      className="text-[11px] text-amber-900 hover:text-amber-950 font-bold px-2 py-0.5 rounded bg-amber-200 hover:bg-amber-300 shrink-0 ml-2"
+                    >
+                      เคลียร์ฟอร์ม
+                    </button>
+                  </div>
+                )}
 
                 <form onSubmit={handleIntSubmit} className="space-y-4 text-xs">
                   <div className="grid grid-cols-2 gap-3">
@@ -1397,7 +1463,11 @@ export default function AdminDashboard() {
                         onChange={(e) => setIntForm({...intForm, id: e.target.value})} 
                         placeholder="เช่น int-1" 
                         readOnly={isIntEdit} 
-                        className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#EA580C] transition-all" 
+                        className={`w-full border-2 rounded-xl px-3 py-2 text-xs font-medium outline-none transition-all ${
+                          isIntEdit 
+                            ? 'bg-amber-50/80 border-amber-300 text-amber-950 cursor-not-allowed font-bold' 
+                            : 'bg-slate-50 border-slate-200 text-slate-950 hover:border-slate-300 focus:bg-white focus:border-[#EA580C]'
+                        }`} 
                       />
                     </div>
                     <div>
@@ -1525,10 +1595,14 @@ export default function AdminDashboard() {
 
                   <button 
                     disabled={isSaving} 
-                    className="w-full py-3 bg-gradient-to-r from-[#EA580C] to-[#E11D48] hover:opacity-95 text-white rounded-xl font-extrabold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 mt-4 shadow-md hover:shadow-lg"
+                    className={`w-full py-3.5 text-white rounded-xl font-extrabold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 mt-4 shadow-md hover:shadow-lg ${
+                      isIntEdit 
+                        ? 'bg-gradient-to-r from-amber-500 to-rose-600 hover:from-amber-600 hover:to-rose-700 ring-2 ring-amber-300' 
+                        : 'bg-gradient-to-r from-[#EA580C] to-[#E11D48] hover:opacity-95'
+                    }`}
                   >
                     {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : <Save size={15} />} 
-                    <span>บันทึกลง Google Sheets</span>
+                    <span>{isIntEdit ? '✓ อัปเดตข้อมูลระบบเดิม (Update System)' : '+ บันทึกลง Google Sheets (Add New)'}</span>
                   </button>
                 </form>
               </div>
@@ -1575,98 +1649,115 @@ export default function AdminDashboard() {
                         (item.title_th && item.title_th.toLowerCase().includes(intSearch.toLowerCase())) || 
                         item.id.toLowerCase().includes(intSearch.toLowerCase())
                       )
-                      .map(item => (
-                      <div 
-                        key={item.id} 
-                        className="bg-white hover:bg-slate-50/90 border-2 border-slate-200/90 hover:border-slate-300 p-4 rounded-xl flex flex-col sm:flex-row justify-between items-start gap-4 transition-all shadow-xs"
-                      >
-                        {/* Thumbnail on left */}
-                        <div className="flex items-start gap-3 flex-1 min-w-0">
-                          {item.imageUrl ? (
-                            <img 
-                              src={convertToDirectLink(item.imageUrl.split(',')[0])} 
-                              alt="thumb" 
-                              className="w-14 h-14 rounded-lg object-cover bg-white border-2 border-slate-300 shrink-0 shadow-2xs"
-                              onError={(e) => (e.currentTarget.style.display = 'none')}
-                            />
-                          ) : (
-                            <div className="w-14 h-14 rounded-lg bg-slate-100 text-slate-400 border-2 border-slate-200 flex items-center justify-center shrink-0">
-                              <ImageIcon size={20} />
+                      .map(item => {
+                        const isCurrentlyEditing = isIntEdit && intForm.id === item.id;
+                        return (
+                          <div 
+                            key={item.id} 
+                            className={`p-4 rounded-xl flex flex-col sm:flex-row justify-between items-start gap-4 transition-all shadow-xs ${
+                              isCurrentlyEditing 
+                                ? 'bg-amber-50/80 border-2 border-amber-400 ring-2 ring-amber-300/70 shadow-md' 
+                                : 'bg-white hover:bg-slate-50/90 border-2 border-slate-200/90 hover:border-slate-300'
+                            }`}
+                          >
+                            {/* Thumbnail on left */}
+                            <div className="flex items-start gap-3 flex-1 min-w-0">
+                              {item.imageUrl ? (
+                                <img 
+                                  src={convertToDirectLink(item.imageUrl.split(',')[0])} 
+                                  alt="thumb" 
+                                  className="w-14 h-14 rounded-lg object-cover bg-white border-2 border-slate-300 shrink-0 shadow-2xs"
+                                  onError={(e) => (e.currentTarget.style.display = 'none')}
+                                />
+                              ) : (
+                                <div className="w-14 h-14 rounded-lg bg-slate-100 text-slate-400 border-2 border-slate-200 flex items-center justify-center shrink-0">
+                                  <ImageIcon size={20} />
+                                </div>
+                              )}
+
+                              <div className="space-y-1 min-w-0 flex-1">
+                                <div className="flex flex-wrap items-center gap-2">
+                                  <span className="font-extrabold text-slate-950 text-xs">
+                                    {item.title_th || item.title}
+                                  </span>
+                                  {item.title_th && item.title && (
+                                    <span className="text-slate-600 text-[11px] font-medium">({item.title})</span>
+                                  )}
+                                  <span className="px-2 py-0.5 rounded-md text-[10px] font-mono bg-amber-100 text-amber-950 border border-amber-300 font-bold">
+                                    {item.tag || 'System'}
+                                  </span>
+                                  <span className="text-slate-600 text-[10px] font-mono font-bold bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
+                                    #{item.id}
+                                  </span>
+                                  {isCurrentlyEditing && (
+                                    <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-200 text-amber-950 border border-amber-300 animate-pulse">
+                                      กำลังแก้ไขอยู่นี้
+                                    </span>
+                                  )}
+                                </div>
+
+                                <p className="text-[11px] text-slate-700 font-medium line-clamp-2 leading-relaxed">
+                                  {item.description_th || item.description}
+                                </p>
+
+                                <div className="flex flex-wrap gap-2 text-[10px] pt-1">
+                                  {item.imageUrl && (
+                                    <span className="px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-950 border border-emerald-300 font-bold flex items-center gap-1 shadow-2xs">
+                                      <ImageIcon size={12} /> มีภาพประกอบ
+                                    </span>
+                                  )}
+                                  {item.referenceUrl && (
+                                    <a 
+                                      href={item.referenceUrl} 
+                                      target="_blank" 
+                                      rel="noopener noreferrer" 
+                                      className="px-2.5 py-1 rounded-md bg-sky-100 text-sky-950 border border-sky-300 font-bold flex items-center gap-1 hover:underline shadow-2xs"
+                                    >
+                                      <ExternalLink size={12} /> ลิงก์ระบบ
+                                    </a>
+                                  )}
+                                  {item.manualUrl && (
+                                    <a 
+                                      href={item.manualUrl} 
+                                      target="_blank" 
+                                      rel="noopener noreferrer" 
+                                      className="px-2.5 py-1 rounded-md bg-amber-100 text-amber-950 border border-amber-300 font-bold flex items-center gap-1 hover:underline shadow-2xs"
+                                    >
+                                      <FileText size={12} /> ดูคู่มือ
+                                    </a>
+                                  )}
+                                </div>
+                              </div>
                             </div>
-                          )}
 
-                          <div className="space-y-1 min-w-0 flex-1">
-                            <div className="flex flex-wrap items-center gap-2">
-                              <span className="font-extrabold text-slate-950 text-xs">
-                                {item.title_th || item.title}
-                              </span>
-                              {item.title_th && item.title && (
-                                <span className="text-slate-600 text-[11px] font-medium">({item.title})</span>
-                              )}
-                              <span className="px-2 py-0.5 rounded-md text-[10px] font-mono bg-amber-100 text-amber-950 border border-amber-300 font-bold">
-                                {item.tag || 'System'}
-                              </span>
-                              <span className="text-slate-600 text-[10px] font-mono font-bold bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
-                                #{item.id}
-                              </span>
-                            </div>
-
-                            <p className="text-[11px] text-slate-700 font-medium line-clamp-2 leading-relaxed">
-                              {item.description_th || item.description}
-                            </p>
-
-                            <div className="flex flex-wrap gap-2 text-[10px] pt-1">
-                              {item.imageUrl && (
-                                <span className="px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-950 border border-emerald-300 font-bold flex items-center gap-1 shadow-2xs">
-                                  <ImageIcon size={12} /> มีภาพประกอบ
-                                </span>
-                              )}
-                              {item.referenceUrl && (
-                                <a 
-                                  href={item.referenceUrl} 
-                                  target="_blank" 
-                                  rel="noopener noreferrer" 
-                                  className="px-2.5 py-1 rounded-md bg-sky-100 text-sky-950 border border-sky-300 font-bold flex items-center gap-1 hover:underline shadow-2xs"
-                                >
-                                  <ExternalLink size={12} /> ลิงก์ระบบ
-                                </a>
-                              )}
-                              {item.manualUrl && (
-                                <a 
-                                  href={item.manualUrl} 
-                                  target="_blank" 
-                                  rel="noopener noreferrer" 
-                                  className="px-2.5 py-1 rounded-md bg-amber-100 text-amber-950 border border-amber-300 font-bold flex items-center gap-1 hover:underline shadow-2xs"
-                                >
-                                  <FileText size={12} /> ดูคู่มือ
-                                </a>
-                              )}
+                            {/* Actions */}
+                            <div className="flex gap-2 shrink-0 self-end sm:self-start">
+                              <button 
+                                onClick={() => { 
+                                  setIntForm(item); 
+                                  setIsIntEdit(true); 
+                                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                                }} 
+                                className={`px-3 py-1.5 rounded-lg border-2 text-xs font-bold flex items-center gap-1.5 shadow-xs transition-colors ${
+                                  isCurrentlyEditing 
+                                    ? 'bg-amber-500 text-white border-amber-600' 
+                                    : 'border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-900'
+                                }`}
+                              >
+                                <Edit3 size={13} />
+                                <span>{isCurrentlyEditing ? 'แก้ไขอยู่' : 'แก้ไข'}</span>
+                              </button>
+                              <button 
+                                onClick={() => handleDeleteInt(item.id)} 
+                                className="px-3 py-1.5 rounded-lg border-2 border-rose-300 bg-rose-100 hover:bg-rose-200 text-rose-950 text-xs font-bold flex items-center gap-1.5 shadow-xs"
+                              >
+                                <Trash2 size={13} />
+                                <span>ลบ</span>
+                              </button>
                             </div>
                           </div>
-                        </div>
-
-                        {/* Actions */}
-                        <div className="flex gap-2 shrink-0 self-end sm:self-start">
-                          <button 
-                            onClick={() => { 
-                              setIntForm(item); 
-                              setIsIntEdit(true); 
-                            }} 
-                            className="px-3 py-1.5 rounded-lg border-2 border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-bold flex items-center gap-1.5 shadow-xs"
-                          >
-                            <Edit3 size={13} />
-                            <span>แก้ไข</span>
-                          </button>
-                          <button 
-                            onClick={() => handleDeleteInt(item.id)} 
-                            className="px-3 py-1.5 rounded-lg border-2 border-rose-300 bg-rose-100 hover:bg-rose-200 text-rose-950 text-xs font-bold flex items-center gap-1.5 shadow-xs"
-                          >
-                            <Trash2 size={13} />
-                            <span>ลบ</span>
-                          </button>
-                        </div>
-                      </div>
-                    ))}
+                        );
+                      })}
                   </div>
                 )}
               </div>
@@ -1862,31 +1953,53 @@ export default function AdminDashboard() {
                 <div className="flex items-center justify-between pb-4 mb-4 border-b-2 border-slate-100">
                   <h3 className="text-sm font-extrabold text-slate-950 flex items-center gap-2">
                     <Type size={18} className="text-[#0284C7]" />
-                    <span>{isNavEdit ? 'แก้ไขเมนู Header' : 'เพิ่มเมนู Header ใหม่'}</span>
+                    <span>{isNavEdit ? 'แก้ไขเมนู Header เดิม' : 'เพิ่มเมนู Header ใหม่'}</span>
                   </h3>
                   {isNavEdit && (
                     <button 
                       type="button" 
                       onClick={() => { setNavForm(emptyNav); setIsNavEdit(false); }} 
-                      className="text-xs text-rose-900 hover:text-rose-950 font-bold px-3 py-1 rounded-lg bg-rose-100 border-2 border-rose-300 shadow-2xs"
+                      className="text-xs text-rose-900 hover:text-rose-950 font-bold px-3 py-1 rounded-lg bg-rose-100 border-2 border-rose-300 shadow-2xs hover:bg-rose-200 transition-colors"
                     >
-                      ยกเลิก
+                      ยกเลิกแก้ไข
                     </button>
                   )}
                 </div>
 
+                {isNavEdit && (
+                  <div className="mb-4 p-3 bg-amber-50 border-2 border-amber-300 rounded-xl flex items-center justify-between shadow-xs">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse shrink-0" />
+                      <span className="text-xs font-bold text-amber-950 truncate">
+                        กำลังแก้ไขเมนู: <span className="underline">{navForm.label_th || navForm.label_en}</span> (#{navForm.id})
+                      </span>
+                    </div>
+                    <button 
+                      type="button" 
+                      onClick={() => { setNavForm(emptyNav); setIsNavEdit(false); }} 
+                      className="text-[11px] text-amber-900 hover:text-amber-950 font-bold px-2 py-0.5 rounded bg-amber-200 hover:bg-amber-300 shrink-0 ml-2"
+                    >
+                      เคลียร์ฟอร์ม
+                    </button>
+                  </div>
+                )}
+
                 <form onSubmit={handleNavSubmit} className="space-y-4 text-xs">
                   <div>
                     <label className="block text-xs font-bold text-slate-800 mb-1">
-                      รหัสเมนู ID
+                      รหัสเมนู ID (เว้นว่างเพื่อสร้างอัตโนมัติ)
                     </label>
                     <input 
                       type="text" 
                       value={navForm.id} 
                       onChange={e => setNavForm({...navForm, id: e.target.value})} 
-                      placeholder="nav-1" 
+                      placeholder="เช่น nav-1" 
                       readOnly={isNavEdit} 
-                      className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#0284C7] transition-all" 
+                      className={`w-full border-2 rounded-xl px-3 py-2 text-xs font-medium outline-none transition-all ${
+                        isNavEdit 
+                          ? 'bg-amber-50/80 border-amber-300 text-amber-950 cursor-not-allowed font-bold' 
+                          : 'bg-slate-50 border-slate-200 text-slate-950 hover:border-slate-300 focus:bg-white focus:border-[#0284C7]'
+                      }`} 
                     />
                   </div>
                   <div>
@@ -1930,10 +2043,14 @@ export default function AdminDashboard() {
 
                   <button 
                     disabled={isSaving} 
-                    className="w-full py-3 bg-gradient-to-r from-[#0284C7] to-[#E11D48] hover:opacity-95 text-white rounded-xl font-extrabold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 mt-4 shadow-md hover:shadow-lg"
+                    className={`w-full py-3.5 text-white rounded-xl font-extrabold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 mt-4 shadow-md hover:shadow-lg ${
+                      isNavEdit 
+                        ? 'bg-gradient-to-r from-amber-500 to-sky-600 hover:from-amber-600 hover:to-sky-700 ring-2 ring-amber-300' 
+                        : 'bg-gradient-to-r from-[#0284C7] to-[#E11D48] hover:opacity-95'
+                    }`}
                   >
                     {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : <Save size={15} />} 
-                    <span>บันทึกเมนู</span>
+                    <span>{isNavEdit ? '✓ อัปเดตเมนูเดิม (Update Nav)' : '+ บันทึกเมนูใหม่ลง Google Sheets (Add New)'}</span>
                   </button>
                 </form>
               </div>
@@ -1950,35 +2067,60 @@ export default function AdminDashboard() {
                   </div>
                 ) : (
                   <div className="space-y-2.5">
-                    {navItems.map(item => (
-                      <div 
-                        key={item.id} 
-                        className="bg-white hover:bg-slate-50/90 border-2 border-slate-200/90 hover:border-slate-300 p-3.5 rounded-xl flex justify-between items-center text-xs shadow-xs"
-                      >
-                        <div>
-                          <span className="font-extrabold text-slate-950">
-                            {item.label_th || item.label_en}
-                          </span>
-                          <span className="text-slate-600 font-mono text-[11px] font-bold ml-2">
-                            ({item.label_en}) &bull; {item.href}
-                          </span>
+                    {navItems.map(item => {
+                      const isCurrentlyEditing = isNavEdit && navForm.id === item.id;
+                      return (
+                        <div 
+                          key={item.id} 
+                          className={`p-3.5 rounded-xl flex justify-between items-center text-xs transition-all shadow-xs ${
+                            isCurrentlyEditing 
+                              ? 'bg-amber-50/80 border-2 border-amber-400 ring-2 ring-amber-300/70 shadow-md' 
+                              : 'bg-white hover:bg-slate-50/90 border-2 border-slate-200/90 hover:border-slate-300'
+                          }`}
+                        >
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-extrabold text-slate-950">
+                                {item.label_th || item.label_en}
+                              </span>
+                              <span className="text-slate-600 font-mono text-[11px] font-bold ml-2">
+                                ({item.label_en}) &bull; {item.href}
+                              </span>
+                              <span className="text-slate-600 text-[10px] font-mono font-bold bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
+                                #{item.id}
+                              </span>
+                              {isCurrentlyEditing && (
+                                <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-200 text-amber-950 border border-amber-300 animate-pulse">
+                                  กำลังแก้ไขอยู่นี้
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex gap-2 shrink-0">
+                            <button 
+                              onClick={() => { 
+                                setNavForm(item); 
+                                setIsNavEdit(true); 
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                              }} 
+                              className={`px-3 py-1.5 rounded-lg border-2 text-xs font-bold shadow-xs transition-colors ${
+                                isCurrentlyEditing 
+                                  ? 'bg-amber-500 text-white border-amber-600' 
+                                  : 'border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-900'
+                              }`}
+                            >
+                              {isCurrentlyEditing ? 'แก้ไขอยู่' : 'แก้ไข'}
+                            </button>
+                            <button 
+                              onClick={() => handleDeleteNav(item.id)} 
+                              className="px-3 py-1.5 rounded-lg border-2 border-rose-300 bg-rose-100 hover:bg-rose-200 text-rose-950 text-xs font-bold shadow-xs"
+                            >
+                              ลบ
+                            </button>
+                          </div>
                         </div>
-                        <div className="flex gap-2 shrink-0">
-                          <button 
-                            onClick={() => { setNavForm(item); setIsNavEdit(true); }} 
-                            className="px-3 py-1.5 rounded-lg border-2 border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-bold shadow-xs"
-                          >
-                            แก้ไข
-                          </button>
-                          <button 
-                            onClick={() => handleDeleteNav(item.id)} 
-                            className="px-3 py-1.5 rounded-lg border-2 border-rose-300 bg-rose-100 hover:bg-rose-200 text-rose-950 text-xs font-bold shadow-xs"
-                          >
-                            ลบ
-                          </button>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -1995,32 +2137,54 @@ export default function AdminDashboard() {
                 <div className="flex items-center justify-between pb-4 mb-4 border-b-2 border-slate-100">
                   <h3 className="text-sm font-extrabold text-slate-950 flex items-center gap-2">
                     <Lightbulb size={18} className="text-[#0284C7]" />
-                    <span>{isConceptEdit ? 'แก้ไขจุดเด่น / คอนเซปต์' : 'เพิ่มคอนเซปต์ใหม่'}</span>
+                    <span>{isConceptEdit ? 'แก้ไขจุดเด่น / คอนเซปต์เดิม' : 'เพิ่มคอนเซปต์ใหม่'}</span>
                   </h3>
                   {isConceptEdit && (
                     <button 
                       type="button" 
                       onClick={() => { setConceptForm(emptyConcept); setIsConceptEdit(false); }} 
-                      className="text-xs text-rose-900 hover:text-rose-950 font-bold px-3 py-1 rounded-lg bg-rose-100 border-2 border-rose-300 shadow-2xs"
+                      className="text-xs text-rose-900 hover:text-rose-950 font-bold px-3 py-1 rounded-lg bg-rose-100 border-2 border-rose-300 shadow-2xs hover:bg-rose-200 transition-colors"
                     >
-                      ยกเลิก
+                      ยกเลิกแก้ไข
                     </button>
                   )}
                 </div>
+
+                {isConceptEdit && (
+                  <div className="mb-4 p-3 bg-amber-50 border-2 border-amber-300 rounded-xl flex items-center justify-between shadow-xs">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse shrink-0" />
+                      <span className="text-xs font-bold text-amber-950 truncate">
+                        กำลังแก้ไขคอนเซปต์: <span className="underline">{conceptForm.title_th || conceptForm.title_en}</span> (#{conceptForm.id})
+                      </span>
+                    </div>
+                    <button 
+                      type="button" 
+                      onClick={() => { setConceptForm(emptyConcept); setIsConceptEdit(false); }} 
+                      className="text-[11px] text-amber-900 hover:text-amber-950 font-bold px-2 py-0.5 rounded bg-amber-200 hover:bg-amber-300 shrink-0 ml-2"
+                    >
+                      เคลียร์ฟอร์ม
+                    </button>
+                  </div>
+                )}
 
                 <form onSubmit={handleConceptSubmit} className="space-y-4 text-xs">
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="block text-xs font-bold text-slate-800 mb-1">
-                        รหัส ID
+                        รหัส ID (เว้นว่างเพื่อสร้างอัตโนมัติ)
                       </label>
                       <input 
                         type="text" 
                         value={conceptForm.id} 
                         onChange={e => setConceptForm({...conceptForm, id: e.target.value})} 
-                        placeholder="concept-1" 
+                        placeholder="เช่น concept-1" 
                         readOnly={isConceptEdit} 
-                        className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#0284C7] transition-all" 
+                        className={`w-full border-2 rounded-xl px-3 py-2 text-xs font-medium outline-none transition-all ${
+                          isConceptEdit 
+                            ? 'bg-amber-50/80 border-amber-300 text-amber-950 cursor-not-allowed font-bold' 
+                            : 'bg-slate-50 border-slate-200 text-slate-950 hover:border-slate-300 focus:bg-white focus:border-[#0284C7]'
+                        }`} 
                       />
                     </div>
                     <div>
@@ -2092,10 +2256,14 @@ export default function AdminDashboard() {
 
                   <button 
                     disabled={isSaving} 
-                    className="w-full py-3 bg-gradient-to-r from-[#0284C7] to-[#E11D48] hover:opacity-95 text-white rounded-xl font-extrabold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 mt-4 shadow-md hover:shadow-lg"
+                    className={`w-full py-3.5 text-white rounded-xl font-extrabold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 mt-4 shadow-md hover:shadow-lg ${
+                      isConceptEdit 
+                        ? 'bg-gradient-to-r from-amber-500 to-sky-600 hover:from-amber-600 hover:to-sky-700 ring-2 ring-amber-300' 
+                        : 'bg-gradient-to-r from-[#0284C7] to-[#E11D48] hover:opacity-95'
+                    }`}
                   >
                     {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : <Save size={15} />} 
-                    <span>บันทึกคอนเซปต์</span>
+                    <span>{isConceptEdit ? '✓ อัปเดตคอนเซปต์เดิม (Update Concept)' : '+ บันทึกคอนเซปต์ใหม่ลง Google Sheets (Add New)'}</span>
                   </button>
                 </form>
               </div>
@@ -2112,43 +2280,66 @@ export default function AdminDashboard() {
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    {concepts.map(c => (
-                      <div 
-                        key={c.id} 
-                        className="bg-white hover:bg-slate-50/90 border-2 border-slate-200/90 hover:border-slate-300 p-4 rounded-xl flex justify-between items-start text-xs shadow-xs"
-                      >
-                        <div className="space-y-1 flex-1 pr-3">
-                          <div className="flex items-center gap-2">
-                            <span className="font-extrabold text-slate-950">
-                              {c.title_th || c.title_en}
-                            </span>
-                            {c.title_th && c.title_en && (
-                              <span className="text-slate-600 text-[11px] font-medium">({c.title_en})</span>
-                            )}
-                            <span className="px-2 py-0.5 rounded text-[10px] bg-sky-100 text-sky-950 border border-sky-300 font-mono font-bold">
-                              {c.icon || 'Feature'}
-                            </span>
+                    {concepts.map(c => {
+                      const isCurrentlyEditing = isConceptEdit && conceptForm.id === c.id;
+                      return (
+                        <div 
+                          key={c.id} 
+                          className={`p-4 rounded-xl flex justify-between items-start text-xs transition-all shadow-xs ${
+                            isCurrentlyEditing 
+                              ? 'bg-amber-50/80 border-2 border-amber-400 ring-2 ring-amber-300/70 shadow-md' 
+                              : 'bg-white hover:bg-slate-50/90 border-2 border-slate-200/90 hover:border-slate-300'
+                          }`}
+                        >
+                          <div className="space-y-1 flex-1 pr-3">
+                            <div className="flex items-center gap-2">
+                              <span className="font-extrabold text-slate-950">
+                                {c.title_th || c.title_en}
+                              </span>
+                              {c.title_th && c.title_en && (
+                                <span className="text-slate-600 text-[11px] font-medium">({c.title_en})</span>
+                              )}
+                              <span className="px-2 py-0.5 rounded text-[10px] bg-sky-100 text-sky-950 border border-sky-300 font-mono font-bold">
+                                {c.icon || 'Feature'}
+                              </span>
+                              <span className="text-slate-600 text-[10px] font-mono font-bold bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
+                                #{c.id}
+                              </span>
+                              {isCurrentlyEditing && (
+                                <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-200 text-amber-950 border border-amber-300 animate-pulse">
+                                  กำลังแก้ไขอยู่นี้
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-[11px] text-slate-700 font-medium leading-relaxed">
+                              {c.desc_th || c.desc_en}
+                            </p>
                           </div>
-                          <p className="text-[11px] text-slate-700 font-medium leading-relaxed">
-                            {c.desc_th || c.desc_en}
-                          </p>
+                          <div className="flex gap-2 shrink-0">
+                            <button 
+                              onClick={() => { 
+                                setConceptForm(c); 
+                                setIsConceptEdit(true); 
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                              }} 
+                              className={`px-3 py-1.5 rounded-lg border-2 text-xs font-bold shadow-xs transition-colors ${
+                                isCurrentlyEditing 
+                                  ? 'bg-amber-500 text-white border-amber-600' 
+                                  : 'border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-900'
+                              }`}
+                            >
+                              {isCurrentlyEditing ? 'แก้ไขอยู่' : 'แก้ไข'}
+                            </button>
+                            <button 
+                              onClick={() => handleDeleteConcept(c.id)} 
+                              className="px-3 py-1.5 rounded-lg border-2 border-rose-300 bg-rose-100 hover:bg-rose-200 text-rose-950 text-xs font-bold shadow-xs"
+                            >
+                              ลบ
+                            </button>
+                          </div>
                         </div>
-                        <div className="flex gap-2 shrink-0">
-                          <button 
-                            onClick={() => { setConceptForm(c); setIsConceptEdit(true); }} 
-                            className="px-3 py-1.5 rounded-lg border-2 border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-bold shadow-xs"
-                          >
-                            แก้ไข
-                          </button>
-                          <button 
-                            onClick={() => handleDeleteConcept(c.id)} 
-                            className="px-3 py-1.5 rounded-lg border-2 border-rose-300 bg-rose-100 hover:bg-rose-200 text-rose-950 text-xs font-bold shadow-xs"
-                          >
-                            ลบ
-                          </button>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -2167,31 +2358,53 @@ export default function AdminDashboard() {
                   <div className="flex items-center justify-between pb-4 mb-4 border-b-2 border-slate-100">
                     <h3 className="text-sm font-extrabold text-slate-950 flex items-center gap-2">
                       <FolderPlus size={18} className="text-[#E11D48]" />
-                      <span>{isSectionEdit ? 'แก้ไขส่วนเสริม' : 'เพิ่มส่วนเสริมใหม่'}</span>
+                      <span>{isSectionEdit ? 'แก้ไขส่วนเสริมเดิม' : 'เพิ่มส่วนเสริมใหม่'}</span>
                     </h3>
                     {isSectionEdit && (
                       <button 
                         type="button" 
                         onClick={() => { setSectionForm(emptySection); setIsSectionEdit(false); }} 
-                        className="text-xs text-rose-900 hover:text-rose-950 font-bold px-3 py-1 rounded-lg bg-rose-100 border-2 border-rose-300 shadow-2xs"
+                        className="text-xs text-rose-900 hover:text-rose-950 font-bold px-3 py-1 rounded-lg bg-rose-100 border-2 border-rose-300 shadow-2xs hover:bg-rose-200 transition-colors"
                       >
-                        ยกเลิก
+                        ยกเลิกแก้ไข
                       </button>
                     )}
                   </div>
 
+                  {isSectionEdit && (
+                    <div className="mb-4 p-3 bg-amber-50 border-2 border-amber-300 rounded-xl flex items-center justify-between shadow-xs">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse shrink-0" />
+                        <span className="text-xs font-bold text-amber-950 truncate">
+                          กำลังแก้ไขส่วนเสริม: <span className="underline">{sectionForm.title_th || sectionForm.title_en}</span> (#{sectionForm.id})
+                        </span>
+                      </div>
+                      <button 
+                        type="button" 
+                        onClick={() => { setSectionForm(emptySection); setIsSectionEdit(false); }} 
+                        className="text-[11px] text-amber-900 hover:text-amber-950 font-bold px-2 py-0.5 rounded bg-amber-200 hover:bg-amber-300 shrink-0 ml-2"
+                      >
+                        เคลียร์ฟอร์ม
+                      </button>
+                    </div>
+                  )}
+
                   <form onSubmit={handleSectionSubmit} className="space-y-4 text-xs">
                     <div>
                       <label className="block text-xs font-bold text-slate-800 mb-1">
-                        รหัสส่วนเสริม (Section ID)
+                        รหัสส่วนเสริม ID (เว้นว่างเพื่อสร้างอัตโนมัติ)
                       </label>
                       <input 
                         type="text" 
                         value={sectionForm.id} 
                         onChange={e => setSectionForm({...sectionForm, id: e.target.value})} 
-                        placeholder="custom-section-1" 
+                        placeholder="เช่น custom-section-1" 
                         readOnly={isSectionEdit} 
-                        className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-950 font-medium outline-none hover:border-slate-300 focus:bg-white focus:border-[#E11D48] transition-all" 
+                        className={`w-full border-2 rounded-xl px-3 py-2 text-xs font-medium outline-none transition-all ${
+                          isSectionEdit 
+                            ? 'bg-amber-50/80 border-amber-300 text-amber-950 cursor-not-allowed font-bold' 
+                            : 'bg-slate-50 border-slate-200 text-slate-950 hover:border-slate-300 focus:bg-white focus:border-[#E11D48]'
+                        }`} 
                       />
                     </div>
                     <div>
@@ -2234,10 +2447,14 @@ export default function AdminDashboard() {
 
                     <button 
                       disabled={isSaving} 
-                      className="w-full py-3 bg-gradient-to-r from-[#E11D48] to-[#EA580C] hover:opacity-95 text-white rounded-xl font-extrabold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 mt-4 shadow-md hover:shadow-lg"
+                      className={`w-full py-3.5 text-white rounded-xl font-extrabold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 mt-4 shadow-md hover:shadow-lg ${
+                        isSectionEdit 
+                          ? 'bg-gradient-to-r from-amber-500 to-rose-600 hover:from-amber-600 hover:to-rose-700 ring-2 ring-amber-300' 
+                          : 'bg-gradient-to-r from-[#E11D48] to-[#EA580C] hover:opacity-95'
+                      }`}
                     >
                       {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : <Save size={15} />} 
-                      <span>บันทึกส่วนเสริม</span>
+                      <span>{isSectionEdit ? '✓ อัปเดตส่วนเสริมเดิม (Update Section)' : '+ บันทึกส่วนเสริมใหม่ลง Google Sheets (Add New)'}</span>
                     </button>
                   </form>
                 </div>
@@ -2254,45 +2471,64 @@ export default function AdminDashboard() {
                     </div>
                   ) : (
                     <div className="space-y-3">
-                      {sections.map(s => (
-                        <div 
-                          key={s.id} 
-                          onClick={() => setSelectedSectionId(s.id)}
-                          className={`p-4 rounded-xl border-2 transition-all cursor-pointer flex justify-between items-center text-xs ${
-                            selectedSectionId === s.id 
-                              ? 'bg-rose-50/90 border-rose-400 shadow-sm ring-2 ring-rose-200/60' 
-                              : 'bg-white hover:bg-slate-50/90 border-slate-200/90 hover:border-slate-300 shadow-2xs'
-                          }`}
-                        >
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <span className="font-extrabold text-slate-950">
-                                {s.title_th || s.title_en}
-                              </span>
-                              <span className="text-[10px] font-mono px-2 py-0.5 rounded font-bold bg-slate-100 text-slate-800 border border-slate-300">
-                                #{s.id}
+                      {sections.map(s => {
+                        const isCurrentlyEditing = isSectionEdit && sectionForm.id === s.id;
+                        return (
+                          <div 
+                            key={s.id} 
+                            onClick={() => setSelectedSectionId(s.id)}
+                            className={`p-4 rounded-xl border-2 transition-all cursor-pointer flex justify-between items-center text-xs ${
+                              isCurrentlyEditing 
+                                ? 'bg-amber-50/80 border-amber-400 ring-2 ring-amber-300/70 shadow-md'
+                                : selectedSectionId === s.id 
+                                  ? 'bg-rose-50/90 border-rose-400 shadow-sm ring-2 ring-rose-200/60' 
+                                  : 'bg-white hover:bg-slate-50/90 border-slate-200/90 hover:border-slate-300 shadow-2xs'
+                            }`}
+                          >
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <span className="font-extrabold text-slate-950">
+                                  {s.title_th || s.title_en}
+                                </span>
+                                <span className="text-[10px] font-mono px-2 py-0.5 rounded font-bold bg-slate-100 text-slate-800 border border-slate-300">
+                                  #{s.id}
+                                </span>
+                                {isCurrentlyEditing && (
+                                  <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-200 text-amber-950 border border-amber-300 animate-pulse">
+                                    กำลังแก้ไขอยู่นี้
+                                  </span>
+                                )}
+                              </div>
+                              <span className="text-slate-600 text-[11px] font-medium block mt-0.5">
+                                {s.subtitle_th || s.subtitle_en}
                               </span>
                             </div>
-                            <span className="text-slate-600 text-[11px] font-medium block mt-0.5">
-                              {s.subtitle_th || s.subtitle_en}
-                            </span>
+                            <div className="flex gap-2 shrink-0">
+                              <button 
+                                onClick={(e) => { 
+                                  e.stopPropagation(); 
+                                  setSectionForm(s); 
+                                  setIsSectionEdit(true); 
+                                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                                }} 
+                                className={`px-3 py-1.5 rounded-lg border-2 text-xs font-bold shadow-xs transition-colors ${
+                                  isCurrentlyEditing 
+                                    ? 'bg-amber-500 text-white border-amber-600' 
+                                    : 'border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-900'
+                                }`}
+                              >
+                                {isCurrentlyEditing ? 'แก้ไขอยู่' : 'แก้ไข'}
+                              </button>
+                              <button 
+                                onClick={(e) => { e.stopPropagation(); handleDeleteSection(s.id); }} 
+                                className="px-3 py-1.5 rounded-lg border-2 border-rose-300 bg-rose-100 hover:bg-rose-200 text-rose-950 text-xs font-bold shadow-xs"
+                              >
+                                ลบ
+                              </button>
+                            </div>
                           </div>
-                          <div className="flex gap-2 shrink-0">
-                            <button 
-                              onClick={(e) => { e.stopPropagation(); setSectionForm(s); setIsSectionEdit(true); }} 
-                              className="px-3 py-1.5 rounded-lg border-2 border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-bold shadow-xs"
-                            >
-                              แก้ไข
-                            </button>
-                            <button 
-                              onClick={(e) => { e.stopPropagation(); handleDeleteSection(s.id); }} 
-                              className="px-3 py-1.5 rounded-lg border-2 border-rose-300 bg-rose-100 hover:bg-rose-200 text-rose-950 text-xs font-bold shadow-xs"
-                            >
-                              ลบ
-                            </button>
-                          </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   )}
                 </div>
@@ -2312,13 +2548,42 @@ export default function AdminDashboard() {
                         เพิ่มไอเทมย่อยที่จะแสดงเป็นการ์ดในส่วนเสริมนี้
                       </p>
                     </div>
-                    <button 
-                      onClick={() => setSelectedSectionId(null)} 
-                      className="text-xs font-bold text-slate-800 hover:text-slate-950 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-300 shadow-2xs"
-                    >
-                      ปิดส่วนนี้
-                    </button>
+                    <div className="flex items-center gap-2">
+                      {isSectionItemEdit && (
+                        <button 
+                          type="button" 
+                          onClick={() => { setSectionItemForm(emptySectionItem); setIsSectionItemEdit(false); }} 
+                          className="text-xs font-bold text-rose-900 hover:text-rose-950 px-3 py-1.5 rounded-lg bg-rose-100 hover:bg-rose-200 border border-rose-300 shadow-2xs transition-colors"
+                        >
+                          ยกเลิกแก้ไขรายการ
+                        </button>
+                      )}
+                      <button 
+                        onClick={() => setSelectedSectionId(null)} 
+                        className="text-xs font-bold text-slate-800 hover:text-slate-950 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-300 shadow-2xs"
+                      >
+                        ปิดส่วนนี้
+                      </button>
+                    </div>
                   </div>
+
+                  {isSectionItemEdit && (
+                    <div className="mb-4 p-3 bg-amber-50 border-2 border-amber-300 rounded-xl flex items-center justify-between shadow-xs">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse shrink-0" />
+                        <span className="text-xs font-bold text-amber-950 truncate">
+                          กำลังแก้ไขรายการ: <span className="underline">{sectionItemForm.title_th || sectionItemForm.title_en}</span> (#{sectionItemForm.id})
+                        </span>
+                      </div>
+                      <button 
+                        type="button" 
+                        onClick={() => { setSectionItemForm(emptySectionItem); setIsSectionItemEdit(false); }} 
+                        className="text-[11px] text-amber-900 hover:text-amber-950 font-bold px-2 py-0.5 rounded bg-amber-200 hover:bg-amber-300 shrink-0 ml-2"
+                      >
+                        เคลียร์ฟอร์ม
+                      </button>
+                    </div>
+                  )}
 
                   {/* Sub-item form */}
                   <form onSubmit={handleSectionItemSubmit} className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6 bg-slate-50/90 p-4 rounded-xl border-2 border-slate-200">
@@ -2350,38 +2615,61 @@ export default function AdminDashboard() {
                     <div className="flex items-end">
                       <button 
                         disabled={isSaving} 
-                        className="w-full py-2.5 bg-gradient-to-r from-[#E11D48] to-[#EA580C] hover:opacity-95 text-white rounded-xl font-extrabold text-xs uppercase tracking-wider shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-1.5"
+                        className={`w-full py-2.5 text-white rounded-xl font-extrabold text-xs uppercase tracking-wider shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-1.5 ${
+                          isSectionItemEdit 
+                            ? 'bg-gradient-to-r from-amber-500 to-rose-600 ring-2 ring-amber-300' 
+                            : 'bg-gradient-to-r from-[#E11D48] to-[#EA580C] hover:opacity-95'
+                        }`}
                       >
                         {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : null}
-                        <span>{isSectionItemEdit ? 'อัปเดตรายการ' : '+ เพิ่มรายการย่อย'}</span>
+                        <span>{isSectionItemEdit ? '✓ อัปเดตรายการเดิม' : '+ เพิ่มรายการย่อย'}</span>
                       </button>
                     </div>
                   </form>
 
                   {/* Sub-items list */}
                   <div className="space-y-2">
-                    {sectionItems.filter(it => it.section_id === selectedSectionId).map(it => (
-                      <div 
-                        key={it.id} 
-                        className="p-3.5 bg-white border-2 border-slate-200 rounded-xl flex justify-between items-center text-xs shadow-2xs"
-                      >
-                        <span className="font-bold text-slate-950">{it.title_th || it.title_en}</span>
-                        <div className="flex gap-2">
-                          <button 
-                            onClick={() => { setSectionItemForm(it); setIsSectionItemEdit(true); }} 
-                            className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-900 text-xs font-bold shadow-2xs"
-                          >
-                            แก้ไข
-                          </button>
-                          <button 
-                            onClick={() => handleDeleteSectionItem(it.id)} 
-                            className="px-2.5 py-1 rounded-lg bg-rose-100 hover:bg-rose-200 border border-rose-300 text-rose-950 text-xs font-bold shadow-2xs"
-                          >
-                            ลบ
-                          </button>
+                    {sectionItems.filter(it => it.section_id === selectedSectionId).map(it => {
+                      const isItemEditing = isSectionItemEdit && sectionItemForm.id === it.id;
+                      return (
+                        <div 
+                          key={it.id} 
+                          className={`p-3.5 rounded-xl flex justify-between items-center text-xs transition-all ${
+                            isItemEditing 
+                              ? 'bg-amber-50/80 border-2 border-amber-400 ring-2 ring-amber-300/70 shadow-md' 
+                              : 'bg-white border-2 border-slate-200 shadow-2xs'
+                          }`}
+                        >
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-slate-950">{it.title_th || it.title_en}</span>
+                            <span className="text-[10px] font-mono px-1.5 py-0.5 bg-slate-100 text-slate-700 rounded border border-slate-300">#{it.id}</span>
+                            {isItemEditing && (
+                              <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-200 text-amber-950 border border-amber-300 animate-pulse">
+                                กำลังแก้ไขอยู่นี้
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex gap-2">
+                            <button 
+                              onClick={() => { setSectionItemForm(it); setIsSectionItemEdit(true); }} 
+                              className={`px-2.5 py-1 rounded-lg border text-xs font-bold shadow-2xs transition-colors ${
+                                isItemEditing 
+                                  ? 'bg-amber-500 text-white border-amber-600' 
+                                  : 'bg-slate-100 hover:bg-slate-200 border-slate-300 text-slate-900'
+                              }`}
+                            >
+                              {isItemEditing ? 'แก้ไขอยู่' : 'แก้ไข'}
+                            </button>
+                            <button 
+                              onClick={() => handleDeleteSectionItem(it.id)} 
+                              className="px-2.5 py-1 rounded-lg bg-rose-100 hover:bg-rose-200 border border-rose-300 text-rose-950 text-xs font-bold shadow-2xs"
+                            >
+                              ลบ
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               )}

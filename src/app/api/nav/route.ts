@@ -35,17 +35,25 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { id, label_en, label_th, href, isEdit } = body;
 
+    const finalId = id?.trim() || `nav-${Date.now()}`;
+
     const rowData = [
-      id || Date.now().toString(),
+      finalId,
       label_en || "",
       label_th || "",
       href || ""
     ];
 
     if (isEdit) {
+      if (!id) return NextResponse.json({ success: false, error: 'ID required' }, { status: 400 });
       await updateSheetRow('nav', id, rowData, 'A:D');
       return NextResponse.json({ success: true, message: 'Nav item updated' });
     } else {
+      const existingRows = await getSheetValues('nav!A2:A');
+      const normalizedNewId = finalId.toLowerCase();
+      if (existingRows.some(row => String(row[0] || '').trim().toLowerCase() === normalizedNewId)) {
+        return NextResponse.json({ success: false, error: `รหัส '${finalId}' มีอยู่แล้วในระบบ` }, { status: 400 });
+      }
       await appendSheetValues('nav!A:D', [rowData]);
       return NextResponse.json({ success: true, message: 'Nav item added' });
     }
