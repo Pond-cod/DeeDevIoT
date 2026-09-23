@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Settings, Save, Loader2, CheckCircle2, AlertCircle, 
-  ExternalLink, Mail, Phone, Sparkles 
+  ExternalLink, Mail, Phone, Sparkles, Eye
 } from 'lucide-react';
 import { SiteConfig } from '../../../types/portfolio';
 import { FacebookIcon, MessengerIcon } from '../../../components/common/Icons';
@@ -261,6 +261,68 @@ export default function AdminConfigPage() {
                   onChange={e => setConfig({ ...config, hero_sub_th: e.target.value })}
                   className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border-2 border-slate-200 text-xs text-slate-900 outline-none resize-none"
                 />
+              </div>
+            </div>
+          </div>
+
+          {/* Section 4: Website Visitors Counter */}
+          <div className="bg-white p-6 rounded-2xl border-2 border-slate-200/90 shadow-xs space-y-5">
+            <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
+              <div>
+                <h2 className="text-sm font-extrabold text-slate-900 flex items-center gap-2">
+                  <Eye className="w-4 h-4 text-emerald-600" />
+                  <span>สถิติผู้เข้าชมเว็บไซต์ (Website Visitor Counter)</span>
+                </h2>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  แสดงยอดคนเข้าชมที่แถบ Navigation Bar มุมบนขวา ซิงก์กับ Google Sheets อัตโนมัติ
+                </p>
+              </div>
+              <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-mono font-bold border border-emerald-200 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                LIVE COUNTER
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="text-xs font-bold text-slate-800 block mb-1">
+                  ยอดผู้เข้าชมปัจจุบัน (Visitor Count)
+                </label>
+                <div className="relative">
+                  <input
+                    type="number"
+                    min="0"
+                    value={config.visitor_count || ''}
+                    onChange={e => setConfig({ ...config, visitor_count: e.target.value })}
+                    placeholder="1280"
+                    className="w-full pl-3.5 pr-20 py-2.5 rounded-xl bg-slate-50 border-2 border-slate-200 text-xs font-mono font-bold text-slate-900 outline-none focus:border-emerald-500"
+                  />
+                  <span className="absolute right-3 top-2.5 text-xs text-slate-400 font-mono">
+                    ครั้ง / views
+                  </span>
+                </div>
+                <span className="text-[10px] text-slate-500 mt-1 block">
+                  ตัวเลขนี้จะเพิ่มขึ้นอัตโนมัติเมื่อมีคนเข้าชมเว็บไซต์ สามารถปรับแก้ตัวเลขเริ่มต้นได้ที่นี่
+                </span>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex flex-col justify-center">
+                <div className="text-[11px] font-bold text-slate-600 mb-1">
+                  ตัวอย่างการแสดงผลบน Navigation Bar:
+                </div>
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border border-slate-200 bg-white shadow-2xs text-xs font-mono w-fit">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                  </span>
+                  <Eye size={13} className="text-slate-500" />
+                  <span className="font-bold text-slate-900">
+                    {Number(config.visitor_count || 1280).toLocaleString('th-TH')}
+                  </span>
+                  <span className="text-[11px] font-sans text-slate-500">
+                    เข้าชม
+                  </span>
+                </div>
               </div>
             </div>
           </div>

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X, ArrowUpRight, Lock, MessageCircle } from 'lucide-react';
 import { MessengerIcon } from '../common/Icons';
+import VisitorCounter from '../common/VisitorCounter';
 
 interface NavbarProps {
   lang?: 'th' | 'en';
@@ -94,6 +95,8 @@ export default function Navbar({
 
           {/* Right Action Buttons */}
           <div className="hidden sm:flex items-center gap-2.5">
+            <VisitorCounter />
+
             {onToggleLang && (
               <button
                 onClick={onToggleLang}
@@ -166,12 +169,13 @@ export default function Navbar({
             );
           })}
 
-          <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+          <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
+            <VisitorCounter compact className="shrink-0" />
             <a
               href={messengerUrl}
               target="_blank"
               rel="noreferrer"
-              className="flex-1 mr-2 text-center py-2.5 rounded-xl bg-gradient-to-r from-[#0084FF] to-[#00C6FF] text-white text-xs font-bold shadow-xs flex items-center justify-center gap-2"
+              className="flex-1 text-center py-2.5 rounded-xl bg-gradient-to-r from-[#0084FF] to-[#00C6FF] text-white text-xs font-bold shadow-xs flex items-center justify-center gap-2"
             >
               <MessengerIcon className="w-4 h-4 fill-white" />
               <span>ทัก Inbox Messenger</span>

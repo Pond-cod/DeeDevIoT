@@ -5,17 +5,34 @@ import Link from 'next/link';
 import { 
   Server, Link as LinkIcon, Layers, Settings, 
   Lightbulb, ArrowRight, CheckCircle2, ShieldCheck, 
-  ExternalLink, Sparkles, RefreshCw, Database
+  ExternalLink, Sparkles, RefreshCw, Database, Eye
 } from 'lucide-react';
 import { usePortfolioData } from '../../hooks/usePortfolioData';
 
 export default function AdminDashboardPage() {
   const { services, integrations, sections, concepts, config, isLoading, refreshData } = usePortfolioData();
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [visitorCount, setVisitorCount] = useState<number | null>(null);
+
+  const fetchVisitors = async () => {
+    try {
+      const res = await fetch('/api/visitors', { cache: 'no-store' });
+      const data = await res.json();
+      if (typeof data.count === 'number') {
+        setVisitorCount(data.count);
+      }
+    } catch {
+      // fallback
+    }
+  };
+
+  useEffect(() => {
+    fetchVisitors();
+  }, []);
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
-    await refreshData();
+    await Promise.all([refreshData(), fetchVisitors()]);
     setIsRefreshing(false);
   };
 
@@ -51,6 +68,14 @@ export default function AdminDashboardPage() {
       icon: Lightbulb,
       color: 'from-emerald-500 to-teal-600',
       href: '/admin/concepts'
+    },
+    {
+      title: 'ผู้เข้าชมเว็บไซต์ (Visitors)',
+      count: visitorCount !== null ? visitorCount.toLocaleString('th-TH') : '...',
+      desc: 'ยอดคนเข้าชมเว็บสะสมทั้งหมด',
+      icon: Eye,
+      color: 'from-blue-600 to-indigo-600',
+      href: '/admin/config'
     }
   ];
 
@@ -92,7 +117,7 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* Metric Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {statCards.map((card, idx) => {
           const Icon = card.icon;
           return (

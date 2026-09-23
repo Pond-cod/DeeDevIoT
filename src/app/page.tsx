@@ -21,6 +21,7 @@ import type {
   SiteConfig
 } from '../types/portfolio';
 import { usePortfolioData, DEFAULT_CONCEPTS } from '../hooks/usePortfolioData';
+import VisitorCounter from '../components/common/VisitorCounter';
 
 function FacebookIcon({ className = "w-5 h-5", fill = "currentColor" }: { className?: string; fill?: string }) {
   return (
@@ -295,6 +296,8 @@ export default function DeeDevIOTWebsite() {
           </nav>
 
           <div className="flex items-center gap-3">
+            <VisitorCounter className="hidden sm:inline-flex" />
+
             <a
               href="#contact"
               className="inline-flex items-center gap-2 px-4 py-2 text-xs font-mono font-bold tracking-wider bg-gradient-to-r from-[#E11D48] via-[#EA580C] to-[#D97706] hover:brightness-105 text-white rounded-xl transition-all shadow-sm hover:shadow-rose-500/20"
@@ -318,15 +321,18 @@ export default function DeeDevIOTWebsite() {
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-40 md:hidden bg-white/98 backdrop-blur-xl pt-20 px-5 sm:px-6 pb-8 flex flex-col justify-between overflow-y-auto overscroll-contain safe-area-bottom">
           <div>
-            <div className="flex items-center gap-2.5 pb-4 mb-3 border-b border-slate-200">
-              <div className="w-10 h-10 rounded-xl overflow-hidden border border-slate-200 bg-white p-0.5 shadow-2xs shrink-0">
-                <img src="/logo.jpg" alt="DeeDevIoT" className="w-full h-full object-cover rounded-lg" />
+            <div className="flex items-center justify-between gap-2 pb-4 mb-3 border-b border-slate-200">
+              <div className="flex items-center gap-2.5">
+                <div className="w-10 h-10 rounded-xl overflow-hidden border border-slate-200 bg-white p-0.5 shadow-2xs shrink-0">
+                  <img src="/logo.jpg" alt="DeeDevIoT" className="w-full h-full object-cover rounded-lg" />
+                </div>
+                <div className="font-mono text-base tracking-wider font-bold flex items-center">
+                  <span className="text-slate-950 font-black">DEEDEV</span>
+                  <span className="text-[#EA580C] mx-0.5 font-black">/</span>
+                  <span className="bg-gradient-to-r from-[#E11D48] to-[#EA580C] bg-clip-text text-transparent font-extrabold">IOT</span>
+                </div>
               </div>
-              <div className="font-mono text-base tracking-wider font-bold flex items-center">
-                <span className="text-slate-950 font-black">DEEDEV</span>
-                <span className="text-[#EA580C] mx-0.5 font-black">/</span>
-                <span className="bg-gradient-to-r from-[#E11D48] to-[#EA580C] bg-clip-text text-transparent font-extrabold">IOT</span>
-              </div>
+              <VisitorCounter />
             </div>
 
             <nav className="flex flex-col space-y-2 font-mono text-sm tracking-wider text-slate-800">

@@ -131,6 +131,7 @@ export interface SiteConfig {
   concept_title2_th?: string;
   concept_description_en?: string;
   concept_description_th?: string;
+  visitor_count?: string;
   [key: string]: string | undefined;
 }
 
