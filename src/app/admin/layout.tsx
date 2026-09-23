@@ -9,6 +9,18 @@ import {
   ChevronRight, Sparkles, MessageCircle, ShieldCheck
 } from 'lucide-react';
 
+interface AdminMenuItem {
+  href: string;
+  label: string;
+  icon: React.ComponentType<{ size?: number; className?: string }>;
+  exact?: boolean;
+}
+
+interface AdminMenuGroup {
+  group: string;
+  items: AdminMenuItem[];
+}
+
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -16,7 +28,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  const menuItems = [
+  const menuItems: AdminMenuGroup[] = [
     {
       group: 'ภาพรวมระบบ',
       items: [
@@ -51,7 +63,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     }
   };
 
-  const isActive = (href: string, exact = false) => {
+  const isActive = (href: string, exact?: boolean) => {
     if (exact) return pathname === href;
     return pathname.startsWith(href);
   };
