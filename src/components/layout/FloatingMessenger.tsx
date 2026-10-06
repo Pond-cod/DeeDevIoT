@@ -2,13 +2,77 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import { ChevronRight, ArrowUpRight, Sparkles, X, Menu } from 'lucide-react';
+import { 
+  Home, Sparkles, Layers, Zap, MessageSquare, Info, 
+  ChevronRight, ArrowUpRight, X 
+} from 'lucide-react';
 import { FacebookIcon, MessengerIcon } from '../common/Icons';
 
 interface FloatingMessengerProps {
   facebookUrl?: string;
   messengerUrl?: string;
 }
+
+const navItems = [
+  {
+    id: 'hero',
+    name: 'Home',
+    desc: 'หน้าแรก',
+    icon: Home,
+    iconColor: 'text-sky-400',
+    iconBg: 'bg-sky-500/15 border-sky-500/30 group-hover:bg-sky-500 group-hover:text-white',
+    hoverBg: 'hover:bg-sky-500/10 hover:border-sky-500/30',
+  },
+  {
+    id: 'works',
+    name: 'Works',
+    desc: 'ผลงานจริง',
+    icon: Sparkles,
+    badge: '⭐ HOT',
+    badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
+    iconColor: 'text-rose-400',
+    iconBg: 'bg-rose-500/15 border-rose-500/30 group-hover:bg-rose-500 group-hover:text-white',
+    hoverBg: 'hover:bg-rose-500/10 hover:border-rose-500/30',
+  },
+  {
+    id: 'services',
+    name: 'Services',
+    desc: 'บริการที่รับทำ',
+    icon: Layers,
+    iconColor: 'text-indigo-400',
+    iconBg: 'bg-indigo-500/15 border-indigo-500/30 group-hover:bg-indigo-500 group-hover:text-white',
+    hoverBg: 'hover:bg-indigo-500/10 hover:border-indigo-500/30',
+  },
+  {
+    id: 'solutions',
+    name: 'Solutions',
+    desc: 'โซลูชัน IoT & Web',
+    icon: Zap,
+    badge: '● LIVE',
+    badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30 animate-pulse',
+    iconColor: 'text-emerald-400',
+    iconBg: 'bg-emerald-500/15 border-emerald-500/30 group-hover:bg-emerald-500 group-hover:text-white',
+    hoverBg: 'hover:bg-emerald-500/10 hover:border-emerald-500/30',
+  },
+  {
+    id: 'contact',
+    name: 'Contact',
+    desc: 'ช่องทางติดต่อ',
+    icon: MessageSquare,
+    iconColor: 'text-amber-400',
+    iconBg: 'bg-amber-500/15 border-amber-500/30 group-hover:bg-amber-500 group-hover:text-white',
+    hoverBg: 'hover:bg-amber-500/10 hover:border-amber-500/30',
+  },
+  {
+    id: 'about',
+    name: 'About',
+    desc: 'เกี่ยวกับเรา',
+    icon: Info,
+    iconColor: 'text-purple-400',
+    iconBg: 'bg-purple-500/15 border-purple-500/30 group-hover:bg-purple-500 group-hover:text-white',
+    hoverBg: 'hover:bg-purple-500/10 hover:border-purple-500/30',
+  },
+];
 
 export default function FloatingMessenger({
   facebookUrl = 'https://www.facebook.com/DeeDevIOT',
@@ -24,6 +88,24 @@ export default function FloatingMessenger({
     return pathname === '/' ? hash : `/${hash}`;
   };
 
+  const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    setIsOpen(false);
+    if (pathname === '/') {
+      e.preventDefault();
+      const cleanId = targetId.replace(/^#/, '');
+      if (cleanId === 'hero' || !cleanId) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.history.replaceState(null, '', '/');
+      } else {
+        const el = document.getElementById(cleanId);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+          window.history.replaceState(null, '', `#${cleanId}`);
+        }
+      }
+    }
+  };
+
   const handleMouseEnter = () => {
     if (closeTimerRef.current) {
       clearTimeout(closeTimerRef.current);
@@ -33,7 +115,6 @@ export default function FloatingMessenger({
   };
 
   const handleMouseLeave = () => {
-    // Delay closing slightly so small cursor gaps don't cause jitter
     closeTimerRef.current = setTimeout(() => {
       setIsOpen(false);
     }, 250);
@@ -73,95 +154,80 @@ export default function FloatingMessenger({
             : 'opacity-0 translate-y-4 scale-95 pointer-events-none'
         }`}
       >
-        <div className="w-[280px] sm:w-[290px] rounded-2xl bg-[#0B132B]/95 backdrop-blur-xl border border-slate-700/80 shadow-[0_12px_45px_rgba(0,0,0,0.6)] p-4 text-white overflow-hidden relative">
+        <div className="w-[290px] sm:w-[305px] rounded-3xl bg-[#090E1F]/95 backdrop-blur-2xl border border-slate-700/80 shadow-[0_20px_60px_rgba(0,0,0,0.7)] p-3.5 text-white overflow-hidden relative">
           
           {/* Subtle Ambient Aurora Light */}
-          <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/20 rounded-full blur-2xl pointer-events-none" />
-          <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-cyan-500/20 rounded-full blur-2xl pointer-events-none" />
+          <div className="absolute -top-12 -right-12 w-36 h-36 bg-blue-500/20 rounded-full blur-2xl pointer-events-none" />
+          <div className="absolute -bottom-12 -left-12 w-36 h-36 bg-cyan-500/20 rounded-full blur-2xl pointer-events-none" />
 
           {/* Menu Header */}
-          <div className="flex items-center justify-between pb-2.5 mb-2.5 border-b border-slate-800">
-            <span className="font-mono text-sm font-black tracking-tight text-white flex items-center gap-2">
+          <div className="flex items-center justify-between pb-2.5 mb-2 border-b border-slate-800/80 px-1">
+            <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>เมนูเว็บไซต์</span>
-            </span>
+              <span className="font-mono text-xs font-black tracking-wider text-slate-200">
+                DEEDEV // NAV
+              </span>
+            </div>
             <span className="text-[10px] font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
               ● ONLINE
             </span>
           </div>
 
-          {/* Main Navigation Sub-Menu Items */}
-          <nav className="flex flex-col space-y-0.5 font-mono text-xs text-slate-300">
-            <a
-              href={getLink('#hero')}
-              onClick={() => setIsOpen(false)}
-              className="px-3 py-1.5 rounded-xl hover:bg-white/10 hover:text-white transition-all flex items-center justify-between group"
-            >
-              <span>Home (หน้าแรก)</span>
-              <ChevronRight size={12} className="text-slate-500 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
-            </a>
-
-            <a
-              href={getLink('#works')}
-              onClick={() => setIsOpen(false)}
-              className="px-3 py-1.5 rounded-xl hover:bg-white/10 hover:text-white transition-all flex items-center justify-between group"
-            >
-              <span>Works (ผลงานจริง)</span>
-              <ChevronRight size={12} className="text-slate-500 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
-            </a>
-
-            <a
-              href={getLink('#services')}
-              onClick={() => setIsOpen(false)}
-              className="px-3 py-1.5 rounded-xl hover:bg-white/10 hover:text-white transition-all flex items-center justify-between group"
-            >
-              <span>Services (บริการ)</span>
-              <ChevronRight size={12} className="text-slate-500 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
-            </a>
-
-            <a
-              href={getLink('#solutions')}
-              onClick={() => setIsOpen(false)}
-              className="px-3 py-1.5 rounded-xl hover:bg-white/10 hover:text-white transition-all flex items-center justify-between group"
-            >
-              <span>Solutions (โซลูชัน)</span>
-              <ChevronRight size={12} className="text-slate-500 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
-            </a>
-
-            <a
-              href={getLink('#contact')}
-              onClick={() => setIsOpen(false)}
-              className="px-3 py-1.5 rounded-xl hover:bg-white/10 hover:text-white transition-all flex items-center justify-between group"
-            >
-              <span>Contact (ติดต่อเรา)</span>
-              <ChevronRight size={12} className="text-slate-500 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
-            </a>
-
-            <a
-              href={getLink('#about')}
-              onClick={() => setIsOpen(false)}
-              className="px-3 py-1.5 rounded-xl hover:bg-white/10 hover:text-white transition-all flex items-center justify-between group"
-            >
-              <span>About (เกี่ยวกับเรา)</span>
-              <ChevronRight size={12} className="text-slate-500 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
-            </a>
+          {/* Main Navigation Sub-Menu Items with distinct colors & icons */}
+          <nav className="flex flex-col space-y-1">
+            {navItems.map((item) => {
+              const IconComp = item.icon;
+              return (
+                <a
+                  key={item.id}
+                  href={getLink(`#${item.id}`)}
+                  onClick={(e) => handleAnchorClick(e, item.id)}
+                  className={`px-2.5 py-2 rounded-xl border border-transparent ${item.hoverBg} transition-all flex items-center justify-between group cursor-pointer`}
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className={`w-7 h-7 rounded-lg ${item.iconBg} border flex items-center justify-center shrink-0 transition-colors shadow-2xs`}>
+                      <IconComp size={14} className={item.iconColor} />
+                    </div>
+                    <div className="flex flex-col min-w-0 text-left">
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-bold text-slate-100 group-hover:text-white text-xs leading-none">
+                          {item.name}
+                        </span>
+                        {item.badge && (
+                          <span className={`text-[9px] font-mono font-black px-1.5 py-0.2 rounded-full border ${item.badgeColor}`}>
+                            {item.badge}
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-[10px] text-slate-400 group-hover:text-slate-300 leading-tight mt-0.5 font-sans">
+                        {item.desc}
+                      </span>
+                    </div>
+                  </div>
+                  <ChevronRight size={13} className="text-slate-600 group-hover:text-white group-hover:translate-x-0.5 transition-all shrink-0 ml-1" />
+                </a>
+              );
+            })}
           </nav>
 
           {/* Highlighted Social & Messenger Section (เน้น ไฮไล) */}
-          <div className="pt-3 mt-2 border-t border-slate-800 space-y-2 font-mono text-xs">
+          <div className="pt-2.5 mt-2 border-t border-slate-800/80 space-y-2">
             
             {/* Highlight 1: Facebook Page */}
             <a
               href={facebookUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-3 py-2.5 rounded-xl bg-blue-600/15 hover:bg-blue-600/25 border border-blue-500/40 hover:border-blue-400 text-sky-400 hover:text-sky-200 transition-all flex items-center justify-between group shadow-sm hover:shadow-[0_0_15px_rgba(59,130,246,0.3)]"
+              className="px-3 py-2 rounded-xl bg-blue-600/15 hover:bg-blue-600/25 border border-blue-500/40 hover:border-blue-400 text-sky-300 hover:text-white transition-all flex items-center justify-between group shadow-sm hover:shadow-[0_0_15px_rgba(59,130,246,0.3)]"
             >
               <div className="flex items-center gap-2.5 min-w-0">
                 <div className="w-6 h-6 rounded-lg bg-[#1877F2] text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-110 transition-transform">
                   <FacebookIcon className="w-3.5 h-3.5 fill-white" />
                 </div>
-                <span className="font-bold truncate text-[11px] sm:text-xs">Facebook: DeeDevIOT</span>
+                <div className="flex flex-col text-left">
+                  <span className="font-bold text-xs truncate leading-none">Facebook Page</span>
+                  <span className="text-[10px] text-sky-400/80 font-mono">@DeeDevIOT</span>
+                </div>
               </div>
               <ArrowUpRight size={14} className="text-sky-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0 ml-1" />
             </a>
@@ -171,15 +237,18 @@ export default function FloatingMessenger({
               href={messengerUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-3 py-2.5 rounded-xl bg-gradient-to-r from-[#0084FF]/25 via-[#00A3FF]/20 to-[#00C6FF]/25 hover:from-[#0084FF]/35 hover:to-[#00C6FF]/35 border border-[#0084FF]/60 hover:border-[#00C6FF] text-[#00C6FF] hover:text-white transition-all flex items-center justify-between group shadow-md hover:shadow-[0_0_20px_rgba(0,132,255,0.4)]"
+              className="px-3 py-2.5 rounded-xl bg-gradient-to-r from-[#0084FF] via-[#00A3FF] to-[#00C6FF] hover:brightness-110 text-white transition-all flex items-center justify-between group shadow-md shadow-[#0084FF]/25 hover:shadow-[0_0_20px_rgba(0,132,255,0.45)]"
             >
               <div className="flex items-center gap-2.5 min-w-0">
-                <div className="w-6 h-6 rounded-lg bg-gradient-to-tr from-[#0084FF] to-[#00C6FF] text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-110 transition-transform">
+                <div className="w-6 h-6 rounded-lg bg-white/20 backdrop-blur-xs text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-110 transition-transform">
                   <MessengerIcon className="w-3.5 h-3.5 fill-white" />
                 </div>
-                <span className="font-black text-white truncate text-[11px] sm:text-xs">Inbox Messenger</span>
+                <div className="flex flex-col text-left">
+                  <span className="font-black text-xs text-white truncate leading-none">ทัก Inbox Messenger</span>
+                  <span className="text-[10px] text-white/80 font-sans">ปรึกษาโปรเจกต์ฟรี ตอบไว</span>
+                </div>
               </div>
-              <ArrowUpRight size={14} className="text-cyan-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0 ml-1" />
+              <ArrowUpRight size={14} className="text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0 ml-1" />
             </a>
 
           </div>

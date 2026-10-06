@@ -12,36 +12,52 @@ interface ProjectCardProps {
 
 export default function ProjectCard({ project, onSelect }: ProjectCardProps) {
   return (
-    <div
-      onClick={() => onSelect(project)}
-      className={`bg-white/95 backdrop-blur-xs border-2 transition-all rounded-2xl flex flex-col justify-between overflow-hidden group shadow-xs hover:shadow-xl transform hover:-translate-y-1 cursor-pointer relative ${
-        project.isFeatured
-          ? 'border-amber-400 ring-2 ring-amber-300/40 hover:border-amber-500 shadow-amber-500/10'
-          : 'border-slate-200/90 hover:border-[#E11D48]'
-      }`}
-    >
-      {/* Cover Image Container */}
-      <div className="relative h-48 w-full overflow-hidden bg-slate-100 border-b border-slate-200">
+    <div className="relative group/card flex flex-col">
+      {/* Glowing halo aura for featured project */}
+      {project.isFeatured && (
+        <div className="absolute -inset-1.5 rounded-3xl bg-gradient-to-r from-amber-400 via-orange-500 to-[#E11D48] opacity-75 group-hover/card:opacity-100 blur-md transition-all duration-500 pointer-events-none" />
+      )}
+
+      <div
+        onClick={() => onSelect(project)}
+        className={`flex-1 transition-all rounded-2xl flex flex-col justify-between overflow-hidden cursor-pointer relative ${
+          project.isFeatured
+            ? 'bg-gradient-to-b from-amber-50/70 via-white to-white border-2 border-amber-400 ring-2 ring-amber-400/60 shadow-[0_12px_40px_rgba(245,158,11,0.22)] transform hover:-translate-y-1.5'
+            : 'bg-white/95 backdrop-blur-xs border-2 border-slate-200/90 hover:border-[#E11D48] shadow-xs hover:shadow-xl transform hover:-translate-y-1'
+        }`}
+      >
+        {/* Top Featured Ribbon Banner */}
         {project.isFeatured && (
-          <div className="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-amber-500 to-[#E11D48] text-white text-[10px] font-mono font-black shadow-md flex items-center gap-1 z-10 animate-pulse">
-            <span>⭐ เด่น</span>
+          <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-[#E11D48] text-white px-4 py-1.5 flex items-center justify-between text-xs font-mono font-black tracking-wide shadow-sm z-20">
+            <span>⭐ ผลงานแนะนำพิเศษ (FEATURED)</span>
+            <span className="text-[10px] bg-black/25 backdrop-blur-xs px-2 py-0.5 rounded-full border border-white/20 font-bold uppercase tracking-wider">
+              TOP PICK
+            </span>
           </div>
         )}
-        <ImageWithFallback
-          src={project.imageUrl}
-          alt={project.name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
-          loading="lazy"
-          fallbackIcon={
-            <div className="w-full h-full bg-gradient-to-br from-slate-50 via-rose-50/40 to-orange-50/40 flex items-center justify-center">
-              <Layers size={36} className="text-slate-400 group-hover:text-[#E11D48] transition-colors" />
+
+        {/* Cover Image Container */}
+        <div className="relative h-48 w-full overflow-hidden bg-slate-100 border-b border-slate-200">
+          {project.isFeatured && (
+            <div className="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-[#E11D48] text-white text-[10px] font-mono font-black shadow-md flex items-center gap-1 z-10 animate-pulse">
+              <span>⭐ เด่น</span>
             </div>
-          }
-        />
-        <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-white/95 backdrop-blur-xs border border-slate-300 text-[10px] font-mono text-slate-900 font-bold shadow-2xs">
-          {project.category}
+          )}
+          <ImageWithFallback
+            src={project.imageUrl}
+            alt={project.name}
+            className="w-full h-full object-cover group-hover/card:scale-105 transition-all duration-500"
+            loading="lazy"
+            fallbackIcon={
+              <div className="w-full h-full bg-gradient-to-br from-slate-50 via-rose-50/40 to-orange-50/40 flex items-center justify-center">
+                <Layers size={36} className="text-slate-400 group-hover/card:text-[#E11D48] transition-colors" />
+              </div>
+            }
+          />
+          <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-white/95 backdrop-blur-xs border border-slate-300 text-[10px] font-mono text-slate-900 font-bold shadow-2xs">
+            {project.category}
+          </div>
         </div>
-      </div>
 
       {/* Content Info */}
       <div className="p-5 flex-1 flex flex-col justify-between">

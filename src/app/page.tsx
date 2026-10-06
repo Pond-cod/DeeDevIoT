@@ -161,6 +161,16 @@ export default function DeeDevIOTWebsite() {
       setIsScrolled(window.scrollY > 20);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Clean up stacked or duplicated hashes in address bar (e.g. #works#hero#hero)
+    if (typeof window !== 'undefined' && window.location.hash) {
+      const hashes = window.location.hash.match(/#[a-zA-Z0-9_-]+/g);
+      if (hashes && hashes.length > 1) {
+        const lastHash = hashes[hashes.length - 1];
+        window.history.replaceState(null, '', lastHash);
+      }
+    }
+
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -281,7 +291,15 @@ export default function DeeDevIOTWebsite() {
           : 'bg-white/80 backdrop-blur-xs border-b border-slate-200/80 py-4'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          <Link href="#hero" className="flex items-center gap-2.5 group focus:outline-none">
+          <Link 
+            href="/" 
+            onClick={(e) => {
+              e.preventDefault();
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              window.history.replaceState(null, '', '/');
+            }}
+            className="flex items-center gap-2.5 group focus:outline-none"
+          >
             <div className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-xl overflow-hidden border-2 border-slate-200/90 bg-white shadow-2xs flex items-center justify-center p-0.5 group-hover:border-[#E11D48] transition-colors shrink-0">
               <img src="/logo.jpg" alt="DeeDevIoT Logo" className="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform" />
             </div>
@@ -293,7 +311,17 @@ export default function DeeDevIOTWebsite() {
           </Link>
 
           <nav className="hidden md:flex items-center gap-6 lg:gap-7 text-xs font-mono tracking-wider font-bold text-slate-800">
-            <a href="#hero" className="hover:text-[#E11D48] transition-colors py-1">Home</a>
+            <a 
+              href="#hero" 
+              onClick={(e) => {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                window.history.replaceState(null, '', '/');
+              }}
+              className="hover:text-[#E11D48] transition-colors py-1"
+            >
+              Home
+            </a>
             <a href="#works" className="hover:text-[#E11D48] transition-colors py-1">Works</a>
             <a href="#services" className="hover:text-[#0284C7] transition-colors py-1">Services</a>
             <a href="#solutions" className="hover:text-[#059669] transition-colors flex items-center gap-1.5 py-1">
@@ -357,7 +385,12 @@ export default function DeeDevIOTWebsite() {
             <nav className="flex flex-col space-y-2 font-mono text-sm tracking-wider text-slate-800">
               <a 
                 href="#hero" 
-                onClick={() => setMobileMenuOpen(false)} 
+                onClick={(e) => {
+                  e.preventDefault();
+                  setMobileMenuOpen(false);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                  window.history.replaceState(null, '', '/');
+                }} 
                 className="py-3 px-3.5 min-h-[46px] rounded-xl border-2 border-slate-200 bg-slate-50/60 hover:bg-slate-100 flex items-center justify-between font-bold"
               >
                 <span>หน้าแรก (Home)</span>
@@ -706,115 +739,147 @@ export default function DeeDevIOTWebsite() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
             {filteredProjects.map((project) => (
-              <article
-                key={project.id}
-                className={`bg-white/95 backdrop-blur-sm border-2 transition-all rounded-2xl flex flex-col justify-between overflow-hidden group shadow-sm hover:shadow-xl transform hover:-translate-y-1 relative ${
-                  project.isFeatured
-                    ? 'border-amber-400 ring-2 ring-amber-300/40 hover:border-amber-500 shadow-amber-500/10'
-                    : 'border-slate-200/90 hover:border-[#E11D48]'
-                }`}
-              >
-                {/* Project Cover Image */}
-                <div className="relative h-48 w-full overflow-hidden bg-slate-100 border-b border-slate-200">
+              <div key={project.id} className="relative group/card flex flex-col">
+                {/* Glowing halo aura for featured project */}
+                {project.isFeatured && (
+                  <div className="absolute -inset-1.5 rounded-3xl bg-gradient-to-r from-amber-400 via-orange-500 to-[#E11D48] opacity-75 group-hover/card:opacity-100 blur-md transition-all duration-500 pointer-events-none" />
+                )}
+
+                <article
+                  className={`flex-1 transition-all rounded-2xl flex flex-col justify-between overflow-hidden relative ${
+                    project.isFeatured
+                      ? 'bg-gradient-to-b from-amber-50/70 via-white to-white border-2 border-amber-400 ring-2 ring-amber-400/60 shadow-[0_12px_40px_rgba(245,158,11,0.22)] transform hover:-translate-y-1.5'
+                      : 'bg-white/95 backdrop-blur-sm border-2 border-slate-200/90 hover:border-[#E11D48] shadow-sm hover:shadow-xl transform hover:-translate-y-1'
+                  }`}
+                >
+                  {/* Top Featured Ribbon Banner */}
                   {project.isFeatured && (
-                    <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-[#E11D48] text-white text-[10px] font-mono font-black shadow-md flex items-center gap-1.5 z-10 animate-pulse">
-                      <span>⭐ ผลงานเด่น</span>
+                    <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-[#E11D48] text-white px-4 py-1.5 flex items-center justify-between text-xs font-mono font-black tracking-wide shadow-sm z-20">
+                      <div className="flex items-center gap-1.5">
+                        <Sparkles size={14} className="text-yellow-200 animate-spin" />
+                        <span>⭐ ผลงานแนะนำพิเศษ (FEATURED)</span>
+                      </div>
+                      <span className="text-[10px] bg-black/25 backdrop-blur-xs px-2 py-0.5 rounded-full border border-white/20 font-bold uppercase tracking-wider">
+                        TOP PICK
+                      </span>
                     </div>
                   )}
-                  {project.imageUrl ? (
-                    <img
-                      src={project.imageUrl}
-                      alt={project.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
-                      loading="lazy"
-                      referrerPolicy="no-referrer"
-                      onError={(e) => {
-                        const match = e.currentTarget.src.match(/(?:\/d\/|id=)([a-zA-Z0-9_-]{20,})/);
-                        if (match && match[1] && !e.currentTarget.src.includes('thumbnail')) {
-                          e.currentTarget.src = `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1000`;
-                        }
-                      }}
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-slate-50 via-rose-50/40 to-orange-50/40 flex items-center justify-center">
-                      <Layers size={36} className="text-slate-400 group-hover:text-[#E11D48] transition-colors" />
-                    </div>
-                  )}
-                  <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-white/95 backdrop-blur-sm border border-slate-300 text-[10px] font-mono text-slate-900 font-bold shadow-xs">
-                    {project.category}
-                  </div>
-                </div>
 
-                {/* Content */}
-                <div className="p-6 flex-1 flex flex-col justify-between">
-                  <div>
-                    <h3 className="text-lg font-extrabold text-slate-950 mb-2 group-hover:text-[#E11D48] transition-colors flex items-center gap-1.5">
-                      <span>{project.name}</span>
-                      {project.isFeatured && (
-                        <span className="text-amber-500 text-sm shrink-0" title="ผลงานแนะนำเป็นพิเศษ">⭐</span>
-                      )}
-                    </h3>
-                    
-                    <p className="text-xs text-slate-700 leading-relaxed mb-5 line-clamp-3 font-normal">
-                      {project.description}
-                    </p>
+                  {/* Project Cover Image */}
+                  <div className="relative h-48 w-full overflow-hidden bg-slate-100 border-b border-slate-200">
+                    {project.imageUrl ? (
+                      <img
+                        src={project.imageUrl}
+                        alt={project.name}
+                        className="w-full h-full object-cover group-hover/card:scale-105 transition-all duration-500"
+                        loading="lazy"
+                        referrerPolicy="no-referrer"
+                        onError={(e) => {
+                          const match = e.currentTarget.src.match(/(?:\/d\/|id=)([a-zA-Z0-9_-]{20,})/);
+                          if (match && match[1] && !e.currentTarget.src.includes('thumbnail')) {
+                            e.currentTarget.src = `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1000`;
+                          }
+                        }}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-slate-50 via-rose-50/40 to-orange-50/40 flex items-center justify-center">
+                        <Layers size={36} className="text-slate-400 group-hover/card:text-[#E11D48] transition-colors" />
+                      </div>
+                    )}
 
-                    {/* Technology Tags */}
-                    <div className="flex flex-wrap gap-1.5 mb-6 font-mono text-[10px]">
-                      {project.technologies.map((techItem) => (
-                        <span
-                          key={techItem}
-                          className="px-2.5 py-1 rounded-md bg-slate-100 border border-slate-300 text-slate-800 font-bold"
-                        >
-                          {techItem}
-                        </span>
-                      ))}
+                    {project.isFeatured ? (
+                      <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-[#E11D48] text-white text-[10px] font-mono font-black shadow-md flex items-center gap-1.5 z-10 animate-pulse">
+                        <Sparkles size={11} className="text-yellow-200" />
+                        <span>⭐ เด่น</span>
+                      </div>
+                    ) : null}
+
+                    <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-white/95 backdrop-blur-sm border border-slate-300 text-[10px] font-mono text-slate-900 font-bold shadow-xs">
+                      {project.category}
                     </div>
                   </div>
 
-                  {/* Actions: Details, Content Link, Manual Link */}
-                  <div className="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 font-mono text-xs">
-                    <button
-                      type="button"
-                      onClick={() => setActiveProjectModal(project)}
-                      className="text-slate-700 hover:text-slate-950 transition-colors flex items-center gap-1.5 font-bold min-h-[40px] px-1"
-                    >
-                      <span>ดูรายละเอียด</span>
-                      <ChevronRight size={14} className="text-[#0284C7]" />
-                    </button>
+                  {/* Content */}
+                  <div className="p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                      <h3 className="text-lg font-extrabold text-slate-950 mb-2 group-hover/card:text-[#E11D48] transition-colors flex items-center gap-2 flex-wrap">
+                        <span>{project.name}</span>
+                        {project.isFeatured && (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[10px] font-mono font-black shadow-xs">
+                            ⭐ เด่น
+                          </span>
+                        )}
+                      </h3>
+                      
+                      <p className="text-xs text-slate-700 leading-relaxed mb-5 line-clamp-3 font-normal">
+                        {project.description}
+                      </p>
 
-                    <div className="flex items-center gap-2">
-                      {project.manualUrl && (
-                        <a
-                          href={project.manualUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-sky-900 hover:text-sky-950 bg-sky-100 hover:bg-sky-200 border border-sky-300 px-3 py-2 rounded-lg text-xs font-bold transition-colors inline-flex items-center gap-1.5 shadow-2xs min-h-[40px]"
-                          title="เปิดดูคู่มือการใช้งาน"
-                        >
-                          <FileText size={13} />
-                          <span>คู่มือ</span>
-                        </a>
-                      )}
+                      {/* Technology Tags */}
+                      <div className="flex flex-wrap gap-1.5 mb-6 font-mono text-[10px]">
+                        {project.technologies.map((techItem) => (
+                          <span
+                            key={techItem}
+                            className={`px-2.5 py-1 rounded-md font-bold ${
+                              project.isFeatured
+                                ? 'bg-amber-100/70 border border-amber-300/80 text-amber-950'
+                                : 'bg-slate-100 border border-slate-300 text-slate-800'
+                            }`}
+                          >
+                            {techItem}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
 
-                      {project.demoUrl ? (
-                        <a
-                          href={project.demoUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-white bg-gradient-to-r from-[#E11D48] to-[#EA580C] hover:brightness-105 px-3.5 py-2 rounded-lg text-xs font-bold transition-colors inline-flex items-center gap-1.5 shadow-xs min-h-[40px]"
-                          title="เปิดดูเนื้อหา / Live Demo"
-                        >
-                          <span>เปิดดูเนื้อหา</span>
-                          <ExternalLink size={13} />
-                        </a>
-                      ) : (
-                        <span className="text-slate-500 text-[11px] px-2.5 py-1 rounded bg-slate-100 border border-slate-200">Production</span>
-                      )}
+                    {/* Actions: Details, Content Link, Manual Link */}
+                    <div className="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 font-mono text-xs">
+                      <button
+                        type="button"
+                        onClick={() => setActiveProjectModal(project)}
+                        className="text-slate-700 hover:text-slate-950 transition-colors flex items-center gap-1.5 font-bold min-h-[40px] px-1 cursor-pointer"
+                      >
+                        <span>ดูรายละเอียด</span>
+                        <ChevronRight size={14} className="text-[#0284C7]" />
+                      </button>
+
+                      <div className="flex items-center gap-2">
+                        {project.manualUrl && (
+                          <a
+                            href={project.manualUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sky-900 hover:text-sky-950 bg-sky-100 hover:bg-sky-200 border border-sky-300 px-3 py-2 rounded-lg text-xs font-bold transition-colors inline-flex items-center gap-1.5 shadow-2xs min-h-[40px]"
+                            title="เปิดดูคู่มือการใช้งาน"
+                          >
+                            <FileText size={13} />
+                            <span>คู่มือ</span>
+                          </a>
+                        )}
+
+                        {project.demoUrl ? (
+                          <a
+                            href={project.demoUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={`px-3.5 py-2 rounded-lg text-xs font-bold transition-all inline-flex items-center gap-1.5 min-h-[40px] ${
+                              project.isFeatured
+                                ? 'text-white bg-gradient-to-r from-amber-500 via-orange-500 to-[#E11D48] hover:brightness-110 shadow-md shadow-orange-500/25 font-black'
+                                : 'text-white bg-gradient-to-r from-[#E11D48] to-[#EA580C] hover:brightness-105 shadow-xs'
+                            }`}
+                            title="เปิดดูเนื้อหา / Live Demo"
+                          >
+                            <span>เปิดดูเนื้อหา</span>
+                            <ExternalLink size={13} />
+                          </a>
+                        ) : (
+                          <span className="text-slate-500 text-[11px] px-2.5 py-1 rounded bg-slate-100 border border-slate-200">Production</span>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </article>
+                </article>
+              </div>
             ))}
 
             {/* Empty State */}

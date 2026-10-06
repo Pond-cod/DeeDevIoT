@@ -10,13 +10,59 @@ import {
 import { ProjectItem } from '../../../types/portfolio';
 import ImageWithFallback from '../../../components/common/ImageWithFallback';
 
+interface OrderInputBoxProps {
+  item: ProjectItem;
+  currentIndex: number;
+  onSave: (item: ProjectItem, newOrder: number) => void;
+  disabled?: boolean;
+}
+
+function OrderInputBox({ item, currentIndex, onSave, disabled }: OrderInputBoxProps) {
+  const currentOrder = item.sortOrder !== undefined && item.sortOrder !== null ? item.sortOrder : (currentIndex + 1);
+  const [val, setVal] = useState<string>(String(currentOrder));
+
+  useEffect(() => {
+    setVal(String(currentOrder));
+  }, [currentOrder]);
+
+  const handleCommit = () => {
+    const num = parseInt(val, 10);
+    if (!isNaN(num) && num > 0 && num !== currentOrder) {
+      onSave(item, num);
+    } else {
+      setVal(String(currentOrder));
+    }
+  };
+
+  return (
+    <div className="flex items-center gap-1.5">
+      <span className="text-xs text-slate-400 font-mono">ลำดับ:</span>
+      <input
+        type="number"
+        min={1}
+        disabled={disabled}
+        value={val}
+        onChange={e => setVal(e.target.value)}
+        onKeyDown={e => {
+          if (e.key === 'Enter') {
+            e.currentTarget.blur();
+          }
+        }}
+        onBlur={handleCommit}
+        className="w-16 px-2 py-1 rounded-lg bg-slate-50 border-2 border-slate-200 text-xs font-mono font-black text-center outline-none focus:border-amber-500 focus:bg-white transition-all disabled:opacity-50"
+        title="พิมพ์ตัวเลขเพื่อกำหนดลำดับ (กด Enter หรือคลิกออกเพื่อย้ายลำดับทันที)"
+      />
+    </div>
+  );
+}
+
 export default function AdminWorksPage() {
   const [projects, setProjects] = useState<ProjectItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState<'all' | 'featured' | 'portfolio' | 'service'>('all');
-  const [status, setStatus] = useState<{ type: 'success' | 'error' | null; message: string }>({ type: null, message: '' });
+  const [status, setStatus] = useState<{ type: 'success' | 'error' | 'info' | null; message: string }>({ type: null, message: '' });
 
   // Fetch both Services and Integrations
   const fetchAllWorks = async () => {
@@ -130,64 +176,97 @@ export default function AdminWorksPage() {
     }
   };
 
-  // Change order
-  const handleUpdateOrder = async (item: ProjectItem, newOrder: number) => {
-    if (newOrder < 1) newOrder = 1;
-    const endpoint = item.sourceType === 'service' ? '/api/services' : '/api/integrations';
+  // Change order & cleanly shift items in array
+  const handleUpdateOrder = async (item: ProjectItem, targetPosition: number) => {
+    if (targetPosition < 1) targetPosition = 1;
+    if (targetPosition > projects.length) targetPosition = projects.length;
 
-    setProjects(prev => {
-      const updated = prev.map(p => p.id === item.id ? { ...p, sortOrder: newOrder } : p);
-      return updated.sort((a, b) => {
-        const aFeat = a.isFeatured ? 1 : 0;
-        const bFeat = b.isFeatured ? 1 : 0;
-        if (aFeat !== bFeat) return bFeat - aFeat;
-        const aOrder = a.sortOrder !== undefined ? a.sortOrder : 9999;
-        const bOrder = b.sortOrder !== undefined ? b.sortOrder : 9999;
-        return aOrder - bOrder;
-      });
+    const fromIndex = projects.findIndex(p => p.id === item.id);
+    if (fromIndex === -1) return;
+    const toIndex = targetPosition - 1;
+
+    // Reorder the list by moving the item
+    const reordered = [...projects];
+    const [movedItem] = reordered.splice(fromIndex, 1);
+    reordered.splice(toIndex, 0, movedItem);
+
+    // Re-assign distinct sequential 1-based sort orders: 1, 2, 3, 4, ...
+    const updatedProjects = reordered.map((p, idx) => ({
+      ...p,
+      sortOrder: idx + 1
+    }));
+
+    setProjects(updatedProjects);
+    setIsSaving(true);
+    setStatus({
+      type: 'info',
+      message: `กำลังบันทึกลำดับใหม่ของ "${item.name}" ไปที่ลำดับ #${targetPosition}...`
     });
 
     try {
-      await fetch(endpoint, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: item.id, sortOrder: newOrder })
+      // Find all items whose sortOrder changed and save them to backend
+      const changedItems = updatedProjects.filter(p => {
+        const orig = projects.find(o => o.id === p.id);
+        return !orig || orig.sortOrder !== p.sortOrder;
+      });
+
+      await Promise.all(
+        changedItems.map(p =>
+          fetch(p.sourceType === 'service' ? '/api/services' : '/api/integrations', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: p.id, sortOrder: p.sortOrder })
+          })
+        )
+      );
+
+      setStatus({
+        type: 'success',
+        message: `จัดลำดับ "${item.name}" ไปที่ลำดับ #${targetPosition} เรียบร้อยแล้ว`
       });
     } catch {
+      setStatus({ type: 'error', message: 'เกิดข้อผิดพลาดในการบันทึกลำดับ' });
       fetchAllWorks();
+    } finally {
+      setIsSaving(false);
     }
   };
 
   // Move up or down in current list
-  const handleMove = async (index: number, direction: 'up' | 'down') => {
-    const targetIndex = direction === 'up' ? index - 1 : index + 1;
-    if (targetIndex < 0 || targetIndex >= projects.length) return;
+  const handleMove = async (item: ProjectItem, direction: 'up' | 'down') => {
+    const fromIndex = projects.findIndex(p => p.id === item.id);
+    if (fromIndex === -1) return;
+    const targetRank = direction === 'up' ? fromIndex : fromIndex + 2;
+    if (targetRank < 1 || targetRank > projects.length) return;
+    await handleUpdateOrder(item, targetRank);
+  };
 
-    const currentItem = projects[index];
-    const targetItem = projects[targetIndex];
-
-    const currentOrder = targetIndex + 1;
-    const targetOrder = index + 1;
-
+  // Re-index all works 1, 2, 3... to eliminate duplicates
+  const handleAutoReindexAll = async () => {
+    if (projects.length === 0) return;
     setIsSaving(true);
+    setStatus({ type: 'info', message: 'กำลังจัดระเบียบลำดับ 1, 2, 3... ให้ทุกรายการในระบบ...' });
+
+    const reindexed = projects.map((p, idx) => ({
+      ...p,
+      sortOrder: idx + 1
+    }));
+    setProjects(reindexed);
+
     try {
-      const p1 = fetch(currentItem.sourceType === 'service' ? '/api/services' : '/api/integrations', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: currentItem.id, sortOrder: currentOrder })
-      });
-
-      const p2 = fetch(targetItem.sourceType === 'service' ? '/api/services' : '/api/integrations', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: targetItem.id, sortOrder: targetOrder })
-      });
-
-      await Promise.all([p1, p2]);
-      setStatus({ type: 'success', message: `สลับลำดับการแสดงผลงานเรียบร้อยแล้ว` });
-      await fetchAllWorks();
+      await Promise.all(
+        reindexed.map(p =>
+          fetch(p.sourceType === 'service' ? '/api/services' : '/api/integrations', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: p.id, sortOrder: p.sortOrder })
+          })
+        )
+      );
+      setStatus({ type: 'success', message: 'จัดระเบียบลำดับ 1, 2, 3... ต่อเนื่องให้ครบทุกผลงานเรียบร้อยแล้ว' });
     } catch {
-      setStatus({ type: 'error', message: 'เกิดข้อผิดพลาดในการสลับลำดับ' });
+      setStatus({ type: 'error', message: 'เกิดข้อผิดพลาดในการบันทึกลำดับ กรุณาลองใหม่อีกครั้ง' });
+      fetchAllWorks();
     } finally {
       setIsSaving(false);
     }
@@ -227,7 +306,16 @@ export default function AdminWorksPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5 shrink-0">
+        <div className="flex items-center gap-2.5 shrink-0 flex-wrap">
+          <button
+            onClick={handleAutoReindexAll}
+            disabled={isLoading || isSaving || projects.length === 0}
+            className="px-3.5 py-2.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs font-bold border border-amber-500/40 transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-40"
+            title="จัดเรียงลำดับ 1, 2, 3... ต่อเนื่องให้ทุกรายการและบันทึก"
+          >
+            <Sparkles size={14} className="text-amber-400" />
+            <span className="hidden sm:inline">จัดระเบียบลำดับ 1..N อัตโนมัติ</span>
+          </button>
           <button
             onClick={fetchAllWorks}
             disabled={isLoading || isSaving}
@@ -254,14 +342,22 @@ export default function AdminWorksPage() {
           className={`p-3.5 rounded-xl flex items-center justify-between text-xs font-bold ${
             status.type === 'success'
               ? 'bg-emerald-50 text-emerald-900 border-2 border-emerald-300'
-              : 'bg-rose-50 text-rose-900 border-2 border-rose-300'
+              : status.type === 'info'
+                ? 'bg-sky-50 text-sky-900 border-2 border-sky-300 animate-pulse'
+                : 'bg-rose-50 text-rose-900 border-2 border-rose-300'
           }`}
         >
           <div className="flex items-center gap-2">
-            {status.type === 'success' ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
+            {status.type === 'success' ? (
+              <CheckCircle2 size={16} className="text-emerald-600 shrink-0" />
+            ) : status.type === 'info' ? (
+              <RefreshCw size={16} className="text-sky-600 animate-spin shrink-0" />
+            ) : (
+              <AlertCircle size={16} className="text-rose-600 shrink-0" />
+            )}
             <span>{status.message}</span>
           </div>
-          <button onClick={() => setStatus({ type: null, message: '' })} className="hover:opacity-75">
+          <button onClick={() => setStatus({ type: null, message: '' })} className="hover:opacity-75 cursor-pointer">
             ✕
           </button>
         </div>
@@ -365,19 +461,19 @@ export default function AdminWorksPage() {
                     <button
                       type="button"
                       disabled={index === 0 || isSaving}
-                      onClick={() => handleMove(index, 'up')}
+                      onClick={() => handleMove(item, 'up')}
                       className="p-1 rounded-lg text-slate-600 hover:bg-slate-200 disabled:opacity-30 disabled:hover:bg-transparent transition-colors cursor-pointer"
                       title="เลื่อนขึ้นด้านบน"
                     >
                       <ArrowUp size={14} />
                     </button>
                     <span className="text-[11px] font-mono font-black text-slate-800 px-1">
-                      #{index + 1}
+                      #{item.sortOrder !== undefined && item.sortOrder !== null ? item.sortOrder : (index + 1)}
                     </span>
                     <button
                       type="button"
                       disabled={index === filtered.length - 1 || isSaving}
-                      onClick={() => handleMove(index, 'down')}
+                      onClick={() => handleMove(item, 'down')}
                       className="p-1 rounded-lg text-slate-600 hover:bg-slate-200 disabled:opacity-30 disabled:hover:bg-transparent transition-colors cursor-pointer"
                       title="เลื่อนลงด้านล่าง"
                     >
@@ -444,23 +540,13 @@ export default function AdminWorksPage() {
                     <span>{item.isFeatured ? '⭐ ผลงานเด่น' : 'ติดดาว'}</span>
                   </button>
 
-                  {/* Manual Order Input */}
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-xs text-slate-400 font-mono">ลำดับ:</span>
-                    <input
-                      type="number"
-                      min={1}
-                      defaultValue={item.sortOrder ?? index + 1}
-                      onBlur={e => {
-                        const val = Number(e.target.value);
-                        if (!isNaN(val) && val !== item.sortOrder) {
-                          handleUpdateOrder(item, val);
-                        }
-                      }}
-                      className="w-16 px-2 py-1 rounded-lg bg-slate-50 border-2 border-slate-200 text-xs font-mono font-bold text-center outline-none focus:border-amber-500 focus:bg-white transition-all"
-                      title="พิมพ์ตัวเลขเพื่อกำหนดลำดับเจาะจง (คลิกออกเพื่อบันทึก)"
-                    />
-                  </div>
+                  {/* Manual Order Input with Controlled Enter & Shift Save */}
+                  <OrderInputBox
+                    item={item}
+                    currentIndex={index}
+                    onSave={handleUpdateOrder}
+                    disabled={isSaving}
+                  />
 
                   {/* Direct Link to Edit in Manager */}
                   <Link
