@@ -38,6 +38,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     {
       group: 'จัดการข้อมูลบริการและผลงาน',
       items: [
+        { href: '/admin/works', label: '⭐ เรียงผลงานหน้าแรก (Works)', icon: Sparkles },
         { href: '/admin/services', label: 'จัดการบริการ (Services)', icon: Server },
         { href: '/admin/integrations', label: 'จัดการเทคโนโลยี (Integrations)', icon: LinkIcon },
         { href: '/admin/sections', label: 'จัดการเซกชัน CMS (Sections)', icon: Layers },

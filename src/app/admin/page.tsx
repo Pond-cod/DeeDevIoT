@@ -108,6 +108,13 @@ export default function AdminDashboardPage() {
           </button>
 
           <Link
+            href="/admin/works"
+            className="px-4 py-2.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-400/40 text-xs font-bold transition-all flex items-center gap-1.5"
+          >
+            <span>⭐ เรียงผลงานหน้าแรก</span>
+          </Link>
+
+          <Link
             href="/admin/services"
             className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#E11D48] to-[#EA580C] hover:opacity-95 text-white text-xs font-bold shadow-md transition-all flex items-center gap-2"
           >

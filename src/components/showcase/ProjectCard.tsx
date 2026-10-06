@@ -14,10 +14,19 @@ export default function ProjectCard({ project, onSelect }: ProjectCardProps) {
   return (
     <div
       onClick={() => onSelect(project)}
-      className="bg-white/95 backdrop-blur-xs border-2 border-slate-200/90 hover:border-[#E11D48] transition-all rounded-2xl flex flex-col justify-between overflow-hidden group shadow-xs hover:shadow-xl transform hover:-translate-y-1 cursor-pointer"
+      className={`bg-white/95 backdrop-blur-xs border-2 transition-all rounded-2xl flex flex-col justify-between overflow-hidden group shadow-xs hover:shadow-xl transform hover:-translate-y-1 cursor-pointer relative ${
+        project.isFeatured
+          ? 'border-amber-400 ring-2 ring-amber-300/40 hover:border-amber-500 shadow-amber-500/10'
+          : 'border-slate-200/90 hover:border-[#E11D48]'
+      }`}
     >
       {/* Cover Image Container */}
       <div className="relative h-48 w-full overflow-hidden bg-slate-100 border-b border-slate-200">
+        {project.isFeatured && (
+          <div className="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-amber-500 to-[#E11D48] text-white text-[10px] font-mono font-black shadow-md flex items-center gap-1 z-10 animate-pulse">
+            <span>⭐ เด่น</span>
+          </div>
+        )}
         <ImageWithFallback
           src={project.imageUrl}
           alt={project.name}
@@ -44,8 +53,9 @@ export default function ProjectCard({ project, onSelect }: ProjectCardProps) {
             </span>
           </div>
 
-          <h3 className="text-base font-extrabold text-slate-900 group-hover:text-[#E11D48] transition-colors line-clamp-1">
-            {project.name}
+          <h3 className="text-base font-extrabold text-slate-900 group-hover:text-[#E11D48] transition-colors line-clamp-1 flex items-center gap-1.5">
+            <span>{project.name}</span>
+            {project.isFeatured && <span className="text-amber-500 text-xs">⭐</span>}
           </h3>
 
           <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">

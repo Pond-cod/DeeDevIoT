@@ -252,7 +252,7 @@ export default function IntegrationsPage() {
       </main>
 
       {/* Floating Messenger Widget */}
-      <FloatingMessenger messengerUrl={config.contact_messenger} />
+      <FloatingMessenger facebookUrl={config.facebook_url} messengerUrl={config.contact_messenger} />
 
       {/* Global Footer */}
       <Footer

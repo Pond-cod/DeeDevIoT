@@ -14,12 +14,14 @@ export interface ServiceData {
   demoUrl?: string;   // ลิงก์เปิดดูเนื้อหา / Live Demo (col F)
   videoUrls?: string; // ลิงก์วิดีโอ (col I)
   manualUrl?: string; // ลิงก์เปิดดูคู่มือ / Manual Documentation (col J)
+  isFeatured?: boolean; // ติดดาวเป็นผลงานเด่น (col K)
+  sortOrder?: number;   // ลำดับการแสดงผล (col L)
 }
 
 export async function GET() {
   try {
-    // ดึงข้อมูลจากแท็บ 'Services' ช่วงเซลล์ 'A2:J'
-    const range = 'Services!A2:J';
+    // ดึงข้อมูลจากแท็บ 'Services' ช่วงเซลล์ 'A2:L' (ครอบคลุม is_featured และ sort_order)
+    const range = 'Services!A2:L';
     const rows = await getSheetValues(range);
 
     // จัดระเบียบข้อมูล (Map) ให้ตรงกับ Interface
@@ -37,6 +39,10 @@ export async function GET() {
         .filter(Boolean)
         .join(',');
 
+      const isFeatured = String(row[10] || '').trim().toUpperCase() === 'TRUE';
+      const sortOrderRaw = row[11] !== undefined && row[11] !== '' ? Number(row[11]) : undefined;
+      const sortOrder = sortOrderRaw !== undefined && !isNaN(sortOrderRaw) ? sortOrderRaw : undefined;
+
       return {
         id: String(row[0] || ''),
         title: String(row[1] || ''),
@@ -48,6 +54,8 @@ export async function GET() {
         description_th: row[7] || '',
         videoUrls: videoUrls,
         manualUrl: row[9] || '',
+        isFeatured: isFeatured,
+        sortOrder: sortOrder,
       };
     });
 
@@ -75,7 +83,7 @@ export const revalidate = 0;
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { id, title, description, icon, imageUrl, demoUrl, videoUrls, manualUrl, isEdit } = body;
+    const { id, title, description, icon, imageUrl, demoUrl, videoUrls, manualUrl, isFeatured, sortOrder, isEdit } = body;
 
     if (!title || !description) {
       return NextResponse.json(
@@ -86,7 +94,7 @@ export async function POST(request: Request) {
 
     const finalId = id?.trim() || `svc-${Date.now()}`;
 
-    // ลำดับคอลัมน์: [id, title, description, icon, imageUrl, demoUrl, title_th, description_th, videoUrls, manualUrl]
+    // ลำดับคอลัมน์: [id, title, description, icon, imageUrl, demoUrl, title_th, description_th, videoUrls, manualUrl, is_featured, sort_order]
     const rowData = [
       finalId,
       title || "",
@@ -97,7 +105,9 @@ export async function POST(request: Request) {
       body.title_th || "",
       body.description_th || "",
       videoUrls || "",
-      manualUrl || ""
+      manualUrl || "",
+      isFeatured ? "TRUE" : "FALSE",
+      sortOrder !== undefined && sortOrder !== null && sortOrder !== '' ? String(sortOrder) : ""
     ];
 
     if (isEdit) {
@@ -107,7 +117,7 @@ export async function POST(request: Request) {
           { status: 400 }
         );
       }
-      const result = await updateSheetRow('Services', id, rowData, 'A:J');
+      const result = await updateSheetRow('Services', id, rowData, 'A:L');
       return NextResponse.json({
         success: true,
         message: 'Service updated successfully in Google Sheets',
@@ -126,7 +136,7 @@ export async function POST(request: Request) {
       }
 
       const newRow = [rowData];
-      const range = 'Services!A:J';
+      const range = 'Services!A:L';
       const result = await appendSheetValues(range, newRow);
 
       return NextResponse.json({
@@ -146,6 +156,50 @@ export async function POST(request: Request) {
       },
       { status: 500 }
     );
+  }
+}
+
+export async function PATCH(request: Request) {
+  try {
+    const body = await request.json();
+    const { id, isFeatured, sortOrder } = body;
+
+    if (!id) {
+      return NextResponse.json({ success: false, error: 'ID is required' }, { status: 400 });
+    }
+
+    const rows = await getSheetValues('Services!A2:L');
+    const normalizedId = String(id).trim().toLowerCase();
+    const existing = rows.find((r: any[]) => String(r[0] || '').trim().toLowerCase() === normalizedId);
+
+    if (!existing) {
+      return NextResponse.json({ success: false, error: 'Service not found' }, { status: 404 });
+    }
+
+    const updatedRow = [
+      existing[0] || id,
+      existing[1] || '',
+      existing[2] || '',
+      existing[3] || '',
+      existing[4] || '',
+      existing[5] || '',
+      existing[6] || '',
+      existing[7] || '',
+      existing[8] || '',
+      existing[9] || '',
+      isFeatured !== undefined ? (isFeatured ? 'TRUE' : 'FALSE') : (existing[10] || 'FALSE'),
+      sortOrder !== undefined && sortOrder !== null ? String(sortOrder) : (existing[11] || '')
+    ];
+
+    await updateSheetRow('Services', id, updatedRow, 'A:L');
+
+    return NextResponse.json({
+      success: true,
+      message: 'Service updated successfully'
+    });
+  } catch (error: any) {
+    console.error('Error in /api/services PATCH:', error);
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 }
 

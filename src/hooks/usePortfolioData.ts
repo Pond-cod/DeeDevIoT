@@ -163,7 +163,7 @@ export function usePortfolioData() {
   }, [fetchData]);
 
   // Transformed projects (combines integrations + services into unified project items)
-  const allProjects: ProjectItem[] = [
+  const rawProjects: ProjectItem[] = [
     ...integrations.map((item, idx) => ({
       id: item.id || `portfolio-${idx}`,
       name: item.title_th || item.title || 'โปรเจกต์ระบบ',
@@ -178,7 +178,9 @@ export function usePortfolioData() {
         'ออกแบบสถาปัตยกรรมระบบตามข้อกำหนดของธุรกิจ',
         'โครงสร้างระบบปลอดภัย รองรับการขยายและเชื่อมต่อ API'
       ],
-      sourceType: 'portfolio' as const
+      sourceType: 'portfolio' as const,
+      isFeatured: !!item.isFeatured,
+      sortOrder: item.sortOrder,
     })),
     ...services.map((cmsItem, idx) => ({
       id: cmsItem.id || `service-${idx}`,
@@ -192,9 +194,23 @@ export function usePortfolioData() {
       manualUrl: cmsItem.manualUrl || undefined,
       videoUrls: cmsItem.videoUrls ? cmsItem.videoUrls.split(',').map((v: string) => v.trim()).filter(Boolean) : undefined,
       architectureDetails: ['ออกแบบและพัฒนาเฉพาะสำหรับโจทย์ทางธุรกิจและองค์กร'],
-      sourceType: 'service' as const
+      sourceType: 'service' as const,
+      isFeatured: !!cmsItem.isFeatured,
+      sortOrder: cmsItem.sortOrder,
     }))
   ];
+
+  // Sort: 1. isFeatured (starred first) -> 2. sortOrder (ascending: 1, 2, 3...) -> 3. original order
+  const allProjects = [...rawProjects].sort((a, b) => {
+    const aFeat = a.isFeatured ? 1 : 0;
+    const bFeat = b.isFeatured ? 1 : 0;
+    if (aFeat !== bFeat) {
+      return bFeat - aFeat; // Featured first
+    }
+    const aOrder = a.sortOrder !== undefined ? a.sortOrder : 9999;
+    const bOrder = b.sortOrder !== undefined ? b.sortOrder : 9999;
+    return aOrder - bOrder;
+  });
 
   const categories = Array.from(new Set(allProjects.map(p => p.category).filter(Boolean)));
 

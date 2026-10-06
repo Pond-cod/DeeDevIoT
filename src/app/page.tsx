@@ -22,6 +22,7 @@ import type {
 } from '../types/portfolio';
 import { usePortfolioData, DEFAULT_CONCEPTS } from '../hooks/usePortfolioData';
 import VisitorCounter from '../components/common/VisitorCounter';
+import FloatingMessenger from '../components/layout/FloatingMessenger';
 
 function FacebookIcon({ className = "w-5 h-5", fill = "currentColor" }: { className?: string; fill?: string }) {
   return (
@@ -202,7 +203,7 @@ export default function DeeDevIOTWebsite() {
   };
 
   // Only real projects and services from Google Sheets CMS (zero mock items)
-  const allProjects: ProjectItem[] = [
+  const rawProjects: ProjectItem[] = [
     ...cmsIntegrations.map((item, idx) => ({
       id: item.id || `portfolio-${idx}`,
       name: item.title_th || item.title || 'โปรเจกต์ระบบ',
@@ -217,7 +218,9 @@ export default function DeeDevIOTWebsite() {
         'ออกแบบสถาปัตยกรรมระบบตามข้อกำหนดของธุรกิจ',
         'โครงสร้างระบบปลอดภัย รองรับการขยายและเชื่อมต่อ API'
       ],
-      sourceType: 'portfolio' as const
+      sourceType: 'portfolio' as const,
+      isFeatured: !!item.isFeatured,
+      sortOrder: item.sortOrder
     })),
     ...cmsServices.map((cmsItem, idx) => ({
       id: cmsItem.id || `service-${idx}`,
@@ -231,21 +234,37 @@ export default function DeeDevIOTWebsite() {
       manualUrl: cmsItem.manualUrl || undefined,
       videoUrls: cmsItem.videoUrls ? cmsItem.videoUrls.split(',').map((v: string) => v.trim()).filter(Boolean) : undefined,
       architectureDetails: ['ออกแบบและพัฒนาเฉพาะสำหรับโจทย์ทางธุรกิจและองค์กร'],
-      sourceType: 'service' as const
+      sourceType: 'service' as const,
+      isFeatured: !!cmsItem.isFeatured,
+      sortOrder: cmsItem.sortOrder
     }))
   ];
+
+  // Sort: 1. isFeatured first -> 2. sortOrder (ascending) -> 3. original index
+  const allProjects: ProjectItem[] = [...rawProjects].sort((a, b) => {
+    const aFeat = a.isFeatured ? 1 : 0;
+    const bFeat = b.isFeatured ? 1 : 0;
+    if (aFeat !== bFeat) return bFeat - aFeat;
+    const aOrder = a.sortOrder !== undefined ? a.sortOrder : 9999;
+    const bOrder = b.sortOrder !== undefined ? b.sortOrder : 9999;
+    return aOrder - bOrder;
+  });
 
   // Dynamic categories from real project items
   const availableCategories = Array.from(
     new Set(allProjects.map(p => p.category).filter(Boolean))
   );
 
+  const hasFeaturedProjects = allProjects.some(p => p.isFeatured);
+
   const filteredProjects = selectedWorkCategory === 'all'
     ? allProjects
-    : allProjects.filter(item => 
-        item.category.toLowerCase() === selectedWorkCategory.toLowerCase() ||
-        item.categoryKey === selectedWorkCategory.toLowerCase()
-      );
+    : selectedWorkCategory === 'featured'
+      ? allProjects.filter(item => item.isFeatured)
+      : allProjects.filter(item => 
+          item.category.toLowerCase() === selectedWorkCategory.toLowerCase() ||
+          item.categoryKey === selectedWorkCategory.toLowerCase()
+        );
 
   const selectedDevice = iotDevices.find(d => d.id === selectedDashboardDeviceId) || iotDevices[0];
 
@@ -654,6 +673,20 @@ export default function DeeDevIOTWebsite() {
               >
                 ทั้งหมด (ALL)
               </button>
+              {hasFeaturedProjects && (
+                <button
+                  type="button"
+                  onClick={() => setSelectedWorkCategory('featured')}
+                  className={`px-4 py-2.5 rounded-xl border-2 transition-all font-bold shrink-0 whitespace-nowrap min-h-[42px] flex items-center gap-1.5 ${
+                    selectedWorkCategory === 'featured'
+                      ? 'bg-gradient-to-r from-amber-500 via-orange-500 to-[#E11D48] text-white border-transparent shadow-md transform -translate-y-0.5'
+                      : 'bg-amber-50/95 backdrop-blur-sm text-amber-950 border-amber-300 hover:border-amber-500 shadow-2xs'
+                  }`}
+                >
+                  <Sparkles size={14} className={selectedWorkCategory === 'featured' ? 'animate-pulse text-amber-200' : 'text-amber-500'} />
+                  <span>⭐ ผลงานเด่น (FEATURED)</span>
+                </button>
+              )}
               {availableCategories.map((cat) => (
                 <button
                   key={cat}
@@ -675,10 +708,19 @@ export default function DeeDevIOTWebsite() {
             {filteredProjects.map((project) => (
               <article
                 key={project.id}
-                className="bg-white/95 backdrop-blur-sm border-2 border-slate-200/90 hover:border-[#E11D48] transition-all rounded-2xl flex flex-col justify-between overflow-hidden group shadow-sm hover:shadow-xl transform hover:-translate-y-1"
+                className={`bg-white/95 backdrop-blur-sm border-2 transition-all rounded-2xl flex flex-col justify-between overflow-hidden group shadow-sm hover:shadow-xl transform hover:-translate-y-1 relative ${
+                  project.isFeatured
+                    ? 'border-amber-400 ring-2 ring-amber-300/40 hover:border-amber-500 shadow-amber-500/10'
+                    : 'border-slate-200/90 hover:border-[#E11D48]'
+                }`}
               >
                 {/* Project Cover Image */}
                 <div className="relative h-48 w-full overflow-hidden bg-slate-100 border-b border-slate-200">
+                  {project.isFeatured && (
+                    <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-[#E11D48] text-white text-[10px] font-mono font-black shadow-md flex items-center gap-1.5 z-10 animate-pulse">
+                      <span>⭐ ผลงานเด่น</span>
+                    </div>
+                  )}
                   {project.imageUrl ? (
                     <img
                       src={project.imageUrl}
@@ -706,8 +748,11 @@ export default function DeeDevIOTWebsite() {
                 {/* Content */}
                 <div className="p-6 flex-1 flex flex-col justify-between">
                   <div>
-                    <h3 className="text-lg font-extrabold text-slate-950 mb-2 group-hover:text-[#E11D48] transition-colors">
-                      {project.name}
+                    <h3 className="text-lg font-extrabold text-slate-950 mb-2 group-hover:text-[#E11D48] transition-colors flex items-center gap-1.5">
+                      <span>{project.name}</span>
+                      {project.isFeatured && (
+                        <span className="text-amber-500 text-sm shrink-0" title="ผลงานแนะนำเป็นพิเศษ">⭐</span>
+                      )}
                     </h3>
                     
                     <p className="text-xs text-slate-700 leading-relaxed mb-5 line-clamp-3 font-normal">
@@ -1764,30 +1809,11 @@ export default function DeeDevIOTWebsite() {
         </div>
       )}
 
-      {/* Floating Messenger Quick Contact Widget */}
-      <aside aria-label="Quick Contact via Messenger" className="fixed bottom-6 right-6 z-40 flex items-center gap-3">
-        <a
-          href={siteConfig.contact_messenger || "https://m.me/DeeDevIOT"}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group relative flex items-center gap-3 bg-white/95 backdrop-blur-md pl-4 pr-3 py-2.5 rounded-full border-2 border-blue-200 shadow-xl hover:shadow-2xl hover:border-blue-400 transition-all duration-300 transform hover:-translate-y-1"
-          aria-label="ทักแชท Inbox ปรึกษาเราผ่าน Messenger"
-        >
-          <div className="hidden sm:flex flex-col text-left">
-            <span className="text-[10px] font-mono font-bold text-blue-600 flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              ONLINE
-            </span>
-            <span className="text-xs font-extrabold text-slate-900 group-hover:text-blue-600 transition-colors">
-              ทัก Inbox ปรึกษาเรา
-            </span>
-          </div>
-
-          <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-[#0084FF] to-[#00C6FF] flex items-center justify-center text-white shadow-[0_4px_16px_rgba(0,132,255,0.4)] group-hover:scale-105 transition-transform shrink-0">
-            <MessengerIcon className="w-6 h-6 fill-white" />
-          </div>
-        </a>
-      </aside>
+      {/* Floating Interactive Sub-Menu & Messenger Widget */}
+      <FloatingMessenger
+        facebookUrl={siteConfig.facebook_url || "https://www.facebook.com/DeeDevIOT"}
+        messengerUrl={siteConfig.contact_messenger || "https://m.me/DeeDevIOT"}
+      />
 
     </div>
   );

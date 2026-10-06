@@ -303,7 +303,7 @@ export default function ContactPage() {
       </main>
 
       {/* Floating Messenger Widget */}
-      <FloatingMessenger messengerUrl={messengerUrl} />
+      <FloatingMessenger facebookUrl={facebookUrl} messengerUrl={messengerUrl} />
 
       {/* Global Footer */}
       <Footer

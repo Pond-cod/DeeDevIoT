@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Server, Plus, Edit3, Trash2, ExternalLink, FileText, 
-  Loader2, Save, X, Search, CheckCircle2, AlertCircle, ArrowUpRight
+  Loader2, Save, X, Search, CheckCircle2, AlertCircle, ArrowUpRight,
+  Star, ArrowUp, ArrowDown
 } from 'lucide-react';
 import { ServiceData } from '../../../types/portfolio';
 import AdminImagePreview from '../../../components/admin/AdminImagePreview';
@@ -20,7 +21,9 @@ const emptyService: ServiceData = {
   imageUrl: '',
   demoUrl: '',
   videoUrls: '',
-  manualUrl: ''
+  manualUrl: '',
+  isFeatured: false,
+  sortOrder: undefined
 };
 
 export default function AdminServicesPage() {
@@ -91,6 +94,45 @@ export default function AdminServicesPage() {
       }
     } catch {
       setStatus({ type: 'error', message: 'เกิดข้อผิดพลาดในการเชื่อมต่อ' });
+    }
+  };
+
+  const handleToggleStar = async (svc: ServiceData) => {
+    const nextFeatured = !svc.isFeatured;
+    setServices(prev => prev.map(s => s.id === svc.id ? { ...s, isFeatured: nextFeatured } : s));
+    try {
+      const res = await fetch('/api/services', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: svc.id, isFeatured: nextFeatured })
+      });
+      const json = await res.json();
+      if (!json.success) {
+        setStatus({ type: 'error', message: json.error || 'ไม่สามารถอัปเดตสถานะดาวได้' });
+        fetchServices();
+      } else {
+        setStatus({ 
+          type: 'success', 
+          message: nextFeatured ? `ติดดาว "${svc.title_th || svc.title}" เป็นผลงานเด่นแล้ว ⭐` : `ยกเลิกการติดดาว "${svc.title_th || svc.title}" แล้ว` 
+        });
+      }
+    } catch {
+      setStatus({ type: 'error', message: 'เกิดข้อผิดพลาดในการเชื่อมต่อ' });
+      fetchServices();
+    }
+  };
+
+  const handleQuickOrder = async (svc: ServiceData, newOrder: number) => {
+    setServices(prev => prev.map(s => s.id === svc.id ? { ...s, sortOrder: newOrder } : s));
+    try {
+      await fetch('/api/services', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: svc.id, sortOrder: newOrder })
+      });
+      fetchServices();
+    } catch {
+      fetchServices();
     }
   };
 
@@ -215,27 +257,52 @@ export default function AdminServicesPage() {
             return (
               <div
                 key={svc.id}
-                className="bg-white border-2 border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col justify-between space-y-3"
+                className={`bg-white border-2 rounded-2xl p-4 shadow-xs flex flex-col justify-between space-y-3 transition-all ${
+                  svc.isFeatured ? 'border-amber-400 ring-2 ring-amber-300/30' : 'border-slate-200/90'
+                }`}
               >
                 <div className="flex items-start gap-3.5">
-                  <div className="w-16 h-16 rounded-xl bg-slate-100 border border-slate-200 shrink-0 overflow-hidden">
+                  <div className="w-16 h-16 rounded-xl bg-slate-100 border border-slate-200 shrink-0 overflow-hidden relative">
                     <ImageWithFallback
                       src={firstImg}
                       alt={svc.title_th || svc.title}
                       className="w-full h-full object-cover"
                     />
+                    {svc.isFeatured && (
+                      <span className="absolute top-1 left-1 px-1.5 py-0.5 rounded-md bg-amber-500 text-white text-[9px] font-black shadow-xs">
+                        ⭐ เด่น
+                      </span>
+                    )}
                   </div>
 
                   <div className="flex-1 min-w-0 space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-rose-50 text-[#E11D48] border border-rose-200">
-                        {svc.icon || 'Solution'}
-                      </span>
-                      <span className="text-[10px] font-mono text-slate-400 truncate">ID: {svc.id}</span>
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2 truncate">
+                        <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-rose-50 text-[#E11D48] border border-rose-200 shrink-0">
+                          {svc.icon || 'Solution'}
+                        </span>
+                        <span className="text-[10px] font-mono text-slate-400 truncate">ID: {svc.id}</span>
+                      </div>
+
+                      {/* One-click Star Button */}
+                      <button
+                        type="button"
+                        onClick={() => handleToggleStar(svc)}
+                        className={`px-2 py-1 rounded-lg border text-[11px] font-bold font-mono transition-all flex items-center gap-1 cursor-pointer shrink-0 ${
+                          svc.isFeatured
+                            ? 'bg-amber-100 text-amber-950 border-amber-300 shadow-2xs'
+                            : 'bg-slate-50 text-slate-500 border-slate-200 hover:text-amber-500 hover:border-amber-200'
+                        }`}
+                        title={svc.isFeatured ? 'คลิกเพื่อยกเลิกการติดดาว' : 'คลิกเพื่อติดดาวผลงานเด่น'}
+                      >
+                        <Star size={13} className={svc.isFeatured ? 'fill-amber-500 text-amber-500' : ''} />
+                        <span>{svc.isFeatured ? 'เด่น' : 'ติดดาว'}</span>
+                      </button>
                     </div>
 
-                    <h3 className="text-sm font-extrabold text-slate-900 truncate">
-                      {svc.title_th || svc.title}
+                    <h3 className="text-sm font-extrabold text-slate-900 truncate flex items-center gap-1.5">
+                      <span>{svc.title_th || svc.title}</span>
+                      {svc.isFeatured && <span className="text-amber-500 text-xs">⭐</span>}
                     </h3>
 
                     <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
@@ -245,9 +312,33 @@ export default function AdminServicesPage() {
                 </div>
 
                 <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-2 text-slate-400 text-[11px]">
-                    {svc.demoUrl && <span className="text-sky-600 font-bold">✓ Live Demo</span>}
-                    {svc.manualUrl && <span className="text-amber-600 font-bold">✓ Manual</span>}
+                  {/* Order control */}
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1 font-mono text-[11px] bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-200">
+                      <span className="text-slate-500 font-bold">ลำดับ:</span>
+                      <span className="text-slate-900 font-black">{svc.sortOrder ?? '-'}</span>
+                      <button
+                        type="button"
+                        onClick={() => handleQuickOrder(svc, Math.max(1, (svc.sortOrder ?? 10) - 1))}
+                        className="p-0.5 hover:bg-slate-200 rounded text-slate-600 transition-colors ml-0.5"
+                        title="เลื่อนขึ้น (เลขลำดับลดลง)"
+                      >
+                        <ArrowUp size={11} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleQuickOrder(svc, (svc.sortOrder ?? 0) + 1)}
+                        className="p-0.5 hover:bg-slate-200 rounded text-slate-600 transition-colors"
+                        title="เลื่อนลง (เลขลำดับเพิ่มขึ้น)"
+                      >
+                        <ArrowDown size={11} />
+                      </button>
+                    </div>
+
+                    <div className="hidden sm:flex items-center gap-2 text-slate-400 text-[11px]">
+                      {svc.demoUrl && <span className="text-sky-600 font-bold">✓ Live</span>}
+                      {svc.manualUrl && <span className="text-amber-600 font-bold">✓ Manual</span>}
+                    </div>
                   </div>
 
                   <div className="flex items-center gap-2">
@@ -287,6 +378,34 @@ export default function AdminServicesPage() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Featured & Order Banner in Modal */}
+              <div className="p-3.5 bg-amber-50/80 border-2 border-amber-300 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+                <label className="flex items-center gap-2.5 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={!!formData.isFeatured}
+                    onChange={e => setFormData({ ...formData, isFeatured: e.target.checked })}
+                    className="w-4 h-4 rounded text-amber-600 focus:ring-amber-500 border-slate-300"
+                  />
+                  <div>
+                    <span className="text-xs font-bold text-amber-950 block">⭐ ติดดาวเป็นผลงานเด่น (Featured)</span>
+                    <span className="text-[11px] text-amber-850 font-normal">แสดงป้ายผลงานแนะนำและจัดลำดับให้อยู่กลุ่มแรก</span>
+                  </div>
+                </label>
+
+                <div className="flex items-center gap-2">
+                  <label className="text-xs font-bold text-slate-700 whitespace-nowrap">ลำดับการแสดงผล:</label>
+                  <input
+                    type="number"
+                    min={1}
+                    value={formData.sortOrder ?? ''}
+                    onChange={e => setFormData({ ...formData, sortOrder: e.target.value ? Number(e.target.value) : undefined })}
+                    placeholder="เช่น 1, 2, 3"
+                    className="w-24 px-2.5 py-1.5 rounded-lg bg-white border-2 border-slate-200 text-xs text-slate-900 font-mono outline-none focus:border-amber-500"
+                  />
+                </div>
+              </div>
+
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="text-xs font-bold text-slate-800 block mb-1">Service ID *</label>

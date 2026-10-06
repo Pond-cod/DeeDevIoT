@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Link as LinkIcon, Plus, Edit3, Trash2, ExternalLink, 
-  Loader2, Save, X, Search, CheckCircle2, AlertCircle 
+  Loader2, Save, X, Search, CheckCircle2, AlertCircle,
+  Star, ArrowUp, ArrowDown
 } from 'lucide-react';
 import { IntegrationData } from '../../../types/portfolio';
 import AdminImagePreview from '../../../components/admin/AdminImagePreview';
@@ -19,7 +20,9 @@ const emptyIntegration: IntegrationData = {
   imageUrl: '',
   tag: 'Hardware',
   referenceUrl: '',
-  manualUrl: ''
+  manualUrl: '',
+  isFeatured: false,
+  sortOrder: undefined
 };
 
 export default function AdminIntegrationsPage() {
@@ -81,6 +84,45 @@ export default function AdminIntegrationsPage() {
       }
     } catch {
       setStatus({ type: 'error', message: 'เกิดข้อผิดพลาดในการเชื่อมต่อ' });
+    }
+  };
+
+  const handleToggleStar = async (item: IntegrationData) => {
+    const nextFeatured = !item.isFeatured;
+    setIntegrations(prev => prev.map(i => i.id === item.id ? { ...i, isFeatured: nextFeatured } : i));
+    try {
+      const res = await fetch('/api/integrations', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: item.id, isFeatured: nextFeatured })
+      });
+      const json = await res.json();
+      if (!json.success) {
+        setStatus({ type: 'error', message: json.error || 'ไม่สามารถอัปเดตสถานะดาวได้' });
+        fetchIntegrations();
+      } else {
+        setStatus({ 
+          type: 'success', 
+          message: nextFeatured ? `ติดดาว "${item.title_th || item.title}" เป็นผลงานเด่นแล้ว ⭐` : `ยกเลิกการติดดาว "${item.title_th || item.title}" แล้ว` 
+        });
+      }
+    } catch {
+      setStatus({ type: 'error', message: 'เกิดข้อผิดพลาดในการเชื่อมต่อ' });
+      fetchIntegrations();
+    }
+  };
+
+  const handleQuickOrder = async (item: IntegrationData, newOrder: number) => {
+    setIntegrations(prev => prev.map(i => i.id === item.id ? { ...i, sortOrder: newOrder } : i));
+    try {
+      await fetch('/api/integrations', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: item.id, sortOrder: newOrder })
+      });
+      fetchIntegrations();
+    } catch {
+      fetchIntegrations();
     }
   };
 
@@ -191,27 +233,52 @@ export default function AdminIntegrationsPage() {
           {filtered.map(item => (
             <div
               key={item.id}
-              className="bg-white border-2 border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col justify-between space-y-3"
+              className={`bg-white border-2 rounded-2xl p-4 shadow-xs flex flex-col justify-between space-y-3 transition-all ${
+                item.isFeatured ? 'border-amber-400 ring-2 ring-amber-300/30' : 'border-slate-200/90'
+              }`}
             >
               <div className="flex items-start gap-3.5">
-                <div className="w-16 h-16 rounded-xl bg-slate-100 border border-slate-200 shrink-0 overflow-hidden">
+                <div className="w-16 h-16 rounded-xl bg-slate-100 border border-slate-200 shrink-0 overflow-hidden relative">
                   <ImageWithFallback
                     src={item.imageUrl}
                     alt={item.title_th || item.title}
                     className="w-full h-full object-cover"
                   />
+                  {item.isFeatured && (
+                    <span className="absolute top-1 left-1 px-1.5 py-0.5 rounded-md bg-amber-500 text-white text-[9px] font-black shadow-xs">
+                      ⭐ เด่น
+                    </span>
+                  )}
                 </div>
 
                 <div className="flex-1 min-w-0 space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-50 text-amber-800 border border-amber-200">
-                      {item.tag || 'Hardware'}
-                    </span>
-                    <span className="text-[10px] font-mono text-slate-400 truncate">ID: {item.id}</span>
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 truncate">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-50 text-amber-800 border border-amber-200 shrink-0">
+                        {item.tag || 'Hardware'}
+                      </span>
+                      <span className="text-[10px] font-mono text-slate-400 truncate">ID: {item.id}</span>
+                    </div>
+
+                    {/* One-click Star Button */}
+                    <button
+                      type="button"
+                      onClick={() => handleToggleStar(item)}
+                      className={`px-2 py-1 rounded-lg border text-[11px] font-bold font-mono transition-all flex items-center gap-1 cursor-pointer shrink-0 ${
+                        item.isFeatured
+                          ? 'bg-amber-100 text-amber-950 border-amber-300 shadow-2xs'
+                          : 'bg-slate-50 text-slate-500 border-slate-200 hover:text-amber-500 hover:border-amber-200'
+                      }`}
+                      title={item.isFeatured ? 'คลิกเพื่อยกเลิกการติดดาว' : 'คลิกเพื่อติดดาวผลงานเด่น'}
+                    >
+                      <Star size={13} className={item.isFeatured ? 'fill-amber-500 text-amber-500' : ''} />
+                      <span>{item.isFeatured ? 'เด่น' : 'ติดดาว'}</span>
+                    </button>
                   </div>
 
-                  <h3 className="text-sm font-extrabold text-slate-900 truncate">
-                    {item.title_th || item.title}
+                  <h3 className="text-sm font-extrabold text-slate-900 truncate flex items-center gap-1.5">
+                    <span>{item.title_th || item.title}</span>
+                    {item.isFeatured && <span className="text-amber-500 text-xs">⭐</span>}
                   </h3>
 
                   <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
@@ -221,17 +288,41 @@ export default function AdminIntegrationsPage() {
               </div>
 
               <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-                {item.referenceUrl ? (
-                  <a
-                    href={item.referenceUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-sky-600 font-bold flex items-center gap-1 hover:underline text-[11px]"
-                  >
-                    <span>Reference URL</span>
-                    <ExternalLink size={12} />
-                  </a>
-                ) : <span />}
+                {/* Order control */}
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1 font-mono text-[11px] bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-200">
+                    <span className="text-slate-500 font-bold">ลำดับ:</span>
+                    <span className="text-slate-900 font-black">{item.sortOrder ?? '-'}</span>
+                    <button
+                      type="button"
+                      onClick={() => handleQuickOrder(item, Math.max(1, (item.sortOrder ?? 10) - 1))}
+                      className="p-0.5 hover:bg-slate-200 rounded text-slate-600 transition-colors ml-0.5"
+                      title="เลื่อนขึ้น (เลขลำดับลดลง)"
+                    >
+                      <ArrowUp size={11} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleQuickOrder(item, (item.sortOrder ?? 0) + 1)}
+                      className="p-0.5 hover:bg-slate-200 rounded text-slate-600 transition-colors"
+                      title="เลื่อนลง (เลขลำดับเพิ่มขึ้น)"
+                    >
+                      <ArrowDown size={11} />
+                    </button>
+                  </div>
+
+                  {item.referenceUrl && (
+                    <a
+                      href={item.referenceUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-sky-600 font-bold hidden sm:flex items-center gap-1 hover:underline text-[11px]"
+                    >
+                      <span>Ref</span>
+                      <ExternalLink size={11} />
+                    </a>
+                  )}
+                </div>
 
                 <div className="flex items-center gap-2">
                   <button
@@ -269,6 +360,34 @@ export default function AdminIntegrationsPage() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Featured & Order Banner in Modal */}
+              <div className="p-3.5 bg-amber-50/80 border-2 border-amber-300 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+                <label className="flex items-center gap-2.5 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={!!formData.isFeatured}
+                    onChange={e => setFormData({ ...formData, isFeatured: e.target.checked })}
+                    className="w-4 h-4 rounded text-amber-600 focus:ring-amber-500 border-slate-300"
+                  />
+                  <div>
+                    <span className="text-xs font-bold text-amber-950 block">⭐ ติดดาวเป็นผลงานเด่น (Featured)</span>
+                    <span className="text-[11px] text-amber-850 font-normal">แสดงป้ายผลงานแนะนำและจัดลำดับให้อยู่กลุ่มแรก</span>
+                  </div>
+                </label>
+
+                <div className="flex items-center gap-2">
+                  <label className="text-xs font-bold text-slate-700 whitespace-nowrap">ลำดับการแสดงผล:</label>
+                  <input
+                    type="number"
+                    min={1}
+                    value={formData.sortOrder ?? ''}
+                    onChange={e => setFormData({ ...formData, sortOrder: e.target.value ? Number(e.target.value) : undefined })}
+                    placeholder="เช่น 1, 2, 3"
+                    className="w-24 px-2.5 py-1.5 rounded-lg bg-white border-2 border-slate-200 text-xs text-slate-900 font-mono outline-none focus:border-amber-500"
+                  />
+                </div>
+              </div>
+
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="text-xs font-bold text-slate-800 block mb-1">ID *</label>

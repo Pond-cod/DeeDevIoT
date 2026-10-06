@@ -11,6 +11,8 @@ export interface ProjectItem {
   videoUrls?: string[];
   architectureDetails: string[];
   sourceType: 'portfolio' | 'service';
+  isFeatured?: boolean;
+  sortOrder?: number;
 }
 
 export interface ServiceData {
@@ -24,6 +26,8 @@ export interface ServiceData {
   demoUrl?: string;
   videoUrls?: string;
   manualUrl?: string;
+  isFeatured?: boolean;
+  sortOrder?: number;
 }
 
 export interface IntegrationData {
@@ -36,6 +40,8 @@ export interface IntegrationData {
   tag: string;
   referenceUrl: string;
   manualUrl?: string;
+  isFeatured?: boolean;
+  sortOrder?: number;
 }
 
 export interface ConceptItem {

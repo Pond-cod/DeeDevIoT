@@ -25,9 +25,12 @@ export default function ShowcasePage() {
   // Filter projects by category and search keyword
   const filteredProjects = useMemo(() => {
     return allProjects.filter(project => {
-      const matchCategory = selectedCategory === 'all' || 
-        project.category.toLowerCase() === selectedCategory.toLowerCase() ||
-        project.categoryKey === selectedCategory.toLowerCase();
+      const matchCategory = selectedCategory === 'all'
+        ? true
+        : selectedCategory === 'featured'
+          ? project.isFeatured
+          : project.category.toLowerCase() === selectedCategory.toLowerCase() ||
+            project.categoryKey === selectedCategory.toLowerCase();
 
       const query = searchQuery.trim().toLowerCase();
       const matchSearch = !query || 
@@ -114,6 +117,19 @@ export default function ShowcasePage() {
               >
                 ทั้งหมด ({allProjects.length})
               </button>
+
+              {allProjects.some(p => p.isFeatured) && (
+                <button
+                  onClick={() => setSelectedCategory('featured')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                    selectedCategory === 'featured'
+                      ? 'bg-gradient-to-r from-amber-500 to-[#E11D48] text-white shadow-2xs'
+                      : 'bg-amber-50 text-amber-900 border border-amber-200 hover:bg-amber-100'
+                  }`}
+                >
+                  <span>⭐ เด่น ({allProjects.filter(p => p.isFeatured).length})</span>
+                </button>
+              )}
 
               {categories.map(cat => {
                 const count = allProjects.filter(p => p.category === cat).length;
@@ -209,7 +225,7 @@ export default function ShowcasePage() {
       />
 
       {/* Floating Messenger Widget */}
-      <FloatingMessenger messengerUrl={config.contact_messenger} />
+      <FloatingMessenger facebookUrl={config.facebook_url} messengerUrl={config.contact_messenger} />
 
       {/* Global Footer */}
       <Footer

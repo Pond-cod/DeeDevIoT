@@ -132,17 +132,28 @@ export default function ServicesPage() {
                     'ระบบเชื่อมโยง API และแสดงผลสดแบบ Real-time',
                     'บริการดูแลและส่งมอบโค้ดพร้อมคู่มือการใช้งาน'
                   ],
-                  sourceType: 'service'
+                  sourceType: 'service',
+                  isFeatured: svc.isFeatured,
+                  sortOrder: svc.sortOrder
                 };
 
                 return (
                   <div
                     key={svc.id}
                     onClick={() => setSelectedService(asProject)}
-                    className="bg-white border-2 border-slate-200/90 hover:border-[#E11D48] rounded-2xl overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between group cursor-pointer"
+                    className={`bg-white border-2 rounded-2xl overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between group cursor-pointer ${
+                      svc.isFeatured
+                        ? 'border-amber-400 ring-2 ring-amber-300/40 shadow-amber-500/10'
+                        : 'border-slate-200/90 hover:border-[#E11D48]'
+                    }`}
                   >
                     {/* Cover Thumbnail */}
                     <div className="relative h-52 w-full overflow-hidden bg-slate-100 border-b border-slate-200">
+                      {svc.isFeatured && (
+                        <div className="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-amber-500 to-[#E11D48] text-white text-[10px] font-mono font-black shadow-md z-10 animate-pulse">
+                          ⭐ ผลงานเด่น
+                        </div>
+                      )}
                       <ImageWithFallback
                         src={firstImg}
                         alt={svc.title_th || svc.title}
@@ -260,7 +271,7 @@ export default function ServicesPage() {
       />
 
       {/* Floating Messenger Widget */}
-      <FloatingMessenger messengerUrl={config.contact_messenger} />
+      <FloatingMessenger facebookUrl={config.facebook_url} messengerUrl={config.contact_messenger} />
 
       {/* Global Footer */}
       <Footer
