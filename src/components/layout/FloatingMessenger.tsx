@@ -106,7 +106,7 @@ export default function FloatingMessenger({
     }
   };
 
-  const handleMouseEnter = () => {
+  const handleButtonMouseEnter = () => {
     if (closeTimerRef.current) {
       clearTimeout(closeTimerRef.current);
       closeTimerRef.current = null;
@@ -114,10 +114,17 @@ export default function FloatingMessenger({
     setIsOpen(true);
   };
 
+  const handleMenuMouseEnter = () => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+  };
+
   const handleMouseLeave = () => {
     closeTimerRef.current = setTimeout(() => {
       setIsOpen(false);
-    }, 250);
+    }, 280);
   };
 
   const handleClickToggle = () => {
@@ -141,17 +148,17 @@ export default function FloatingMessenger({
   return (
     <div
       ref={containerRef}
-      onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       className="fixed bottom-6 right-6 z-50 flex flex-col items-end"
       aria-label="Floating Navigation and Messenger Menu"
     >
-      {/* Full Sub-Menu Flyout (Opens on hover or click) */}
+      {/* Full Sub-Menu Flyout (Opens on hover over trigger button or click) */}
       <div
-        className={`transition-all duration-300 transform origin-bottom-right mb-3 ${
+        onMouseEnter={handleMenuMouseEnter}
+        className={`absolute bottom-full right-0 mb-3 transition-all duration-300 transform origin-bottom-right ${
           isOpen
-            ? 'opacity-100 translate-y-0 scale-100 pointer-events-auto'
-            : 'opacity-0 translate-y-4 scale-95 pointer-events-none'
+            ? 'opacity-100 translate-y-0 scale-100 pointer-events-auto visible'
+            : 'opacity-0 translate-y-4 scale-95 pointer-events-none invisible'
         }`}
       >
         <div className="w-[290px] sm:w-[305px] rounded-3xl bg-[#090E1F]/95 backdrop-blur-2xl border border-slate-700/80 shadow-[0_20px_60px_rgba(0,0,0,0.7)] p-3.5 text-white overflow-hidden relative">
@@ -259,6 +266,7 @@ export default function FloatingMessenger({
       {/* Floating Trigger Button (เริ่มต้นเป็นแค่ไอคอนเดี่ยว) */}
       <button
         type="button"
+        onMouseEnter={handleButtonMouseEnter}
         onClick={handleClickToggle}
         className="relative group w-14 h-14 rounded-full bg-gradient-to-tr from-[#0084FF] via-[#00A3FF] to-[#00C6FF] text-white flex items-center justify-center shadow-[0_4px_20px_rgba(0,132,255,0.45)] hover:shadow-[0_6px_25px_rgba(0,132,255,0.6)] hover:scale-110 active:scale-95 transition-all duration-300 ring-4 ring-white/90 cursor-pointer"
         aria-label="เปิดเมนูนำทางและติดต่อ Inbox Messenger"
