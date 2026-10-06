@@ -124,5 +124,6 @@ export default function ProjectCard({ project, onSelect }: ProjectCardProps) {
         </div>
       </div>
     </div>
+  </div>
   );
 }
